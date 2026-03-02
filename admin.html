@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panel de Control SiDGBE | Sistema de Registros</title>
+    <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f4f4; }
+        .navbar-admin { background-color: #0C231E; padding: 15px; color: white; margin-bottom: 30px; }
+        .card-admin { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 5px solid #D4C19C; }
+        .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 15px; font-size: 16px; border: none; transition: 0.3s; }
+        .btn-registrar:hover { background-color: #1d4d42 !important; transform: translateY(-2px); }
+        label { font-weight: bold; color: #555; text-transform: uppercase; font-size: 12px; }
+        .form-control { border-radius: 5px; height: 45px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar-admin text-center">
+        <h4 style="margin:0; letter-spacing: 1px;">SISTEMA DE GESTIÓN DE CERTIFICADOS DIGITALES (ADMIN)</h4>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="card-admin">
+                    <h3 class="text-center" style="color: #13322B; margin-bottom: 30px;">Registro de Folio Nuevo</h3>
+                    
+                    <form id="adminForm">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>Nivel Educativo:</label>
+                                <select id="nivel" class="form-control" required>
+                                    <option value="">-- Seleccionar Nivel --</option>
+                                    <option value="Secundaria">SECUNDARIA (INEA)</option>
+                                    <option value="Preparatoria">PREPARATORIA (BACHILLERATO)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Número de Folio (ID):</label>
+                                <input type="text" id="folio" class="form-control" placeholder="Ej: INE2600123" required style="text-transform: uppercase;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nombre Completo del Alumno:</label>
+                            <input type="text" id="nombre" class="form-control" placeholder="JUAN PEREZ LOPEZ" required style="text-transform: uppercase;">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 form-group">
+                                <label>CURP del Alumno:</label>
+                                <input type="text" id="curp" class="form-control" placeholder="ABCD000000XXXXXX00" required maxlength="18" style="text-transform: uppercase;">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label>Promedio Final:</label>
+                                <input type="text" id="promedio" class="form-control" placeholder="9.2" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>Fecha de Emisión del Documento:</label>
+                                <input type="date" id="fechaEmision" class="form-control" required>
+                                <small class="text-muted">Esta fecha aparecerá en la validación pública.</small>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Ciclo Escolar:</label>
+                                <input type="text" id="ciclo" class="form-control" placeholder="Ej: 2024-2025" required>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <button type="submit" class="btn btn-registrar btn-block">
+                            <i class="glyphicon glyphicon-cloud-upload"></i> GUARDAR Y ACTIVAR EN REGISTRO NACIONAL
+                        </button>
+                    </form>
+
+                    <div id="status" style="margin-top: 25px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDqlOQFN104R7MymHW5r7JJ2Mc3UymViZ4",
+            authDomain: "siged-86634.firebaseapp.com",
+            projectId: "siged-86634",
+            storageBucket: "siged-86634.firebasestorage.app",
+            messagingSenderId: "787103426645",
+            appId: "1:787103426645:web:4268b3cc891fc14c0a0cdc"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.getElementById('adminForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerText = "PROCESANDO...";
+
+            const folio = document.getElementById('folio').value.toUpperCase().trim();
+            const nivel = document.getElementById('nivel').value;
+            
+            // Lógica de texto por nivel
+            const nivelTexto = (nivel === "Secundaria") ? "SECUNDARIA (INEA)" : "CERTIFICADO DE TERMINACIÓN DE ESTUDIOS (BACHILLERATO)";
+
+            const datos = {
+                nombre: document.getElementById('nombre').value.toUpperCase().trim(),
+                curp: document.getElementById('curp').value.toUpperCase().trim(),
+                promedio: document.getElementById('promedio').value.trim(),
+                fechaEmision: document.getElementById('fechaEmision').value, // Guardamos la fecha elegida
+                ciclo: document.getElementById('ciclo').value.trim(),
+                nivel: nivelTexto,
+                tipo: nivel,
+                estatus: "VALIDO / EMITIDO",
+                timestamp: new Date()
+            };
+
+            try {
+                await setDoc(doc(db, "certificados", folio), datos);
+                document.getElementById('status').innerHTML = `<div class="alert alert-success"><strong>¡ÉXITO!</strong> El folio <b>${folio}</b> ha sido activado globalmente.</div>`;
+                document.getElementById('adminForm').reset();
+            } catch (err) {
+                document.getElementById('status').innerHTML = `<div class="alert alert-danger">Error al conectar: ${err.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "GUARDAR Y ACTIVAR EN REGISTRO NACIONAL";
+            }
+        });
+    </script>
+</body>
+</html>
