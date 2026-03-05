@@ -148,7 +148,7 @@
         });
 
         // --- MONITOR EN TIEMPO REAL --- [cite: 2026-02-14]
-        const q = query(collection(db, "certificados"), orderBy("timestamp", "desc"));
+        const q = query(collection(db, "certificados")); [cite: 2026-02-14]
         onSnapshot(q, (snapshot) => {
             const tabla = document.getElementById('tablaAlumnos');
             tabla.innerHTML = "";
