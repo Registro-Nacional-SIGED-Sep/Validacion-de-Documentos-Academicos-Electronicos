@@ -3,81 +3,95 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel de Control SiDGBE | Sistema de Registros</title>
+    <title>Panel Maestro SiDGBE | Control de Pagos y Visitas</title>
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f4f4; }
-        .navbar-admin { background-color: #0C231E; padding: 15px; color: white; margin-bottom: 30px; }
-        .card-admin { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 5px solid #D4C19C; }
-        .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 15px; font-size: 16px; border: none; transition: 0.3s; }
-        .btn-registrar:hover { background-color: #1d4d42 !important; transform: translateY(-2px); }
-        label { font-weight: bold; color: #555; text-transform: uppercase; font-size: 12px; }
-        .form-control { border-radius: 5px; height: 45px; }
+        body { background-color: #f0f2f5; font-family: 'Open Sans', sans-serif; }
+        .navbar-admin { background-color: #0C231E; padding: 20px; color: white; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .card-admin { background: white; padding: 35px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 6px solid #D4C19C; margin-bottom: 40px; }
+        .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 12px; border: none; transition: 0.3s; border-radius: 8px; }
+        .btn-registrar:hover { background-color: #1d4d42 !important; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        label { font-weight: 700; color: #333; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        .form-control { border-radius: 8px; height: 45px; border: 1px solid #ccc; }
+        
+        /* Estilos para la Tabla de Gestión */
+        .table-container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .badge-visitas { background: #007bff; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px; }
+        .status-badge { padding: 6px 12px; border-radius: 5px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .status-pendiente { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .status-pagado { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .btn-action { padding: 5px 10px; font-size: 12px; margin: 2px; border-radius: 5px; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-pay { background: #28a745; color: white; }
+        .btn-delete { background: #dc3545; color: white; }
+        .btn-action:hover { opacity: 0.8; transform: scale(1.05); }
     </style>
 </head>
 <body>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0; letter-spacing: 1px;">SISTEMA DE GESTIÓN DE CERTIFICADOS DIGITALES (ADMIN)</h4>
+        <h4 style="margin:0; letter-spacing: 2px; font-weight: 300;">SISTEMA DE GESTIÓN DE CERTIFICADOS DIGITALES (ADMIN V2.0)</h4>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid" style="max-width: 1200px; margin: auto;">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-5">
                 <div class="card-admin">
-                    <h3 class="text-center" style="color: #13322B; margin-bottom: 30px;">Registro de Folio Nuevo</h3>
-                    
+                    <h3 class="text-center" style="color: #13322B; margin-bottom: 25px; font-weight: bold;">Nuevo Registro</h3>
                     <form id="adminForm">
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label>Nivel Educativo:</label>
-                                <select id="nivel" class="form-control" required>
-                                    <option value="">-- Seleccionar Nivel --</option>
-                                    <option value="Secundaria">SECUNDARIA (INEA)</option>
-                                    <option value="Preparatoria">PREPARATORIA (BACHILLERATO)</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Número de Folio (ID):</label>
-                                <input type="text" id="folio" class="form-control" placeholder="Ej: INE2600123" required style="text-transform: uppercase;">
-                            </div>
-                        </div>
-
                         <div class="form-group">
-                            <label>Nombre Completo del Alumno:</label>
+                            <label>Nivel Educativo:</label>
+                            <select id="nivel" class="form-control" required>
+                                <option value="">-- Seleccionar --</option>
+                                <option value="Secundaria">SECUNDARIA (INEA)</option>
+                                <option value="Preparatoria">PREPARATORIA (BACHILLERATO)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Folio (ID):</label>
+                            <input type="text" id="folio" class="form-control" placeholder="INE2600123" required style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre del Alumno:</label>
                             <input type="text" id="nombre" class="form-control" placeholder="JUAN PEREZ LOPEZ" required style="text-transform: uppercase;">
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-8 form-group">
-                                <label>CURP del Alumno:</label>
-                                <input type="text" id="curp" class="form-control" placeholder="ABCD000000XXXXXX00" required maxlength="18" style="text-transform: uppercase;">
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label>Promedio Final:</label>
-                                <input type="text" id="promedio" class="form-control" placeholder="9.2" required>
-                            </div>
+                        <div class="form-group">
+                            <label>CURP:</label>
+                            <input type="text" id="curp" class="form-control" maxlength="18" required style="text-transform: uppercase;">
                         </div>
-
                         <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label>Fecha de Emisión del Documento:</label>
-                                <input type="date" id="fechaEmision" class="form-control" required>
-                                <small class="text-muted">Esta fecha aparecerá en la validación pública.</small>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Ciclo Escolar:</label>
-                                <input type="text" id="ciclo" class="form-control" placeholder="Ej: 2024-2025" required>
-                            </div>
+                            <div class="col-xs-6"><label>Promedio:</label><input type="text" id="promedio" class="form-control" required></div>
+                            <div class="col-xs-6"><label>Ciclo:</label><input type="text" id="ciclo" class="form-control" required></div>
                         </div>
-
-                        <hr>
+                        <br>
+                        <div class="form-group">
+                            <label>Fecha de Emisión:</label>
+                            <input type="date" id="fechaEmision" class="form-control" required>
+                        </div>
                         <button type="submit" class="btn btn-registrar btn-block">
-                            <i class="glyphicon glyphicon-cloud-upload"></i> GUARDAR Y ACTIVAR EN REGISTRO NACIONAL
+                             GUARDAR Y ACTIVAR FOLIO
                         </button>
                     </form>
+                    <div id="status" style="margin-top: 15px;"></div>
+                </div>
+            </div>
 
-                    <div id="status" style="margin-top: 25px;"></div>
+            <div class="col-md-7">
+                <div class="table-container">
+                    <h3 style="color: #13322B; margin-bottom: 20px; font-weight: bold;">Monitor de Folios Activos</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Folio / Alumno</th>
+                                    <th>Estatus Pago</th>
+                                    <th class="text-center">Vistas</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaAlumnos">
+                                </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,7 +99,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, deleteDoc, collection, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDqlOQFN104R7MymHW5r7JJ2Mc3UymViZ4",
@@ -99,41 +113,85 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // --- FUNCIÓN PARA GUARDAR NUEVO ---
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
             btn.disabled = true;
-            btn.innerText = "PROCESANDO...";
-
+            
             const folio = document.getElementById('folio').value.toUpperCase().trim();
             const nivel = document.getElementById('nivel').value;
-            
-            // Lógica de texto por nivel
             const nivelTexto = (nivel === "Secundaria") ? "SECUNDARIA (INEA)" : "CERTIFICADO DE TERMINACIÓN DE ESTUDIOS (BACHILLERATO)";
 
             const datos = {
                 nombre: document.getElementById('nombre').value.toUpperCase().trim(),
                 curp: document.getElementById('curp').value.toUpperCase().trim(),
                 promedio: document.getElementById('promedio').value.trim(),
-                fechaEmision: document.getElementById('fechaEmision').value, // Guardamos la fecha elegida
+                fechaEmision: document.getElementById('fechaEmision').value,
                 ciclo: document.getElementById('ciclo').value.trim(),
                 nivel: nivelTexto,
                 tipo: nivel,
-                estatus: "VALIDO / EMITIDO",
+                pagado: false, // Inicia como pendiente [cite: 2026-02-14]
+                visitas: 0,    // Contador inicial [cite: 2026-02-14]
                 timestamp: new Date()
             };
 
             try {
                 await setDoc(doc(db, "certificados", folio), datos);
-                document.getElementById('status').innerHTML = `<div class="alert alert-success"><strong>¡ÉXITO!</strong> El folio <b>${folio}</b> ha sido activado globalmente.</div>`;
+                document.getElementById('status').innerHTML = `<div class="alert alert-success">Folio ${folio} creado.</div>`;
                 document.getElementById('adminForm').reset();
             } catch (err) {
-                document.getElementById('status').innerHTML = `<div class="alert alert-danger">Error al conectar: ${err.message}</div>`;
+                alert("Error: " + err.message);
             } finally {
                 btn.disabled = false;
-                btn.innerText = "GUARDAR Y ACTIVAR EN REGISTRO NACIONAL";
             }
         });
+
+        // --- MONITOR EN TIEMPO REAL --- [cite: 2026-02-14]
+        const q = query(collection(db, "certificados"), orderBy("timestamp", "desc"));
+        onSnapshot(q, (snapshot) => {
+            const tabla = document.getElementById('tablaAlumnos');
+            tabla.innerHTML = "";
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+                
+                tabla.innerHTML += `
+                    <tr>
+                        <td>
+                            <b>${id}</b><br>
+                            <small>${data.nombre}</small>
+                        </td>
+                        <td>
+                            <span class="status-badge ${data.pagado ? 'status-pagado' : 'status-pendiente'}">
+                                ${data.pagado ? 'LIBERADO' : 'PENDIENTE'}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge-visitas">${data.visitas || 0}</span>
+                        </td>
+                        <td>
+                            <button class="btn-action btn-pay" onclick="togglePago('${id}', ${data.pagado})">
+                                ${data.pagado ? 'Bloquear' : 'Validar'}
+                            </button>
+                            <button class="btn-action btn-delete" onclick="eliminarFolio('${id}')">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        });
+
+        // --- FUNCIONES GLOBALES PARA LOS BOTONES ---
+        window.togglePago = async (id, actual) => {
+            const ref = doc(db, "certificados", id);
+            await updateDoc(ref, { pagado: !actual }); [cite: 2026-02-14]
+        };
+
+        window.eliminarFolio = async (id) => {
+            if(confirm(`¿Seguro que deseas eliminar el folio ${id}? Esta acción no se puede deshacer.`)) {
+                await deleteDoc(doc(db, "certificados", id)); [cite: 2026-02-14]
+            }
+        };
     </script>
 </body>
 </html>
