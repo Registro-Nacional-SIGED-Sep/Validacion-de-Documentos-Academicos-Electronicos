@@ -10,12 +10,31 @@
     <style>
         .navbar-inverse { background-color: #0C231E; border: none; }
         .wizard-steps { margin-top: 30px; }
-        #seccion-resultados, #seccion-error, #loader { display: none; } 
+        #seccion-resultados, #seccion-error, #loader, #seccion-bloqueo { display: none; } 
         .btn-buscar { background-color: #12322B; color: white; transition: 0.3s; font-weight: bold; }
         .btn-buscar:hover { background-color: #1d4d42; color: white; }
         .label-institucional { color: #6F7271; font-weight: bold; font-size: 13px; text-transform: uppercase; }
         .header-estatal { color: #13322B; font-weight: 800; border-bottom: 2px solid #D4C19C; padding-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Marca de agua digital para pagos pendientes */
+        .watermark-container { position: relative; overflow: hidden; }
+        .watermark-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 60px;
+            color: rgba(255, 0, 0, 0.15);
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+            text-transform: uppercase;
+            border: 10px solid rgba(255, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .alerta-bloqueo { background-color: #fcf8e3; border: 2px solid #faebcc; color: #8a6d3b; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
     </style>
 </head>
 
@@ -70,15 +89,11 @@
         </section>
 
         <section id="seccion-resultados">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="alert alert-success">
-                        <i class="glyphicon glyphicon-ok-sign"></i> <strong>Documento Validado:</strong> El folio corresponde a un certificado registrado y vigente.
-                    </div>
-                </div>
-            </div>
+            <div id="status-alerta-container"></div>
 
-            <div class="row" style="margin-top: 20px;">
+            <div class="row watermark-container">
+                <div id="capa-marca-agua" class="watermark-overlay" style="display:none;">PAGO PENDIENTE</div>
+
                 <div class="col-md-8">
                     <div class="panel panel-default" style="border-top: 4px solid #D4C19C;">
                         <div class="panel-body">
@@ -98,8 +113,8 @@
                                     <p id="res-ciclo" style="font-size: 16px;">--</p>
                                 </div>
                                 <div class="col-md-6" style="margin-top:15px;">
-                                    <p class="label-institucional">ESTATUS:</p>
-                                    <span class="label label-success" style="font-size: 14px;">COMPLETADO / EMITIDO</span>
+                                    <p class="label-institucional">ESTATUS DE VALIDACIÓN:</p>
+                                    <span id="label-estatus-pago" class="label" style="font-size: 14px;">--</span>
                                 </div>
                             </div>
                         </div>
@@ -133,6 +148,10 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="text-center" style="margin-top: 20px;">
+                <button class="btn btn-default" onclick="location.reload()">Realizar otra consulta</button>
+            </div>
         </section>
     </main>
 
@@ -145,7 +164,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDqlOQFN104R7MymHW5r7JJ2Mc3UymViZ4",
@@ -170,12 +189,16 @@
                 const docRef = doc(db, "certificados", f);
                 const docSnap = await getDoc(docRef);
 
-                setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+
+                    // 1. ACTUALIZAR CONTADOR DE VISITAS EN FIREBASE [cite: 2026-02-14]
+                    await updateDoc(docRef, { visitas: increment(1) });
+
+                    setTimeout(() => {
+                        document.getElementById('loader').style.display = 'none';
                         
-                        // Llenar datos en pantalla
+                        // 2. LLENAR DATOS
                         document.getElementById('res-nombre').innerText = data.nombre;
                         document.getElementById('res-nivel').innerText = data.nivel;
                         document.getElementById('res-curp').innerText = data.curp;
@@ -184,41 +207,55 @@
                         document.getElementById('res-folio').innerText = f;
                         document.getElementById('res-ciclo').innerText = data.ciclo || "N/A";
                         
-                        // Formatear Fecha
                         if(data.fechaEmision) {
                             const p = data.fechaEmision.split("-");
                             document.getElementById('res-fecha').innerText = `${p[2]}/${p[1]}/${p[0]}`;
                         }
 
-                        // Ajustar Visuales según Nivel
+                        // 3. LÓGICA DE ESTATUS DE PAGO
+                        const alertaContainer = document.getElementById('status-alerta-container');
+                        const labelPago = document.getElementById('label-estatus-pago');
+                        const marcaAgua = document.getElementById('capa-marca-agua');
+
+                        if(data.pagado === true) {
+                            alertaContainer.innerHTML = `<div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> <strong>Documento Validado:</strong> El folio corresponde a un certificado registrado y vigente.</div>`;
+                            labelPago.innerText = "COMPLETADO / EMITIDO";
+                            labelPago.className = "label label-success";
+                            marcaAgua.style.display = 'none';
+                        } else {
+                            alertaContainer.innerHTML = `<div class="alerta-bloqueo"><i class="glyphicon glyphicon-warning-sign"></i> <strong>AVISO IMPORTANTE:</strong> Este registro se encuentra en proceso de validación final. Favor de liquidar su trámite para habilitar el sello digital oficial.</div>`;
+                            labelPago.innerText = "PENDIENTE DE PAGO";
+                            labelPago.className = "label label-warning";
+                            marcaAgua.style.display = 'block'; // Muestra la marca de agua [cite: 2026-02-14]
+                        }
+
+                        // 4. PERSONALIZACIÓN POR NIVEL
                         const logo = document.getElementById('logo-inicio');
                         const titulo = document.getElementById('titulo-principal');
                         const footer = document.getElementById('footer-text');
-                        const infoTitulo = document.getElementById('txt-info-titulo');
-
+                        
                         if(data.tipo === "Secundaria") {
-                            logo.src = "https://i.ibb.co/cS6fBNKK/1000071089.png";
                             titulo.innerText = "Validación de Certificados Digitales INEA";
                             footer.innerText = "Instituto Nacional para la Educación de los Adultos (INEA)";
-                            infoTitulo.innerText = "Información del Educando";
                         } else {
-                            logo.src = "https://www.gob.mx/cms/uploads/action_program/main_image/26139/post_DGB.jpg";
                             titulo.innerText = "Validación de Certificados de Bachillerato";
                             footer.innerText = "Dirección General de Bachillerato (DGB)";
-                            infoTitulo.innerText = "Información del Alumno";
                         }
 
                         document.getElementById('seccion-resultados').style.display = 'block';
                         window.scrollTo(0,0);
-                    } else {
-                        document.getElementById('seccion-error').style.display = 'block';
-                    }
-                }, 1500);
+                    }, 1200);
+                } else {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('seccion-error').style.display = 'block';
+                }
             } catch (e) {
-                alert("Error de conexión.");
+                console.error(e);
+                alert("Error de conexión con el servidor.");
                 location.reload();
             }
         }
     </script>
 </body>
-</html>
+    </html>
+    
