@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | Gestión de Registros Nacionales</title>
+    <title>Panel Maestro SiDGBE | Control de Registros</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     
@@ -12,66 +12,49 @@
         .navbar-admin { background-color: #0C231E; padding: 20px; color: white; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .card-admin { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 5px solid #D4C19C; margin-bottom: 30px; }
         
-        /* Botón Guardar */
         .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 14px; font-size: 15px; border: none; transition: 0.3s; border-radius: 6px; width: 100%; }
         .btn-registrar:hover { background-color: #1d4d42 !important; transform: translateY(-1px); }
         
-        /* Labels y Formulario */
         label { font-weight: bold; color: #444; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
         .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; font-size: 14px; margin-bottom: 15px; }
         
-        /* Tabla de Monitoreo */
         .monitor-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
         .table thead th { background-color: #f8f9fa; color: #13322B; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #D4C19C; }
+        
+        /* Badge de Visitas */
         .badge-visitas { background-color: #0056b3; color: white; padding: 4px 10px; border-radius: 50px; font-weight: bold; font-size: 12px; }
         
-        /* Estados de Pausa/Play */
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        /* Estatus Visual */
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; display: inline-block; }
         .status-online { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-paused { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
-        /* Botonera de acciones */
-        .btn-action { border: none; padding: 6px 10px; border-radius: 4px; font-size: 11px; color: white; transition: 0.2s; font-weight: bold; }
-        .btn-pause { background-color: #f0ad4e; } /* Naranja */
-        .btn-activate { background-color: #5cb85c; } /* Verde */
-        .btn-delete { background-color: #d9534f; } /* Rojo */
-        .btn-action:hover { opacity: 0.8; }
+        /* Botonera Mejorada */
+        .btn-action { border: none; padding: 8px 12px; border-radius: 4px; font-size: 11px; color: white; transition: 0.2s; font-weight: bold; cursor: pointer; }
+        .btn-pause { background-color: #f0ad4e; } 
+        .btn-activate { background-color: #5cb85c; } 
+        .btn-delete { background-color: #d9534f; }
+        .btn-action:hover { filter: brightness(1.1); }
 
-        /* Stats superiores */
+        /* Stats Limpias */
         .stat-box { background: #13322B; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-        .stat-box h3 { margin: 5px 0; color: #D4C19C; font-weight: bold; }
-        .stat-box p { margin: 0; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
-
-        @media (max-width: 768px) {
-            .card-admin { padding: 15px; }
-        }
+        .stat-box h3 { margin: 5px 0; color: #D4C19C; font-weight: bold; font-size: 28px; }
+        .stat-box p { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
     </style>
 </head>
 <body>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600;">SISTEMA DE GESTIÓN DE CERTIFICADOS DIGITALES (ADMIN V3.5)</h4>
+        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600;">SISTEMA DE GESTIÓN DE CERTIFICADOS (ADMIN V4.0)</h4>
     </nav>
 
     <div class="container-fluid" style="max-width: 1400px;">
         
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6 col-md-offset-3">
                 <div class="stat-box">
-                    <p>Total de Registros</p>
+                    <p>Total de Alumnos Registrados en el Sistema</p>
                     <h3 id="stat-total">0</h3>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stat-box">
-                    <p>Recaudación Estimada ($100/u)</p>
-                    <h3 id="stat-dinero">$0.00</h3>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stat-box">
-                    <p>Progreso Meta $100k</p>
-                    <h3 id="stat-meta">0%</h3>
                 </div>
             </div>
         </div>
@@ -92,11 +75,11 @@
 
                         <div class="row">
                             <div class="col-sm-6">
-                                <label>Folio (ID Único):</label>
+                                <label>Folio:</label>
                                 <input type="text" id="folio" class="form-control" placeholder="Ej: INE26001" required style="text-transform: uppercase;">
                             </div>
                             <div class="col-sm-6">
-                                <label>Promedio Final:</label>
+                                <label>Promedio:</label>
                                 <input type="text" id="promedio" class="form-control" placeholder="9.5" required>
                             </div>
                         </div>
@@ -120,7 +103,7 @@
 
                         <hr>
                         <button type="submit" id="btnGuardar" class="btn btn-registrar">
-                             ACTIVAR Y SUBIR REGISTRO
+                             INSERTAR EN BASE DE DATOS
                         </button>
                     </form>
                 </div>
@@ -130,7 +113,7 @@
                 <div class="monitor-container">
                     <div class="row" style="margin-bottom: 20px;">
                         <div class="col-sm-6">
-                            <h4 style="color: #13322B; font-weight: bold; margin: 0;">Monitor de Folios Activos</h4>
+                            <h4 style="color: #13322B; font-weight: bold; margin: 0;">Monitor de Validación</h4>
                         </div>
                         <div class="col-sm-6">
                             <input type="text" id="buscador" class="form-control" style="margin-bottom:0;" placeholder="🔍 Buscar por Nombre o Folio..." onkeyup="filtrarTabla()">
@@ -144,7 +127,7 @@
                                     <th>Folio / Alumno</th>
                                     <th class="text-center">Visitas</th>
                                     <th class="text-center">Estatus</th>
-                                    <th class="text-right">Control</th>
+                                    <th class="text-right">Control de Acceso</th>
                                 </tr>
                             </thead>
                             <tbody id="tablaAlumnos">
@@ -172,7 +155,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // BUSCADOR EN TIEMPO REAL
+        // BUSCADOR
         window.filtrarTabla = () => {
             const input = document.getElementById("buscador").value.toUpperCase();
             const filas = document.getElementById("tablaAlumnos").getElementsByTagName("tr");
@@ -187,7 +170,7 @@
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
             btn.disabled = true;
-            btn.innerText = "CONECTANDO...";
+            btn.innerText = "PROCESANDO...";
 
             const folio = document.getElementById('folio').value.toUpperCase().trim();
             const nivel = document.getElementById('nivel').value;
@@ -202,23 +185,23 @@
                 nivel: nivelTexto,
                 tipo: nivel,
                 visitas: 0,
-                activo: true, // Por defecto entra activo
+                activo: true, 
                 timestamp: new Date()
             };
 
             try {
                 await setDoc(doc(db, "certificados", folio), datos);
-                alert("¡Folio " + folio + " guardado con éxito!");
+                alert("Alumno registrado con éxito.");
                 document.getElementById('adminForm').reset();
             } catch (error) {
-                alert("Error: " + error.message);
+                alert("Error al guardar: " + error.message);
             } finally {
                 btn.disabled = false;
-                btn.innerText = "ACTIVAR Y SUBIR REGISTRO";
+                btn.innerText = "INSERTAR EN BASE DE DATOS";
             }
         });
 
-        // MONITOR Y ESTADÍSTICAS
+        // MONITOR REAL-TIME
         onSnapshot(collection(db, "certificados"), (querySnapshot) => {
             const tabla = document.getElementById('tablaAlumnos');
             let total = 0;
@@ -229,12 +212,14 @@
                 const data = documento.data();
                 const id = documento.id;
                 
-                // Lógica de visualización del estatus
-                const statusHtml = data.activo ? 
+                // Aseguramos que data.activo exista, si no, lo tratamos como true
+                const isActivo = data.activo !== false;
+
+                const statusHtml = isActivo ? 
                     '<span class="status-badge status-online">Visible</span>' : 
                     '<span class="status-badge status-paused">Pausado</span>';
                 
-                const toggleBtn = data.activo ? 
+                const toggleBtn = isActivo ? 
                     `<button class="btn-action btn-pause" onclick="cambiarEstado('${id}', false)">Pausar</button>` : 
                     `<button class="btn-action btn-activate" onclick="cambiarEstado('${id}', true)">Activar</button>`;
 
@@ -253,23 +238,21 @@
                     </tr>`;
             });
 
-            // Actualizar Dashboard
             document.getElementById('stat-total').innerText = total;
-            const recaudacion = total * 100;
-            document.getElementById('stat-dinero').innerText = "$" + recaudacion.toLocaleString();
-            const meta = (recaudacion / 100000 * 100).toFixed(1);
-            document.getElementById('stat-meta').innerText = meta + "%";
         });
 
-        // FUNCIONES DE ACCIÓN
+        // FUNCIONES GLOBALES PARA LOS BOTONES
         window.cambiarEstado = async (id, nuevoEstado) => {
             try {
-                await updateDoc(doc(db, "certificados", id), { activo: nuevoEstado });
-            } catch (e) { alert("Error al cambiar estado: " + e.message); }
+                const docRef = doc(db, "certificados", id);
+                await updateDoc(docRef, { activo: nuevoEstado });
+            } catch (e) {
+                alert("Error al actualizar estado: " + e.message);
+            }
         };
 
         window.borrarRegistro = async (id) => {
-            if (confirm("¿Eliminar definitivamente el folio " + id + "?")) {
+            if (confirm("¿Estás seguro de eliminar permanentemente a este alumno?")) {
                 try {
                     await deleteDoc(doc(db, "certificados", id));
                 } catch (e) { alert("Error: " + e.message); }
