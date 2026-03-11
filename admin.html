@@ -16,12 +16,18 @@
         label { font-weight: bold; color: #444; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
         .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; font-size: 14px; }
         
+        /* Stats Cards */
+        .stat-card { background: #13322B; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+        .stat-card h2 { margin: 0; color: #D4C19C; font-weight: bold; }
+        .stat-card p { margin: 0; font-size: 12px; text-transform: uppercase; opacity: 0.8; }
+
         /* Tabla de Monitoreo */
         .monitor-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
         .table thead th { background-color: #f8f9fa; color: #13322B; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #D4C19C; }
         .badge-visitas { background-color: #0056b3; color: white; padding: 4px 10px; border-radius: 50px; font-weight: bold; font-size: 12px; }
         .btn-delete { background-color: #9e1b1b; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; transition: 0.2s; }
         .btn-delete:hover { background-color: #c0392b; }
+        .btn-ws { background-color: #25D366; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; margin-right: 5px; }
         
         /* Animación de carga */
         .loading-overlay { display: none; text-align: center; padding: 20px; }
@@ -32,12 +38,32 @@
 <body>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600;">SISTEMA DE GESTIÓN DE CERTIFICADOS DIGITALES (ADMIN V2.5)</h4>
+        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600;">SISTEMA DE GESTIÓN DE CERTIFICADOS DIGITALES (ADMIN V3.0)</h4>
     </nav>
 
     <div class="container-fluid" style="max-width: 1300px;">
         <div class="row">
-            
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <p>Folios en Sistema</p>
+                    <h2 id="stat-total">0</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <p>Recaudación Estimada</p>
+                    <h2 id="stat-dinero">$0.00</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <p>Meta Mensual ($100k)</p>
+                    <h2 id="stat-meta">0%</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-md-5">
                 <div class="card-admin">
                     <h4 class="text-center" style="color: #13322B; margin-bottom: 25px; font-weight: bold;">Registrar Nuevo Alumno</h4>
@@ -104,11 +130,18 @@
 
             <div class="col-md-7">
                 <div class="monitor-container">
-                    <h4 style="color: #13322B; margin-bottom: 20px; font-weight: bold;">Monitor de Folios Activos</h4>
-                    <p class="text-muted" style="font-size: 12px;">Aquí puedes ver cuántos clientes han consultado su folio en tiempo real.</p>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h4 style="color: #13322B; font-weight: bold;">Monitor de Folios</h4>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" id="buscador" class="form-control" placeholder="🔍 Buscar por Folio o Nombre..." onkeyup="filtrarTabla()">
+                        </div>
+                    </div>
+                    <br>
                     
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table class="table table-striped" id="tablaPrincipal">
                             <thead>
                                 <tr>
                                     <th>Folio / Alumno</th>
@@ -117,7 +150,7 @@
                                 </tr>
                             </thead>
                             <tbody id="tablaAlumnos">
-                                </tbody>
+                            </tbody>
                         </table>
                         <div id="loaderTabla" class="loading-overlay" style="display:block;">
                             <div class="spinner"></div>
@@ -134,7 +167,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot, deleteDoc, collection, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Configuración de tu Proyecto [cite: 2026-02-14]
         const firebaseConfig = {
             apiKey: "AIzaSyDqlOQFN104R7MymHW5r7JJ2Mc3UymViZ4",
             authDomain: "siged-86634.firebaseapp.com",
@@ -144,11 +176,21 @@
             appId: "1:787103426645:web:4268b3cc891fc14c0a0cdc"
         };
 
-        // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- FUNCIÓN: GUARDAR REGISTRO --- [cite: 2026-02-14]
+        // --- FUNCIÓN FILTRAR TABLA (BUSCADOR) ---
+        window.filtrarTabla = () => {
+            const input = document.getElementById("buscador").value.toUpperCase();
+            const filas = document.getElementById("tablaAlumnos").getElementsByTagName("tr");
+            
+            for (let i = 0; i < filas.length; i++) {
+                const textoFila = filas[i].textContent || filas[i].innerText;
+                filas[i].style.display = textoFila.toUpperCase().indexOf(input) > -1 ? "" : "none";
+            }
+        };
+
+        // --- FUNCIÓN: GUARDAR REGISTRO ---
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
@@ -157,8 +199,6 @@
 
             const folio = document.getElementById('folio').value.toUpperCase().trim();
             const nivel = document.getElementById('nivel').value;
-            
-            // Texto descriptivo según el nivel seleccionado
             const nivelTexto = (nivel === "Secundaria") ? "SECUNDARIA (INEA)" : "CERTIFICADO DE TERMINACIÓN DE ESTUDIOS (BACHILLERATO)";
 
             const datosNuevoAlumno = {
@@ -169,49 +209,38 @@
                 ciclo: document.getElementById('ciclo').value.trim(),
                 nivel: nivelTexto,
                 tipo: nivel,
-                visitas: 0, // Contador de visitas inicializado en 0 [cite: 2026-02-14]
-                pagado: false, // Por defecto requiere validación de pago [cite: 2026-02-14]
+                visitas: 0,
+                pagado: false,
                 timestamp: new Date()
             };
 
             try {
-                // Guardar en la colección "certificados" usando el Folio como ID del documento [cite: 2026-02-14]
                 await setDoc(doc(db, "certificados", folio), datosNuevoAlumno);
-                
                 alert("¡ÉXITO! El folio " + folio + " ha sido activado correctamente.");
-                document.getElementById('status').innerHTML = `<div class="alert alert-success">Folio <b>${folio}</b> guardado con éxito.</div>`;
                 document.getElementById('adminForm').reset();
             } catch (error) {
-                alert("ERROR AL GUARDAR: " + error.message);
-                document.getElementById('status').innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+                alert("ERROR: " + error.message);
             } finally {
                 btn.disabled = false;
                 btn.innerText = "GUARDAR EN BASE DE DATOS NACIONAL";
             }
         });
 
-        // --- FUNCIÓN: MONITOR EN TIEMPO REAL --- [cite: 2026-02-14]
-        // Usamos una consulta simple sin orderBy para evitar errores de índices en el móvil [cite: 2026-02-14]
-        const consultaCertificados = collection(db, "certificados");
-
-        onSnapshot(consultaCertificados, (querySnapshot) => {
+        // --- MONITOR EN TIEMPO REAL ---
+        onSnapshot(collection(db, "certificados"), (querySnapshot) => {
             const tabla = document.getElementById('tablaAlumnos');
             const loader = document.getElementById('loaderTabla');
             
-            tabla.innerHTML = ""; // Limpiar tabla antes de actualizar
+            let totalFolios = 0;
+            tabla.innerHTML = "";
             loader.style.display = "none";
 
-            if (querySnapshot.empty) {
-                tabla.innerHTML = "<tr><td colspan='3' class='text-center'>No hay folios registrados actualmente.</td></tr>";
-                return;
-            }
-
             querySnapshot.forEach((documento) => {
+                totalFolios++;
                 const data = documento.data();
                 const idFolio = documento.id;
                 
-                // Generar fila de la tabla
-                const fila = `
+                tabla.innerHTML += `
                     <tr>
                         <td>
                             <strong style="color:#13322B;">${idFolio}</strong><br>
@@ -221,32 +250,30 @@
                             <span class="badge-visitas">${data.visitas || 0}</span>
                         </td>
                         <td class="text-right">
-                            <button class="btn-delete" onclick="confirmarEliminacion('${idFolio}')">
-                                <i class="glyphicon glyphicon-trash"></i> Borrar
-                            </button>
+                            <button class="btn-ws" onclick="window.open('https://wa.me/?text=Hola ${data.nombre}, su folio ${idFolio} ya está activo.')">Msg</button>
+                            <button class="btn-delete" onclick="confirmarEliminacion('${idFolio}')">Borrar</button>
                         </td>
                     </tr>
                 `;
-                tabla.innerHTML += fila;
             });
-        }, (error) => {
-            alert("Error al leer la base de datos: " + error.message);
+
+            // Actualizar Estadísticas
+            document.getElementById('stat-total').innerText = totalFolios;
+            const recaudacion = totalFolios * 100;
+            document.getElementById('stat-dinero').innerText = "$" + recaudacion.toLocaleString();
+            const porcentajeMeta = (recaudacion / 100000 * 100).toFixed(1);
+            document.getElementById('stat-meta').innerText = porcentajeMeta + "%";
         });
 
-        // --- FUNCIÓN: ELIMINAR FOLIO --- [cite: 2026-02-14]
         window.confirmarEliminacion = async (id) => {
-            const respuesta = confirm("¿Estás completamente seguro de eliminar el folio " + id + "?\nEsta acción borrará el registro de la página de validación permanentemente.");
-            
-            if (respuesta) {
+            if (confirm("¿Eliminar folio " + id + "?")) {
                 try {
                     await deleteDoc(doc(db, "certificados", id));
-                    alert("Registro eliminado con éxito.");
-                } catch (e) {
-                    alert("No se pudo eliminar: " + e.message);
-                }
+                } catch (e) { alert(e.message); }
             }
         };
 
     </script>
 </body>
 </html>
+
