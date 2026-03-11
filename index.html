@@ -175,6 +175,16 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
+                    // --- NUEVA FUNCIÓN DE PAUSA ---
+                    // Si el administrador cambió el estatus a "false", el cliente no verá el documento
+                    if (data.activo === false) {
+                        setTimeout(() => {
+                            document.getElementById('loader').style.display = 'none';
+                            document.getElementById('seccion-error').style.display = 'block';
+                        }, 1200);
+                        return; // Detenemos la función aquí
+                    }
+
                     // Sumar visita al contador para que lo veas en tu Admin
                     await updateDoc(docRef, { visitas: increment(1) });
 
@@ -221,4 +231,5 @@
         }
     </script>
 </body>
-</html>
+    </html>
+                                    
