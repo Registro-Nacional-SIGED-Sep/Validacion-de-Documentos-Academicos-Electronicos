@@ -18,25 +18,23 @@
         label { font-weight: bold; color: #444; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
         .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; font-size: 14px; margin-bottom: 15px; }
         
+        /* Ocultar campos técnicos por defecto */
+        #campos-tecnicos { display: none; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #D4C19C; }
+
         .monitor-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
         .table thead th { background-color: #f8f9fa; color: #13322B; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #D4C19C; }
         
-        /* Badge de Visitas */
         .badge-visitas { background-color: #0056b3; color: white; padding: 4px 10px; border-radius: 50px; font-weight: bold; font-size: 12px; }
-        
-        /* Estatus Visual */
         .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; display: inline-block; }
         .status-online { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-paused { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
-        /* Botonera Mejorada */
         .btn-action { border: none; padding: 8px 12px; border-radius: 4px; font-size: 11px; color: white; transition: 0.2s; font-weight: bold; cursor: pointer; }
         .btn-pause { background-color: #f0ad4e; } 
         .btn-activate { background-color: #5cb85c; } 
         .btn-delete { background-color: #d9534f; }
         .btn-action:hover { filter: brightness(1.1); }
 
-        /* Stats Limpias */
         .stat-box { background: #13322B; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
         .stat-box h3 { margin: 5px 0; color: #D4C19C; font-weight: bold; font-size: 28px; }
         .stat-box p { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
@@ -45,7 +43,7 @@
 <body>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600;">SISTEMA DE GESTIÓN DE CERTIFICADOS (ADMIN V4.0)</h4>
+        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600;">SISTEMA DE GESTIÓN DE CERTIFICADOS (ADMIN V5.0)</h4>
     </nav>
 
     <div class="container-fluid" style="max-width: 1400px;">
@@ -67,10 +65,30 @@
                     <form id="adminForm">
                         <div class="form-group">
                             <label>Nivel Educativo:</label>
-                            <select id="nivel" class="form-control" required>
+                            <select id="nivel" class="form-control" required onchange="verificarNivel()">
                                 <option value="Secundaria">SECUNDARIA (INEA)</option>
                                 <option value="Preparatoria">PREPARATORIA (BACHILLERATO)</option>
+                                <option value="Tecnico">CARRERA TÉCNICA PROFESIONAL</option>
                             </select>
+                        </div>
+
+                        <div id="campos-tecnicos">
+                            <label>Nombre de la Carrera / Especialidad:</label>
+                            <input type="text" id="carrera" class="form-control" placeholder="Ej: CONTABILIDAD Y FINANZAS" style="text-transform: uppercase;">
+                            
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Matrícula:</label>
+                                    <input type="text" id="matricula" class="form-control" placeholder="20231509...">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Clave CCT:</label>
+                                    <input type="text" id="cct" class="form-control" placeholder="15ETC0014Z" style="text-transform: uppercase;">
+                                </div>
+                            </div>
+                            
+                            <label>Escuela / Institución (o Acuerdo):</label>
+                            <input type="text" id="escuela" class="form-control" placeholder="Ej: CONALEP PLANTEL 12 / ACUERDO 286" style="text-transform: uppercase;">
                         </div>
 
                         <div class="row">
@@ -92,7 +110,7 @@
 
                         <div class="row">
                             <div class="col-sm-6">
-                                <label>Ciclo Escolar:</label>
+                                <label>Ciclo / Periodo:</label>
                                 <input type="text" id="ciclo" class="form-control" placeholder="2024-2025" required>
                             </div>
                             <div class="col-sm-6">
@@ -127,11 +145,10 @@
                                     <th>Folio / Alumno</th>
                                     <th class="text-center">Visitas</th>
                                     <th class="text-center">Estatus</th>
-                                    <th class="text-right">Control de Acceso</th>
+                                    <th class="text-right">Acción</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaAlumnos">
-                                </tbody>
+                            <tbody id="tablaAlumnos"></tbody>
                         </table>
                     </div>
                 </div>
@@ -155,7 +172,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // BUSCADOR
+        // FUNCIÓN PARA MOSTRAR CAMPOS TÉCNICOS
+        window.verificarNivel = () => {
+            const nivel = document.getElementById("nivel").value;
+            const campos = document.getElementById("campos-tecnicos");
+            campos.style.display = (nivel === "Tecnico") ? "block" : "none";
+        };
+
         window.filtrarTabla = () => {
             const input = document.getElementById("buscador").value.toUpperCase();
             const filas = document.getElementById("tablaAlumnos").getElementsByTagName("tr");
@@ -165,7 +188,6 @@
             }
         };
 
-        // GUARDAR REGISTRO
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
@@ -174,7 +196,11 @@
 
             const folio = document.getElementById('folio').value.toUpperCase().trim();
             const nivel = document.getElementById('nivel').value;
-            const nivelTexto = (nivel === "Secundaria") ? "SECUNDARIA (INEA)" : "CERTIFICADO DE TERMINACIÓN DE ESTUDIOS (BACHILLERATO)";
+            
+            let nivelTexto = "";
+            if(nivel === "Secundaria") nivelTexto = "SECUNDARIA (INEA)";
+            else if(nivel === "Preparatoria") nivelTexto = "CERTIFICADO DE TERMINACIÓN DE ESTUDIOS (BACHILLERATO)";
+            else nivelTexto = document.getElementById('carrera').value.toUpperCase() || "CARRERA TÉCNICA PROFESIONAL";
 
             const datos = {
                 nombre: document.getElementById('nombre').value.toUpperCase().trim(),
@@ -184,6 +210,10 @@
                 ciclo: document.getElementById('ciclo').value.trim(),
                 nivel: nivelTexto,
                 tipo: nivel,
+                // Nuevos Campos
+                escuela: document.getElementById('escuela').value.toUpperCase().trim() || "N/A",
+                matricula: document.getElementById('matricula').value.trim() || "N/A",
+                cct: document.getElementById('cct').value.toUpperCase().trim() || "N/A",
                 visitas: 0,
                 activo: true, 
                 timestamp: new Date()
@@ -191,75 +221,46 @@
 
             try {
                 await setDoc(doc(db, "certificados", folio), datos);
-                alert("Alumno registrado con éxito.");
+                alert("Registro exitoso.");
                 document.getElementById('adminForm').reset();
-            } catch (error) {
-                alert("Error al guardar: " + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "INSERTAR EN BASE DE DATOS";
-            }
+                document.getElementById('campos-tecnicos').style.display = "none";
+            } catch (error) { alert("Error: " + error.message); }
+            finally { btn.disabled = false; btn.innerText = "INSERTAR EN BASE DE DATOS"; }
         });
 
-        // MONITOR REAL-TIME
         onSnapshot(collection(db, "certificados"), (querySnapshot) => {
             const tabla = document.getElementById('tablaAlumnos');
             let total = 0;
             tabla.innerHTML = "";
-
             querySnapshot.forEach((documento) => {
                 total++;
                 const data = documento.data();
                 const id = documento.id;
-                
-                // Aseguramos que data.activo exista, si no, lo tratamos como true
                 const isActivo = data.activo !== false;
+                const statusHtml = isActivo ? '<span class="status-badge status-online">Visible</span>' : '<span class="status-badge status-paused">Pausado</span>';
+                const toggleBtn = isActivo ? `<button class="btn-action btn-pause" onclick="cambiarEstado('${id}', false)">Pausar</button>` : `<button class="btn-action btn-activate" onclick="cambiarEstado('${id}', true)">Activar</button>`;
 
-                const statusHtml = isActivo ? 
-                    '<span class="status-badge status-online">Visible</span>' : 
-                    '<span class="status-badge status-paused">Pausado</span>';
-                
-                const toggleBtn = isActivo ? 
-                    `<button class="btn-action btn-pause" onclick="cambiarEstado('${id}', false)">Pausar</button>` : 
-                    `<button class="btn-action btn-activate" onclick="cambiarEstado('${id}', true)">Activar</button>`;
-
-                tabla.innerHTML += `
-                    <tr>
-                        <td>
-                            <strong style="color:#13322B;">${id}</strong><br>
-                            <small class="text-muted">${data.nombre}</small>
-                        </td>
-                        <td class="text-center"><span class="badge-visitas">${data.visitas || 0}</span></td>
-                        <td class="text-center">${statusHtml}</td>
-                        <td class="text-right">
-                            ${toggleBtn}
-                            <button class="btn-action btn-delete" onclick="borrarRegistro('${id}')">Borrar</button>
-                        </td>
-                    </tr>`;
+                tabla.innerHTML += `<tr>
+                    <td><strong>${id}</strong><br><small>${data.nombre}</small></td>
+                    <td class="text-center"><span class="badge-visitas">${data.visitas || 0}</span></td>
+                    <td class="text-center">${statusHtml}</td>
+                    <td class="text-right">${toggleBtn} <button class="btn-action btn-delete" onclick="borrarRegistro('${id}')">Borrar</button></td>
+                </tr>`;
             });
-
             document.getElementById('stat-total').innerText = total;
         });
 
-        // FUNCIONES GLOBALES PARA LOS BOTONES
         window.cambiarEstado = async (id, nuevoEstado) => {
-            try {
-                const docRef = doc(db, "certificados", id);
-                await updateDoc(docRef, { activo: nuevoEstado });
-            } catch (e) {
-                alert("Error al actualizar estado: " + e.message);
-            }
+            try { await updateDoc(doc(db, "certificados", id), { activo: nuevoEstado }); } 
+            catch (e) { alert("Error: " + e.message); }
         };
 
         window.borrarRegistro = async (id) => {
-            if (confirm("¿Estás seguro de eliminar permanentemente a este alumno?")) {
-                try {
-                    await deleteDoc(doc(db, "certificados", id));
-                } catch (e) { alert("Error: " + e.message); }
+            if (confirm("¿Eliminar?")) {
+                try { await deleteDoc(doc(db, "certificados", id)); } 
+                catch (e) { alert("Error: " + e.message); }
             }
         };
-
     </script>
 </body>
 </html>
-
