@@ -91,8 +91,12 @@
                                     <p class="label-institucional">NIVEL EDUCATIVO:</p>
                                     <p id="res-nivel" style="font-size: 16px;">--</p>
                                 </div>
+                                <div class="col-md-12" style="margin-top:15px;">
+                                    <p class="label-institucional">INSTITUCIÓN / ESCUELA:</p>
+                                    <p id="res-escuela" style="font-size: 16px; font-weight: bold;">--</p>
+                                </div>
                                 <div class="col-md-6" style="margin-top:15px;">
-                                    <p class="label-institucional">CICLO ESCOLAR:</p>
+                                    <p class="label-institucional">CICLO / PERIODO:</p>
                                     <p id="res-ciclo" style="font-size: 16px;">--</p>
                                 </div>
                                 <div class="col-md-6" style="margin-top:15px;">
@@ -110,6 +114,10 @@
                         <div class="panel-body">
                             <label class="label-institucional">CURP:</label>
                             <p id="res-curp" style="font-family: monospace;">--</p>
+                            <label class="label-institucional">MATRÍCULA:</label>
+                            <p id="res-matricula" style="font-weight: bold;">--</p>
+                            <label class="label-institucional">C.C.T (CLAVE DE ESCUELA):</label>
+                            <p id="res-cct" style="font-weight: bold;">--</p>
                             <label class="label-institucional">FOLIO DIGITAL:</label>
                             <p id="res-folio" style="font-weight: bold; color: #13322B;">--</p>
                             <label class="label-institucional">PROMEDIO:</label>
@@ -175,23 +183,22 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    // --- NUEVA FUNCIÓN DE PAUSA ---
-                    // Si el administrador cambió el estatus a "false", el cliente no verá el documento
+                    // --- FUNCIÓN DE PAUSA ---
                     if (data.activo === false) {
                         setTimeout(() => {
                             document.getElementById('loader').style.display = 'none';
                             document.getElementById('seccion-error').style.display = 'block';
                         }, 1200);
-                        return; // Detenemos la función aquí
+                        return;
                     }
 
-                    // Sumar visita al contador para que lo veas en tu Admin
+                    // Sumar visita
                     await updateDoc(docRef, { visitas: increment(1) });
 
                     setTimeout(() => {
                         document.getElementById('loader').style.display = 'none';
                         
-                        // Llenar datos
+                        // Llenar datos básicos
                         document.getElementById('res-nombre').innerText = data.nombre;
                         document.getElementById('res-nivel').innerText = data.nivel;
                         document.getElementById('res-curp').innerText = data.curp;
@@ -200,6 +207,11 @@
                         document.getElementById('res-folio').innerText = f;
                         document.getElementById('res-ciclo').innerText = data.ciclo || "N/A";
                         
+                        // Llenar NUEVOS datos legales
+                        document.getElementById('res-escuela').innerText = data.escuela || "CENTRO EDUCATIVO NACIONAL";
+                        document.getElementById('res-matricula').innerText = data.matricula || "N/A";
+                        document.getElementById('res-cct').innerText = data.cct || "N/A";
+
                         if(data.fechaEmision) {
                             const p = data.fechaEmision.split("-");
                             document.getElementById('res-fecha').innerText = `${p[2]}/${p[1]}/${p[0]}`;
@@ -212,6 +224,9 @@
                         if(data.tipo === "Secundaria") {
                             titulo.innerText = "Validación de Certificados Digitales INEA";
                             footer.innerText = "Instituto Nacional para la Educación de los Adultos (INEA)";
+                        } else if(data.tipo === "Tecnico") {
+                            titulo.innerText = "Validación de Títulos y Certificados Técnicos";
+                            footer.innerText = "Dirección General de Educación Técnica Industrial (DGETI)";
                         } else {
                             titulo.innerText = "Validación de Certificados de Bachillerato";
                             footer.innerText = "Dirección General de Bachillerato (DGB)";
@@ -231,5 +246,4 @@
         }
     </script>
 </body>
-    </html>
-                                    
+</html>
