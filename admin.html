@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | Control de Registros</title>
+    <title>Panel Maestro SiDGBE | Control Total V6.0</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     
@@ -18,8 +18,8 @@
         label { font-weight: bold; color: #444; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
         .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; font-size: 14px; margin-bottom: 15px; }
         
-        /* Ocultar campos técnicos por defecto */
-        #campos-tecnicos { display: none; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #D4C19C; }
+        /* Contenedores de campos dinámicos */
+        #campos-especiales { display: none; background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #D4C19C; }
 
         .monitor-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
         .table thead th { background-color: #f8f9fa; color: #13322B; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #D4C19C; }
@@ -43,7 +43,7 @@
 <body>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600;">SISTEMA DE GESTIÓN DE CERTIFICADOS (ADMIN V5.0)</h4>
+        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600;">SISTEMA DE GESTIÓN INTEGRAL (ADMIN V6.0)</h4>
     </nav>
 
     <div class="container-fluid" style="max-width: 1400px;">
@@ -51,7 +51,7 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="stat-box">
-                    <p>Total de Alumnos Registrados en el Sistema</p>
+                    <p>Registros Totales en la Red Nacional</p>
                     <h3 id="stat-total">0</h3>
                 </div>
             </div>
@@ -60,68 +60,71 @@
         <div class="row">
             <div class="col-md-5">
                 <div class="card-admin">
-                    <h4 class="text-center" style="color: #13322B; margin-bottom: 25px; font-weight: bold;">Registrar Nuevo Alumno</h4>
+                    <h4 class="text-center" style="color: #13322B; margin-bottom: 25px; font-weight: bold;">Registrar Nuevo Documento</h4>
                     
                     <form id="adminForm">
                         <div class="form-group">
-                            <label>Nivel Educativo:</label>
+                            <label>Tipo de Documento a Validar:</label>
                             <select id="nivel" class="form-control" required onchange="verificarNivel()">
+                                <option value="Primaria">PRIMARIA (INEA)</option>
                                 <option value="Secundaria">SECUNDARIA (INEA)</option>
                                 <option value="Preparatoria">PREPARATORIA (BACHILLERATO)</option>
                                 <option value="Tecnico">CARRERA TÉCNICA PROFESIONAL</option>
+                                <option value="Titulo">TÍTULO UNIVERSITARIO</option>
+                                <option value="Cedula">CÉDULA PROFESIONAL</option>
                             </select>
                         </div>
 
-                        <div id="campos-tecnicos">
-                            <label>Nombre de la Carrera / Especialidad:</label>
-                            <input type="text" id="carrera" class="form-control" placeholder="Ej: CONTABILIDAD Y FINANZAS" style="text-transform: uppercase;">
+                        <div id="campos-especiales">
+                            <label id="label-carrera">Nombre de la Carrera / Especialidad:</label>
+                            <input type="text" id="carrera" class="form-control" placeholder="Ej: LIC. EN DERECHO" style="text-transform: uppercase;">
                             
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label>Matrícula:</label>
-                                    <input type="text" id="matricula" class="form-control" placeholder="20231509...">
+                                    <label id="label-matricula">Matrícula / No. Registro:</label>
+                                    <input type="text" id="matricula" class="form-control" placeholder="20230001">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label>Clave CCT:</label>
+                                    <label id="label-cct">Clave CCT / Sede:</label>
                                     <input type="text" id="cct" class="form-control" placeholder="15ETC0014Z" style="text-transform: uppercase;">
                                 </div>
                             </div>
                             
-                            <label>Escuela / Institución (o Acuerdo):</label>
-                            <input type="text" id="escuela" class="form-control" placeholder="Ej: CONALEP PLANTEL 12 / ACUERDO 286" style="text-transform: uppercase;">
+                            <label id="label-escuela">Institución Educativa / Universidad:</label>
+                            <input type="text" id="escuela" class="form-control" placeholder="UNIVERSIDAD NACIONAL / ACUERDO 286" style="text-transform: uppercase;">
                         </div>
 
                         <div class="row">
                             <div class="col-sm-6">
-                                <label>Folio:</label>
-                                <input type="text" id="folio" class="form-control" placeholder="Ej: INE26001" required style="text-transform: uppercase;">
+                                <label>Folio del Documento:</label>
+                                <input type="text" id="folio" class="form-control" placeholder="FOLIO DIGITAL" required style="text-transform: uppercase;">
                             </div>
                             <div class="col-sm-6">
-                                <label>Promedio:</label>
+                                <label>Promedio / Calificación:</label>
                                 <input type="text" id="promedio" class="form-control" placeholder="9.5" required>
                             </div>
                         </div>
 
-                        <label>Nombre Completo:</label>
-                        <input type="text" id="nombre" class="form-control" placeholder="NOMBRE DEL ALUMNO" required style="text-transform: uppercase;">
+                        <label>Nombre Completo del Titular:</label>
+                        <input type="text" id="nombre" class="form-control" placeholder="NOMBRE COMPLETO" required style="text-transform: uppercase;">
 
                         <label>CURP:</label>
                         <input type="text" id="curp" class="form-control" maxlength="18" placeholder="CURP A 18 DÍGITOS" required style="text-transform: uppercase;">
 
                         <div class="row">
                             <div class="col-sm-6">
-                                <label>Ciclo / Periodo:</label>
-                                <input type="text" id="ciclo" class="form-control" placeholder="2024-2025" required>
+                                <label>Ciclo / Periodo Cursado:</label>
+                                <input type="text" id="ciclo" class="form-control" placeholder="2020-2024" required>
                             </div>
                             <div class="col-sm-6">
-                                <label>Fecha de Emisión:</label>
+                                <label>Fecha de Expedición:</label>
                                 <input type="date" id="fechaEmision" class="form-control" required>
                             </div>
                         </div>
 
                         <hr>
                         <button type="submit" id="btnGuardar" class="btn btn-registrar">
-                             INSERTAR EN BASE DE DATOS
+                             VINCULAR REGISTRO A BASE DE DATOS
                         </button>
                     </form>
                 </div>
@@ -131,7 +134,7 @@
                 <div class="monitor-container">
                     <div class="row" style="margin-bottom: 20px;">
                         <div class="col-sm-6">
-                            <h4 style="color: #13322B; font-weight: bold; margin: 0;">Monitor de Validación</h4>
+                            <h4 style="color: #13322B; font-weight: bold; margin: 0;">Monitor Nacional de Registros</h4>
                         </div>
                         <div class="col-sm-6">
                             <input type="text" id="buscador" class="form-control" style="margin-bottom:0;" placeholder="🔍 Buscar por Nombre o Folio..." onkeyup="filtrarTabla()">
@@ -142,10 +145,10 @@
                         <table class="table table-striped" id="tablaPrincipal">
                             <thead>
                                 <tr>
-                                    <th>Folio / Alumno</th>
-                                    <th class="text-center">Visitas</th>
-                                    <th class="text-center">Estatus</th>
-                                    <th class="text-right">Acción</th>
+                                    <th>Identificador / Titular</th>
+                                    <th class="text-center">Consultas</th>
+                                    <th class="text-center">Estado</th>
+                                    <th class="text-right">Controles</th>
                                 </tr>
                             </thead>
                             <tbody id="tablaAlumnos"></tbody>
@@ -172,11 +175,32 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // FUNCIÓN PARA MOSTRAR CAMPOS TÉCNICOS
+        // LÓGICA DE CAMPOS INTELIGENTES V6.0
         window.verificarNivel = () => {
             const nivel = document.getElementById("nivel").value;
-            const campos = document.getElementById("campos-tecnicos");
-            campos.style.display = (nivel === "Tecnico") ? "block" : "none";
+            const campos = document.getElementById("campos-especiales");
+            
+            // Mostrar campos si es Técnico, Título o Cédula
+            if(nivel === "Tecnico" || nivel === "Titulo" || nivel === "Cedula") {
+                campos.style.display = "block";
+                
+                // Personalización de etiquetas según el tipo
+                if(nivel === "Cedula") {
+                    document.getElementById("label-carrera").innerText = "Título Alcanzado:";
+                    document.getElementById("label-matricula").innerText = "Número de Cédula:";
+                    document.getElementById("label-escuela").innerText = "Universidad de Egreso:";
+                } else if(nivel === "Titulo") {
+                    document.getElementById("label-carrera").innerText = "Grado Académico:";
+                    document.getElementById("label-matricula").innerText = "Folio de Título:";
+                    document.getElementById("label-escuela").innerText = "Universidad / Institución:";
+                } else {
+                    document.getElementById("label-carrera").innerText = "Carrera / Especialidad Técnica:";
+                    document.getElementById("label-matricula").innerText = "Matrícula Escolar:";
+                    document.getElementById("label-escuela").innerText = "Plantel / Escuela:";
+                }
+            } else {
+                campos.style.display = "none";
+            }
         };
 
         window.filtrarTabla = () => {
@@ -192,15 +216,18 @@
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
             btn.disabled = true;
-            btn.innerText = "PROCESANDO...";
+            btn.innerText = "SINCRONIZANDO...";
 
             const folio = document.getElementById('folio').value.toUpperCase().trim();
             const nivel = document.getElementById('nivel').value;
             
             let nivelTexto = "";
-            if(nivel === "Secundaria") nivelTexto = "SECUNDARIA (INEA)";
-            else if(nivel === "Preparatoria") nivelTexto = "CERTIFICADO DE TERMINACIÓN DE ESTUDIOS (BACHILLERATO)";
-            else nivelTexto = document.getElementById('carrera').value.toUpperCase() || "CARRERA TÉCNICA PROFESIONAL";
+            if(nivel === "Primaria") nivelTexto = "CERTIFICADO DE PRIMARIA (INEA)";
+            else if(nivel === "Secundaria") nivelTexto = "CERTIFICADO DE SECUNDARIA (INEA)";
+            else if(nivel === "Preparatoria") nivelTexto = "CERTIFICADO DE BACHILLERATO (DGB)";
+            else if(nivel === "Cedula") nivelTexto = "CÉDULA PROFESIONAL FEDERAL";
+            else if(nivel === "Titulo") nivelTexto = "TÍTULO PROFESIONAL ELECTRÓNICO";
+            else nivelTexto = document.getElementById('carrera').value.toUpperCase() || "CARRERA TÉCNICA";
 
             const datos = {
                 nombre: document.getElementById('nombre').value.toUpperCase().trim(),
@@ -210,10 +237,11 @@
                 ciclo: document.getElementById('ciclo').value.trim(),
                 nivel: nivelTexto,
                 tipo: nivel,
-                // Nuevos Campos
-                escuela: document.getElementById('escuela').value.toUpperCase().trim() || "N/A",
+                // Datos extendidos
+                escuela: document.getElementById('escuela').value.toUpperCase().trim() || "SISTEMA EDUCATIVO NACIONAL",
                 matricula: document.getElementById('matricula').value.trim() || "N/A",
                 cct: document.getElementById('cct').value.toUpperCase().trim() || "N/A",
+                carrera: document.getElementById('carrera').value.toUpperCase().trim() || "N/A",
                 visitas: 0,
                 activo: true, 
                 timestamp: new Date()
@@ -221,10 +249,10 @@
 
             try {
                 await setDoc(doc(db, "certificados", folio), datos);
-                alert("Registro exitoso.");
+                alert("¡Registro insertado correctamente en el Sistema Nacional!");
                 document.getElementById('adminForm').reset();
-                document.getElementById('campos-tecnicos').style.display = "none";
-            } catch (error) { alert("Error: " + error.message); }
+                document.getElementById('campos-especiales').style.display = "none";
+            } catch (error) { alert("Error de Base de Datos: " + error.message); }
             finally { btn.disabled = false; btn.innerText = "INSERTAR EN BASE DE DATOS"; }
         });
 
@@ -237,11 +265,11 @@
                 const data = documento.data();
                 const id = documento.id;
                 const isActivo = data.activo !== false;
-                const statusHtml = isActivo ? '<span class="status-badge status-online">Visible</span>' : '<span class="status-badge status-paused">Pausado</span>';
+                const statusHtml = isActivo ? '<span class="status-badge status-online">Validado</span>' : '<span class="status-badge status-paused">Pausado</span>';
                 const toggleBtn = isActivo ? `<button class="btn-action btn-pause" onclick="cambiarEstado('${id}', false)">Pausar</button>` : `<button class="btn-action btn-activate" onclick="cambiarEstado('${id}', true)">Activar</button>`;
 
                 tabla.innerHTML += `<tr>
-                    <td><strong>${id}</strong><br><small>${data.nombre}</small></td>
+                    <td><strong>${id}</strong><br><small class="text-muted">${data.nombre}</small></td>
                     <td class="text-center"><span class="badge-visitas">${data.visitas || 0}</span></td>
                     <td class="text-center">${statusHtml}</td>
                     <td class="text-right">${toggleBtn} <button class="btn-action btn-delete" onclick="borrarRegistro('${id}')">Borrar</button></td>
@@ -252,13 +280,13 @@
 
         window.cambiarEstado = async (id, nuevoEstado) => {
             try { await updateDoc(doc(db, "certificados", id), { activo: nuevoEstado }); } 
-            catch (e) { alert("Error: " + e.message); }
+            catch (e) { alert("Error al cambiar estado: " + e.message); }
         };
 
         window.borrarRegistro = async (id) => {
-            if (confirm("¿Eliminar?")) {
+            if (confirm("¿Está seguro de eliminar este registro oficial permanentemente?")) {
                 try { await deleteDoc(doc(db, "certificados", id)); } 
-                catch (e) { alert("Error: " + e.message); }
+                catch (e) { alert("Error al eliminar: " + e.message); }
             }
         };
     </script>
