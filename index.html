@@ -4,60 +4,57 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SISTEMA DE VALIDACIÓN NACIONAL | Registro Digital 2026</title>
+    <title>SISTEMA DE VALIDACIÓN NACIONAL | Registro Digital SIGED 2026</title>
 
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        :root { --gob-verde: #12322B; --gob-dorado: #D4C19C; --gob-rojo: #9F2241; --gob-gris: #545454; }
-        body { font-family: 'Open Sans', sans-serif; background-color: #f4f4f4; }
-        .navbar-inverse { background-color: #0C231E; border-bottom: 4px solid var(--gob-dorado); }
+        :root { --sep-verde: #12322B; --sep-dorado: #D4C19C; --gob-gris: #545454; }
+        body { font-family: 'Open Sans', sans-serif; background-color: #f7f7f7; }
+        .navbar-inverse { background-color: #0C231E; border-bottom: 4px solid var(--sep-dorado); }
         
-        /* Animaciones de entrada */
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in-oficial { animation: slideUp 0.9s ease-out forwards; }
+        /* Animaciones Visuales */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in-sep { animation: slideUp 0.8s ease forwards; }
 
-        /* Contenedor de Búsqueda Mejorado */
+        /* Contenedor de Búsqueda de Alta Seguridad */
         .search-container { 
-            background: white; border-radius: 12px; padding: 60px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-top: 8px solid var(--gob-verde);
+            background: white; border-radius: 8px; padding: 60px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-top: 6px solid var(--sep-verde);
             margin-top: 50px; position: relative; overflow: hidden;
         }
-        .search-container::before { content: ""; position: absolute; top: 0; right: 0; width: 150px; height: 150px; background: url('https://framework-gb.cdn.gob.mx/landing/img/escudo-mexico.png') no-repeat; opacity: 0.05; background-size: contain; }
 
         .btn-buscar { 
-            background: var(--gob-verde); color: white; font-weight: 800; 
+            background: var(--sep-verde); color: white; font-weight: 800; 
             height: 60px; font-size: 19px; letter-spacing: 1px;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); border: none; border-radius: 4px;
         }
-        .btn-buscar:hover { background: #1d4d42; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); color: #fff; }
+        .btn-buscar:hover { background: #1d4d42; color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-        /* Paneles de Resultados */
+        /* Estilo de Resultados Profesionales (Con Borde Dorado) */
         #seccion-resultados, #seccion-error, #loader { display: none; }
-        .header-estatal { color: var(--gob-verde); font-weight: 800; border-bottom: 3px solid var(--gob-dorado); padding-bottom: 15px; margin-bottom: 35px; text-transform: uppercase; }
+        .header-estatal { color: var(--sep-verde); font-weight: 800; border-bottom: 2px solid var(--sep-dorado); padding-bottom: 15px; margin-bottom: 30px; text-transform: uppercase; }
         
-        .panel-oficial { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: white; margin-bottom: 30px; transition: 0.3s; }
-        .panel-oficial:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .panel-header-oficial { background: var(--gob-verde); color: white; padding: 18px 25px; font-weight: bold; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .panel-sep-oficial { border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: white; margin-bottom: 30px; border-top: 3px solid var(--sep-dorado); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .panel-header-sep { background: var(--sep-verde); color: white; padding: 18px 25px; font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
         
-        .label-inst { color: var(--gob-gris); font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .dato-inst { font-size: 18px; font-weight: 700; color: #222; margin-bottom: 20px; border-left: 4px solid var(--gob-dorado); padding-left: 12px; background: #fafafa; padding-top: 5px; padding-bottom: 5px; }
+        .label-inst { color: var(--gob-gris); font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; display: block; }
+        .dato-inst { font-size: 18px; font-weight: 700; color: #222; margin-bottom: 15px; border-left: 4px solid var(--sep-verde); padding-left: 10px; background: #fafafa; padding-top: 5px; padding-bottom: 5px; }
 
         /* Marcas de Seguridad Inviolables */
         .watermark { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg);
-            font-size: 90px; color: rgba(18, 50, 43, 0.04); font-weight: 900; pointer-events: none; z-index: 0;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 90px; color: rgba(18, 50, 43, 0.03); font-weight: 900; pointer-events: none; z-index: 0;
             white-space: nowrap; text-transform: uppercase;
         }
         
-        /* Ocultar contador para usuarios normales, visible solo para Admin */
+        /* Ocultar contador para Admin */
         #panel-administrador-stats { display: none; } 
 
-        .sello-verificacion { border: 2px solid #eee; padding: 20px; background: #fff; position: relative; }
-        .sello-verificacion::after { content: "VALIDADO"; position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: bold; color: #28a745; border: 1px solid #28a745; padding: 2px 5px; border-radius: 3px; }
+        .sello-verificacion-sep { border: 2px dashed #ddd; padding: 15px; background: #fafafa; text-align: center; }
 
-        footer { background: #0C231E; color: white; padding: 90px 0; border-top: 12px solid var(--gob-dorado); margin-top: 120px; }
+        footer { background: #0C231E; color: white; padding: 80px 0; border-top: 10px solid var(--sep-dorado); margin-top: 120px; }
     </style>
 </head>
 
@@ -73,18 +70,18 @@
     </header>
 
     <main class="container" style="margin-top: 130px;">
-        <ol class="breadcrumb" style="background: transparent; font-size: 12px; font-weight: bold;">
+        <ol class="breadcrumb" style="background: transparent; font-size: 12px; font-weight: 600;">
             <li><a href="#"><i class="icon icon-home"></i> GOB.MX</a></li>
-            <li>ESTADOS</li>
-            <li>VERIFICACIÓN DE DOCUMENTOS</li>
-            <li class="active">SISTEMA SIGED</li>
+            <li>SERVICIOS EDUCATIVOS</li>
+            <li>REGISTRO NACIONAL (SIGED)</li>
+            <li class="active">VALIDACIÓN ELECTRÓNICA</li>
         </ol>
 
-        <section id="seccion-busqueda" class="fade-in-oficial">
+        <section id="seccion-busqueda" class="fade-in-sep">
             <div class="row text-center">
                 <div class="col-md-12">
-                    <h1 class="header-estatal">Validación de Certificados Académicos Electrónicos</h1>
-                    <p class="lead" style="color: #444; font-weight: 600;">Dirección General de acreditación, Incorporación y Revalidación (DGAIR)</p>
+                    <h1 class="header-estatal">Consulta Federal de Documentos Académicos</h1>
+                    <p class="lead" style="color: #444; font-weight: 700;">Sistema de Información y Gestión Educativa (SIGED)</p>
                 </div>
             </div>
             
@@ -92,12 +89,12 @@
                 <div class="col-md-10 col-md-offset-1 search-container">
                     <div class="row">
                         <div class="col-md-12">
-                            <h3 style="font-weight: 800; margin-bottom: 30px; color: var(--gob-verde);">CONSULTA NACIONAL DE REGISTROS</h3>
+                            <h3 style="font-weight: 900; margin-bottom: 25px; color: var(--sep-verde);">CONSULTA POR FOLIO DIGITAL O CURP</h3>
                         </div>
                         <div class="col-md-8">
                             <div class="form-group">
-                                <label class="label-inst">Ingrese Folio de Validación o CURP:</label>
-                                <input type="text" id="folio-input" class="form-control" placeholder="EJ: 6C8-D1E3-F9G5-H2J7" style="text-transform: uppercase; font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; height: 60px; border: 2px solid #ccc; letter-spacing: 1px;">
+                                <label class="label-inst">Ingrese el Folio Digital Único (SIGED):</label>
+                                <input type="text" id="folio-input" class="form-control" placeholder="EJ: INE26001 / 12345678" style="text-transform: uppercase; font-family: 'Open Sans', sans-serif; font-size: 22px; font-weight: 800; height: 60px; border: 2px solid #ccc; letter-spacing: 1px;">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -105,14 +102,14 @@
                             <button type="button" onclick="consultarFirebase()" class="btn btn-buscar btn-block">BUSCAR REGISTRO</button>
                         </div>
                     </div>
-                    <div class="row" style="margin-top: 30px; padding-top: 25px; border-top: 2px solid #f0f0f0;">
+                    <div class="row" style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
                         <div class="col-md-3 text-center" style="border-right: 1px solid #eee;">
-                            <img src="https://framework-gb.cdn.gob.mx/landing/img/escudo-mexico.png" height="65" style="filter: grayscale(100%); opacity: 0.8;">
-                            <p style="font-size: 11px; font-weight: 800; margin-top: 12px; color: var(--gob-gris);">GOBIERNO DE MÉXICO</p>
+                            <img src="https://framework-gb.cdn.gob.mx/landing/img/escudo-mexico.png" height="60" style="filter: grayscale(100%); opacity: 0.7;">
+                            <p style="font-size: 11px; font-weight: 800; margin-top: 10px; color: var(--gob-gris);">GOBIERNO DE MÉXICO</p>
                         </div>
                         <div class="col-md-9">
                             <p class="text-muted" style="font-size: 12px; line-height: 1.6; padding-left: 15px;">
-                                <b>Aviso Legal:</b> La consulta de documentos académicos en este portal es gratuita. La falsificación de documentos públicos es un delito sancionado por el Código Penal Federal. El sistema realiza un seguimiento de auditoría por cada consulta exitosa para garantizar la integridad de los datos.
+                                <b>Aviso Institucional:</b> La falsificación o uso indebido de certificados académicos es un delito federal. El sistema registra cada consulta exitosa para fines de auditoría y seguridad. SIGED v2.1
                             </p>
                         </div>
                     </div>
@@ -121,22 +118,22 @@
         </section>
 
         <div id="loader" class="text-center" style="padding: 120px 0;">
-            <div class="spinner" style="width: 80px; height: 80px; border: 8px solid #eee; border-top: 8px solid var(--gob-verde); border-radius: 50%; animation: spin 0.8s linear infinite; margin: auto;"></div>
-            <h2 style="margin-top: 40px; font-weight: 900; color: var(--gob-verde); letter-spacing: 3px;">CONECTANDO CON SERVIDORES SIGED...</h2>
-            <p style="font-weight: bold; color: var(--gob-dorado);">EXTRAYENDO FIRMA ELECTRÓNICA DE LA AUTORIDAD EMISORA</p>
+            <div class="spinner" style="width: 80px; height: 80px; border: 8px solid #eee; border-top: 8px solid var(--sep-verde); border-radius: 50%; animation: spin 0.8s linear infinite; margin: auto;"></div>
+            <h2 style="margin-top: 40px; font-weight: 900; color: var(--sep-verde);">CONECTANDO CON SERVIDORES SIGED...</h2>
+            <p style="font-weight: bold; color: var(--gob-gris);">EXTRAYENDO FIRMA ELECTRÓNICA DE LA AUTORIDAD EDUCATIVA</p>
         </div>
 
-        <section id="seccion-resultados" class="fade-in-oficial">
+        <section id="seccion-resultados" class="fade-in-sep">
             <div class="row">
                 <div class="col-md-12">
                     <div class="alert alert-success" style="border-left: 10px solid #28a745; background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.05); color: #333;">
                         <div class="row">
                             <div class="col-sm-1 text-center">
-                                <i class="glyphicon glyphicon-ok-sign" style="font-size: 45px; color: #28a745;"></i>
+                                <i class="glyphicon glyphicon-ok-sign" style="font-size: 45px; color: #28a745; margin-top: 5px;"></i>
                             </div>
                             <div class="col-sm-11">
-                                <h3 style="margin: 0; font-weight: 900;">DOCUMENTO LOCALIZADO Y AUTENTICADO</h3>
-                                <p style="margin: 5px 0 0 0; font-size: 15px;">La firma digital adjunta es válida y coincide con los registros de la Secretaría de Educación Pública.</p>
+                                <h3 style="margin: 0; font-weight: 900;">DOCUMENTO LOCALIZADO Y AUTENTICADO (SIGED)</h3>
+                                <p style="margin: 5px 0 0 0; font-size: 15px;">La firma digital es válida y coincide con los registros centrales del Sistema Nacional.</p>
                             </div>
                         </div>
                     </div>
@@ -144,71 +141,65 @@
             </div>
 
             <div class="row" style="position: relative; margin-top: 20px;">
-                <div class="watermark">SISTEMA NACIONAL DE CRÉDITOS</div>
+                <div class="watermark">VALIDACIÓN OFICIAL SIGED</div>
                 
                 <div class="col-md-8">
-                    <div class="panel-oficial">
-                        <div class="panel-header-oficial">Certificación de Antecedentes Académicos</div>
+                    <div class="panel-sep-oficial">
+                        <div class="panel-header-sep">Acreditación de Antecedentes Académicos</div>
                         <div class="panel-body" style="padding: 45px;">
-                            <label class="label-inst">Titular del Documento:</label>
-                            <h1 id="res-nombre" style="font-weight: 900; color: var(--gob-verde); margin: 0 0 25px 0; font-size: 38px;">--</h1>
+                            <label class="label-inst">Nombre completo del Titular:</label>
+                            <h1 id="res-nombre" style="font-weight: 900; color: var(--sep-verde); margin: 0 0 25px 0; font-size: 38px;">--</h1>
                             
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label class="label-inst">Grado Alcanzado:</label>
+                                    <label class="label-inst">Grado o Nivel Alcanzado:</label>
                                     <div id="res-nivel" class="dato-inst">--</div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="label-inst">Situación Académica:</label>
-                                    <div class="dato-inst" style="color: #28a745; border-left-color: #28a745;">REGISTRADO / ACTIVO</div>
+                                    <label class="label-inst">Situación Jurídica:</label>
+                                    <div class="dato-inst" style="color: #28a745; border-left-color: #28a745;">REGISTRADO / VIGENTE</div>
                                 </div>
                                 <div class="col-sm-12">
-                                    <label class="label-inst" id="label-escuela-dinamico">Institución Emisora:</label>
-                                    <div id="res-escuela" class="dato-inst" style="background: #f1f1f1;">--</div>
+                                    <label class="label-inst" id="label-escuela-dinamico">Institución / Universidad Emisora:</label>
+                                    <div id="res-escuela" class="dato-inst" style="background: #f4f4f4;">--</div>
                                 </div>
                                 <div id="contenedor-especialidad" class="col-sm-12" style="display: none;">
-                                    <label class="label-inst">Especialidad o Carrera:</label>
+                                    <label class="label-inst">Especialidad / Carrera:</label>
                                     <div id="res-carrera" class="dato-inst">--</div>
                                 </div>
-                            </div>
-                            
-                            <div style="background: #fff9e6; border: 1px solid #ffeeba; padding: 15px; margin-top: 20px;">
-                                <p style="font-size: 11px; color: #856404; margin-bottom: 0;">
-                                    <b>Nota Institucional:</b> Este documento electrónico sustituye al formato físico tradicional y cuenta con la misma validez legal en términos de la Ley de Firma Electrónica Avanzada.
-                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-4">
-                    <div class="panel-oficial">
-                        <div class="panel-header-oficial" style="background: var(--gob-dorado); color: #222;">Cédula de Validación</div>
+                    <div class="panel-sep-oficial">
+                        <div class="panel-header-sep" style="background: var(--gob-gris); color: #fff;">Datos del Registro SIGED</div>
                         <div class="panel-body">
-                            <label class="label-inst">Clave Única (CURP):</label>
+                            <label class="label-inst">CURP:</label>
                             <p id="res-curp" style="font-family: monospace; font-weight: bold; font-size: 16px; letter-spacing: 1px;">--</p>
                             
-                            <label class="label-inst" id="label-id-secundario">Número de Control:</label>
+                            <label class="label-inst" id="label-id-secundario">Matrícula Escolar:</label>
                             <p id="res-matricula" style="font-weight: bold; font-size: 16px;">--</p>
                             
-                            <label class="label-inst">Folio SIGED:</label>
-                            <p id="res-folio" style="color: var(--gob-rojo); font-weight: 900; font-size: 16px;">--</p>
+                            <label class="label-inst">Folio Digital Único:</label>
+                            <p id="res-folio" style="color: var(--sep-dorado); font-weight: 900; font-size: 16px;">--</p>
                             
                             <label class="label-inst">Calificación / Promedio:</label>
-                            <p id="res-promedio" style="font-size: 32px; font-weight: 900; color: var(--gob-verde);">--</p>
+                            <p id="res-promedio" style="font-size: 32px; font-weight: 900; color: var(--sep-verde);">--</p>
                             
-                            <label class="label-inst">Fecha de Timbrado:</label>
+                            <label class="label-inst">Fecha de Timbrado SEP:</label>
                             <p id="res-fecha" style="font-weight: bold;">--</p>
 
                             <hr>
                             <div id="panel-administrador-stats" style="background: #f0f0f0; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
-                                <label class="label-inst" style="color:var(--gob-rojo)">ESTADÍSTICAS ADMIN:</label>
+                                <label class="label-inst" style="color:var(--sep-dorado)">ADMINISTRADOR SIGED:</label>
                                 <p style="margin:0; font-weight:bold;">Visualizaciones: <span id="res-visitas">0</span></p>
                             </div>
 
-                            <div class="sello-verificacion">
+                            <div class="sello-verificacion-sep">
                                 <div style="height: 50px; background: repeating-linear-gradient(90deg, #111, #111 2px, #fff 2px, #fff 5px); width: 100%;"></div>
-                                <p style="font-size: 9px; text-align: center; margin-top: 5px; font-weight: bold;">AUTENTICACIÓN FEDERAL v7.2</p>
+                                <p style="font-size: 9px; text-align: center; margin-top: 5px; font-weight: bold;">AUTENTICACIÓN FEDERAL SIGED</p>
                             </div>
                         </div>
                     </div>
@@ -217,17 +208,17 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="panel panel-default" style="border: 2px solid #ddd;">
-                        <div class="panel-heading" style="background: #333; color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 1px;">CADENA ORIGINAL DE CERTIFICACIÓN DIGITAL</div>
-                        <div class="panel-body" style="background: #000; color: #0f0; font-family: 'Courier New', monospace; font-size: 10px; padding: 20px; border-radius: 0 0 4px 4px;">
-                            ||3.3|SEP|DGAIR|2026|EMISION_NACIONAL|<span id="res-curp-sello"></span>|ID_<span id="res-folio-sello"></span>|HYU8UvLUHvM3lnyRhHCFGcXC89FdgqV6hQwA+M/Ejhs7oeSYzcuAk78uVoQFQMvaOV+ml6jxNvitIAE6CRAJZdMcYflxdlkgszhp7t4U64/3S78IDssuifjqqcfsmMcM48I3ssOvbcD0gRM2LSEs4oo7mY79Xl7alulerea/ODltvg/YITdn5P9RvaoyoPODSXzj2vjjD=||
+                    <div class="panel panel-default" style="border: 1px solid #ddd;">
+                        <div class="panel-heading" style="background: #111; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px;">CADENA ORIGINAL DE CERTIFICACIÓN DIGITAL (SIGED)</div>
+                        <div class="panel-body" style="background: #000; color: #ffffff; font-family: 'Courier New', monospace; font-size: 10px; padding: 25px; border-radius: 0 0 4px 4px; line-height: 1.5; word-break: break-all;">
+                            ||3.3|SEP|SIGED|2026|<span id="res-curp-sello"></span>|EMISION_<span id="res-folio-sello"></span>|HYU8UvLUHvM3lnyRhHCFGcXC89FdgqV6hQwA+M/Ejhs7oeSYzcuAk78uVoQFQMvaOV+ml6jxNvitIAE6CRAJZdMcYflxdlkgszhp7t4U64/3S78IDssuifjqqcfsmMcM48I3ssOvbcD0gRM2LSEs4oo7mY79Xl7alulerea/ODltvg/YITdn5P9RvaoyoPODSXzj2vjjD=||
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="text-center" style="margin: 50px 0;">
-                <button class="btn btn-default btn-lg" onclick="location.reload()" style="border-radius: 50px; padding: 15px 50px; font-weight: bold; border: 2px solid var(--gob-verde);">NUEVA BÚSQUEDA INTEGRAL</button>
+                <button class="btn btn-default btn-lg" onclick="location.reload()" style="border-radius: 50px; padding: 15px 50px; font-weight: bold; border: 2px solid var(--sep-verde);">NUEVA BÚSQUEDA INTEGRAL</button>
             </div>
         </section>
     </main>
@@ -239,25 +230,25 @@
                     <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" width="200" style="margin-bottom: 40px; opacity: 0.9;">
                 </div>
                 <div class="col-md-9">
-                    <h3 id="footer-inst" style="font-weight: 900; margin-bottom: 25px; letter-spacing: 1px;">SECRETARÍA DE EDUCACIÓN PÚBLICA</h3>
+                    <h3 id="footer-inst" style="font-weight: 900; margin-bottom: 25px; letter-spacing: 1px;">SISTEMA NACIONAL SIGED (SEP)</h3>
                     <div class="row" style="font-size: 12px; opacity: 0.8; line-height: 1.8;">
                         <div class="col-sm-5">
-                            <p><b>Sede Administrativa (DGAIR):</b><br>
+                            <p><b>Dirección General del SIGED:</b><br>
                             Avenida Universidad 1200, Col. Xoco,<br>
-                            Alcaldía Benito Juárez, C.P. 03330, CDMX.</p>
+                            CDMX, C.P. 03330.</p>
                         </div>
                         <div class="col-sm-3">
-                            <p><b>Soporte Técnico:</b><br>
-                            mesadeayuda@nube.sep.gob.mx<br>
-                            Tel: 55 3601 1000</p>
+                            <p><b>Contacto Institucional:</b><br>
+                            mesadeayuda.siged@nube.sep.gob.mx<br>
+                            Tel: 800 288 6688</p>
                         </div>
                         <div class="col-sm-4">
-                            <p><b>Enlaces de Interés:</b><br>
-                            Trámites y Servicios<br>
-                            Transparencia Obligatoria</p>
+                            <p><b>Enlaces Rápidos:</b><br>
+                            Términos y Condiciones<br>
+                            Aviso de Privacidad</p>
                         </div>
                     </div>
-                    <p style="margin-top: 50px; font-size: 11px; opacity: 0.5;">© 2026 Gobierno de México - El uso de este sitio implica la aceptación de los Términos y Condiciones de Uso.</p>
+                    <p style="margin-top: 50px; font-size: 10px; opacity: 0.5;">© 2026 Gobierno de México - Plataforma Integral de Validación de Documentos.</p>
                 </div>
             </div>
         </div>
@@ -298,6 +289,7 @@
 
                 if (docSnap.exists() && docSnap.data().activo !== false) {
                     const data = docSnap.data();
+                    // Incrementamos visitas, pero se cargará en el conteo final (data+1)
                     await updateDoc(docRef, { visitas: increment(1) });
 
                     setTimeout(() => {
@@ -313,20 +305,21 @@
                         document.getElementById('res-folio').innerText = f;
                         document.getElementById('res-escuela').innerText = data.escuela || "PREPARATORIA ABIERTA EN LINEA";
                         document.getElementById('res-matricula').innerText = data.matricula || "1932286054";
-                        document.getElementById('res-visitas').innerText = (data.visitas || 0) + 1;
+                        document.getElementById('res-visitas').innerText = (data.visitas || 0) + 1; // Ajustamos conteo final
                         document.getElementById('res-fecha').innerText = data.fechaTimbrado || "16/08/2021 10:45:26";
 
                         if(data.tipo === "Cedula" || data.carrera) {
                             document.getElementById('contenedor-especialidad').style.display = "block";
                             document.getElementById('res-carrera').innerText = data.carrera;
                             document.getElementById('label-escuela-dinamico').innerText = "Institución Universitaria:";
+                            document.getElementById('res-escuela').innerText = data.universidad || "SEP FEDERAL";
                         }
                         
                         window.scrollTo(0,0);
-                    }, 2200);
+                    }, 2500);
                 } else {
                     document.getElementById('loader').style.display = 'none';
-                    alert("ERROR: El folio ingresado no existe o no ha sido timbrado por la autoridad.");
+                    alert("FOLIO NO LOCALIZADO: El registro no existe o no ha sido cargado en la base central SIGED.");
                     location.reload();
                 }
             } catch (e) {
