@@ -3,75 +3,82 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | Control Total V6.0</title>
+    <title>Panel Maestro SiDGBE | Control Total V6.5</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
         body { background-color: #f4f7f6; font-family: 'Open Sans', sans-serif; padding-bottom: 50px; }
-        .navbar-admin { background-color: #0C231E; padding: 20px; color: white; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .card-admin { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 5px solid #D4C19C; margin-bottom: 30px; }
+        .navbar-admin { background-color: #0C231E; padding: 20px; color: white; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border-bottom: 4px solid #D4C19C; }
+        .card-admin { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-top: 5px solid #D4C19C; margin-bottom: 30px; position: relative; }
         
-        .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 14px; font-size: 15px; border: none; transition: 0.3s; border-radius: 6px; width: 100%; }
-        .btn-registrar:hover { background-color: #1d4d42 !important; transform: translateY(-1px); }
+        /* Botones Mejorados */
+        .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 14px; font-size: 15px; border: none; transition: 0.3s; border-radius: 6px; width: 100%; box-shadow: 0 4px 0 #091a16; }
+        .btn-registrar:hover { background-color: #1d4d42 !important; transform: translateY(-2px); box-shadow: 0 6px 0 #091a16; }
+        .btn-registrar:active { transform: translateY(2px); box-shadow: none; }
         
-        label { font-weight: bold; color: #444; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
-        .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; font-size: 14px; margin-bottom: 15px; }
+        label { font-weight: bold; color: #12322B; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
+        .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; font-size: 14px; margin-bottom: 15px; transition: 0.3s; }
+        .form-control:focus { border-color: #D4C19C; box-shadow: 0 0 8px rgba(212, 193, 156, 0.4); outline: none; }
         
-        #campos-especiales { display: none; background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #D4C19C; }
+        #campos-especiales { display: none; background: #fdfaf3; padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #D4C19C; }
 
         .monitor-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
-        .table thead th { background-color: #f8f9fa; color: #13322B; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #D4C19C; }
+        .table thead th { background-color: #13322B; color: #D4C19C; text-transform: uppercase; font-size: 10px; padding: 15px; border: none; }
         
-        .badge-visitas { background-color: #0056b3; color: white; padding: 4px 10px; border-radius: 50px; font-weight: bold; font-size: 12px; }
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; display: inline-block; }
-        .status-online { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status-paused { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-
-        .btn-action { border: none; padding: 8px 12px; border-radius: 4px; font-size: 11px; color: white; transition: 0.2s; font-weight: bold; cursor: pointer; }
-        .btn-pause { background-color: #f0ad4e; } 
-        .btn-activate { background-color: #5cb85c; } 
-        .btn-delete { background-color: #d9534f; }
-        .btn-action:hover { filter: brightness(1.1); }
-
-        .stat-box { background: #13322B; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-        .stat-box h3 { margin: 5px 0; color: #D4C19C; font-weight: bold; font-size: 28px; }
-        .stat-box p { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
-
-        /* Estilos para el Generador de QR */
+        /* Efectos de QR y Modal */
         #qr-result-container {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             background: #fff;
-            border: 2px solid #D4C19C;
-            border-radius: 10px;
+            border: 3px solid #D4C19C;
+            border-radius: 15px;
             margin-top: 20px;
-            animation: fadeIn 0.5s;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            animation: slideUp 0.4s ease-out;
         }
         #qrcode {
             display: inline-block;
-            padding: 10px;
+            padding: 15px;
             background: white;
-            border: 1px solid #eee;
+            border: 1px solid #ddd;
+            margin: 15px 0;
+            border-radius: 10px;
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .btn-download-qr { background: #be965c; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; margin-top: 10px; transition: 0.3s; width: 100%; }
+        .btn-download-qr:hover { background: #a67e46; transform: scale(1.02); }
+
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Status & Stats */
+        .stat-box { background: linear-gradient(135deg, #13322B 0%, #0C231E 100%); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 25px; border-bottom: 5px solid #D4C19C; }
+        .stat-box h3 { margin: 5px 0; color: #D4C19C; font-weight: 800; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        
+        .badge-visitas { background: #be965c; padding: 5px 12px; border-radius: 50px; font-weight: bold; }
+        .btn-action { border: none; padding: 8px 12px; border-radius: 4px; font-size: 10px; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-left: 2px; }
+        .btn-pause { background-color: #f39c12; }
+        .btn-activate { background-color: #27ae60; }
+        .btn-delete { background-color: #c0392b; }
     </style>
 </head>
 <body>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600;">SISTEMA DE GESTIÓN INTEGRAL (ADMIN V6.0)</h4>
+        <h4 style="margin:0; letter-spacing: 2px; font-weight: 800;">PLATAFORMA NACIONAL DE FOLIOS ACADÉMICOS <span style="color: #D4C19C;">V6.5</span></h4>
     </nav>
 
-    <div class="container-fluid" style="max-width: 1400px;">
+    <div class="container-fluid" style="max-width: 1500px;">
         
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-4 col-md-offset-4">
                 <div class="stat-box">
-                    <p>Registros Totales en la Red Nacional</p>
+                    <p style="font-weight: 700; opacity: 0.9;">REGISTROS ACTIVOS EN LA NUBE</p>
                     <h3 id="stat-total">0</h3>
+                    <small style="color: #D4C19C;">Sincronizado en Tiempo Real con Firebase</small>
                 </div>
             </div>
         </div>
@@ -79,11 +86,11 @@
         <div class="row">
             <div class="col-md-5">
                 <div class="card-admin">
-                    <h4 class="text-center" style="color: #13322B; margin-bottom: 25px; font-weight: bold;">Registrar Nuevo Documento</h4>
+                    <h4 class="text-center" style="color: #13322B; margin-bottom: 25px; font-weight: 900; border-bottom: 2px solid #eee; padding-bottom: 10px;">VINCULACIÓN DE DOCUMENTO</h4>
                     
                     <form id="adminForm">
                         <div class="form-group">
-                            <label>Tipo de Documento a Validar:</label>
+                            <label>Tipo de Documento:</label>
                             <select id="nivel" class="form-control" required onchange="verificarNivel()">
                                 <option value="Primaria">PRIMARIA (INEA)</option>
                                 <option value="Secundaria">SECUNDARIA (INEA)</option>
@@ -95,65 +102,44 @@
                         </div>
 
                         <div id="campos-especiales">
-                            <label id="label-carrera">Nombre de la Carrera / Especialidad:</label>
-                            <input type="text" id="carrera" class="form-control" placeholder="Ej: LIC. EN DERECHO" style="text-transform: uppercase;">
-                            
+                            <label id="label-carrera">Carrera / Especialidad:</label>
+                            <input type="text" id="carrera" class="form-control" placeholder="EJ: LIC. EN DERECHO" style="text-transform: uppercase;">
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <label id="label-matricula">Matrícula / No. Registro:</label>
-                                    <input type="text" id="matricula" class="form-control" placeholder="20230001">
-                                </div>
-                                <div class="col-sm-6">
-                                    <label id="label-cct">Clave CCT / Sede:</label>
-                                    <input type="text" id="cct" class="form-control" placeholder="15ETC0014Z" style="text-transform: uppercase;">
-                                </div>
+                                <div class="col-sm-6"><label id="label-matricula">Matrícula:</label><input type="text" id="matricula" class="form-control"></div>
+                                <div class="col-sm-6"><label id="label-cct">Clave CCT:</label><input type="text" id="cct" class="form-control" style="text-transform: uppercase;"></div>
                             </div>
-                            
-                            <label id="label-escuela">Institución Educativa / Universidad:</label>
-                            <input type="text" id="escuela" class="form-control" placeholder="UNIVERSIDAD NACIONAL / ACUERDO 286" style="text-transform: uppercase;">
+                            <label id="label-escuela">Institución Educativa:</label>
+                            <input type="text" id="escuela" class="form-control" style="text-transform: uppercase;">
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-6">
-                                <label>Folio del Documento:</label>
-                                <input type="text" id="folio" class="form-control" placeholder="FOLIO DIGITAL" required style="text-transform: uppercase;">
-                            </div>
-                            <div class="col-sm-6">
-                                <label>Promedio / Calificación:</label>
-                                <input type="text" id="promedio" class="form-control" placeholder="9.5" required>
-                            </div>
+                            <div class="col-sm-6"><label>Folio del Documento:</label><input type="text" id="folio" class="form-control" required style="text-transform: uppercase; font-weight: bold; color: #c0392b;"></div>
+                            <div class="col-sm-6"><label>Promedio:</label><input type="text" id="promedio" class="form-control" placeholder="10.0" required></div>
                         </div>
 
-                        <label>Nombre Completo del Titular:</label>
-                        <input type="text" id="nombre" class="form-control" placeholder="NOMBRE COMPLETO" required style="text-transform: uppercase;">
+                        <label>Nombre del Titular:</label>
+                        <input type="text" id="nombre" class="form-control" required style="text-transform: uppercase;">
 
                         <label>CURP:</label>
-                        <input type="text" id="curp" class="form-control" maxlength="18" placeholder="CURP A 18 DÍGITOS" required style="text-transform: uppercase;">
+                        <input type="text" id="curp" class="form-control" maxlength="18" required style="text-transform: uppercase;">
 
                         <div class="row">
-                            <div class="col-sm-6">
-                                <label>Ciclo / Periodo Cursado:</label>
-                                <input type="text" id="ciclo" class="form-control" placeholder="2020-2024" required>
-                            </div>
-                            <div class="col-sm-6">
-                                <label>Fecha de Expedición:</label>
-                                <input type="date" id="fechaEmision" class="form-control" required>
-                            </div>
+                            <div class="col-sm-6"><label>Ciclo Escolar:</label><input type="text" id="ciclo" class="form-control" placeholder="2022-2025" required></div>
+                            <div class="col-sm-6"><label>Fecha Expedición:</label><input type="date" id="fechaEmision" class="form-control" required></div>
                         </div>
 
                         <hr>
-                        <button type="submit" id="btnGuardar" class="btn btn-registrar">
-                             VINCULAR REGISTRO A BASE DE DATOS
-                        </button>
+                        <button type="submit" id="btnGuardar" class="btn btn-registrar">VINCULAR Y GENERAR CÓDIGO QR</button>
                     </form>
 
                     <div id="qr-result-container">
-                        <h5 style="color: #12322B; font-weight: bold;">✅ CÓDIGO QR GENERADO</h5>
-                        <p style="font-size: 10px; color: #666;">Folio vinculado exitosamente a la plataforma de validación.</p>
-                        <div id="qrcode"></div>
-                        <br><br>
-                        <button class="btn btn-default btn-sm" onclick="descargarQR()">Descargar Imagen QR</button>
-                        <button class="btn btn-link btn-sm" onclick="document.getElementById('qr-result-container').style.display='none'">Cerrar</button>
+                        <div id="capture-area" style="padding: 10px; background: white;">
+                            <h5 style="color: #12322B; font-weight: 900; margin: 0;">VALIDACIÓN OFICIAL</h5>
+                            <p style="font-size: 9px; color: #999; margin-bottom: 5px;">FOLIO: <span id="qr-folio-display">---</span></p>
+                            <div id="qrcode"></div>
+                        </div>
+                        <button class="btn-download-qr" onclick="descargarImagenQR()">💾 GUARDAR COMO IMAGEN (PNG)</button>
+                        <button class="btn btn-link btn-xs" onclick="document.getElementById('qr-result-container').style.display='none'">Ocultar Panel</button>
                     </div>
                 </div>
             </div>
@@ -161,22 +147,18 @@
             <div class="col-md-7">
                 <div class="monitor-container">
                     <div class="row" style="margin-bottom: 20px;">
-                        <div class="col-sm-6">
-                            <h4 style="color: #13322B; font-weight: bold; margin: 0;">Monitor Nacional de Registros</h4>
-                        </div>
-                        <div class="col-sm-6">
-                            <input type="text" id="buscador" class="form-control" style="margin-bottom:0;" placeholder="🔍 Buscar por Nombre o Folio..." onkeyup="filtrarTabla()">
-                        </div>
+                        <div class="col-sm-6"><h4 style="color: #13322B; font-weight: 900;">MONITOR DE REGISTROS</h4></div>
+                        <div class="col-sm-6"><input type="text" id="buscador" class="form-control" placeholder="🔍 Buscar por nombre o folio..." onkeyup="filtrarTabla()"></div>
                     </div>
                     
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="tablaPrincipal">
+                    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                        <table class="table table-hover" id="tablaPrincipal">
                             <thead>
                                 <tr>
-                                    <th>Identificador / Titular</th>
-                                    <th class="text-center">Consultas</th>
+                                    <th>Folio / Titular</th>
+                                    <th class="text-center">Vistas</th>
                                     <th class="text-center">Estado</th>
-                                    <th class="text-right">Controles</th>
+                                    <th class="text-right">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="tablaAlumnos"></tbody>
@@ -191,6 +173,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot, deleteDoc, collection, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // Configuración original (Mantenida)
         const firebaseConfig = {
             apiKey: "AIzaSyDqlOQFN104R7MymHW5r7JJ2Mc3UymViZ4",
             authDomain: "siged-86634.firebaseapp.com",
@@ -203,30 +186,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // LÓGICA DE CAMPOS INTELIGENTES V6.0
+        // Funciones Globales
         window.verificarNivel = () => {
             const nivel = document.getElementById("nivel").value;
             const campos = document.getElementById("campos-especiales");
-            
-            if(nivel === "Tecnico" || nivel === "Titulo" || nivel === "Cedula") {
-                campos.style.display = "block";
-                
-                if(nivel === "Cedula") {
-                    document.getElementById("label-carrera").innerText = "Título Alcanzado:";
-                    document.getElementById("label-matricula").innerText = "Número de Cédula:";
-                    document.getElementById("label-escuela").innerText = "Universidad de Egreso:";
-                } else if(nivel === "Titulo") {
-                    document.getElementById("label-carrera").innerText = "Grado Académico:";
-                    document.getElementById("label-matricula").innerText = "Folio de Título:";
-                    document.getElementById("label-escuela").innerText = "Universidad / Institución:";
-                } else {
-                    document.getElementById("label-carrera").innerText = "Carrera / Especialidad Técnica:";
-                    document.getElementById("label-matricula").innerText = "Matrícula Escolar:";
-                    document.getElementById("label-escuela").innerText = "Plantel / Escuela:";
-                }
-            } else {
-                campos.style.display = "none";
-            }
+            campos.style.display = (nivel !== "Primaria" && nivel !== "Secundaria" && nivel !== "Preparatoria") ? "block" : "none";
         };
 
         window.filtrarTabla = () => {
@@ -238,18 +202,14 @@
             }
         };
 
-        // --- FUNCIÓN PARA GENERAR QR AUTOMÁTICO ---
+        // --- GENERACIÓN DE QR CORREGIDA ---
         window.generarQRAuto = (folio) => {
             const qrContainer = document.getElementById("qrcode");
-            const resultBox = document.getElementById("qr-result-container");
+            document.getElementById("qr-folio-display").innerText = folio;
+            qrContainer.innerHTML = ""; 
             
-            // Limpiar QR anterior
-            qrContainer.innerHTML = "";
-            
-            // URL Base que solicitaste
             const urlFinal = `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${encodeURIComponent(folio)}`;
             
-            // Crear el QR
             new QRCode(qrContainer, {
                 text: urlFinal,
                 width: 180,
@@ -259,17 +219,20 @@
                 correctLevel : QRCode.CorrectLevel.H
             });
             
-            resultBox.style.display = "block";
+            document.getElementById("qr-result-container").style.display = "block";
         };
 
-        window.descargarQR = () => {
-            const img = document.querySelector("#qrcode img");
-            if(img) {
-                const link = document.createElement("a");
-                link.href = img.src;
-                link.download = `QR_FOLIO_${document.getElementById('folio').value}.png`;
+        // --- DESCARGA REAL DE IMAGEN QR ---
+        window.descargarImagenQR = () => {
+            const area = document.getElementById("capture-area");
+            const folio = document.getElementById("qr-folio-display").innerText;
+            
+            html2canvas(area, { scale: 3 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `CERTIFICADO_QR_${folio}.png`;
+                link.href = canvas.toDataURL("image/png");
                 link.click();
-            }
+            });
         };
 
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
@@ -278,30 +241,17 @@
             const folioValue = document.getElementById('folio').value.toUpperCase().trim();
             
             btn.disabled = true;
-            btn.innerText = "SINCRONIZANDO...";
+            btn.innerHTML = '<span class="glyphicon glyphicon-refresh"></span> GUARDANDO...';
 
             const nivel = document.getElementById('nivel').value;
-            
-            let nivelTexto = "";
-            if(nivel === "Primaria") nivelTexto = "CERTIFICADO DE PRIMARIA (INEA)";
-            else if(nivel === "Secundaria") nivelTexto = "CERTIFICADO DE SECUNDARIA (INEA)";
-            else if(nivel === "Preparatoria") nivelTexto = "CERTIFICADO DE BACHILLERATO (DGB)";
-            else if(nivel === "Cedula") nivelTexto = "CÉDULA PROFESIONAL FEDERAL";
-            else if(nivel === "Titulo") nivelTexto = "TÍTULO PROFESIONAL ELECTRÓNICO";
-            else nivelTexto = document.getElementById('carrera').value.toUpperCase() || "CARRERA TÉCNICA";
-
             const datos = {
                 nombre: document.getElementById('nombre').value.toUpperCase().trim(),
                 curp: document.getElementById('curp').value.toUpperCase().trim(),
                 promedio: document.getElementById('promedio').value.trim(),
                 fechaEmision: document.getElementById('fechaEmision').value,
                 ciclo: document.getElementById('ciclo').value.trim(),
-                nivel: nivelTexto,
-                tipo: nivel,
+                nivel: nivel.toUpperCase(),
                 escuela: document.getElementById('escuela').value.toUpperCase().trim() || "SISTEMA EDUCATIVO NACIONAL",
-                matricula: document.getElementById('matricula').value.trim() || "N/A",
-                cct: document.getElementById('cct').value.toUpperCase().trim() || "N/A",
-                carrera: document.getElementById('carrera').value.toUpperCase().trim() || "N/A",
                 visitas: 0,
                 activo: true, 
                 timestamp: new Date()
@@ -309,50 +259,39 @@
 
             try {
                 await setDoc(doc(db, "certificados", folioValue), datos);
-                
-                // --- DISPARAR GENERACIÓN DE QR ---
                 generarQRAuto(folioValue);
-                
-                alert("¡Registro insertado correctamente! QR generado abajo.");
-                document.getElementById('adminForm').reset();
-                document.getElementById('campos-especiales').style.display = "none";
-            } catch (error) { alert("Error de Base de Datos: " + error.message); }
-            finally { btn.disabled = false; btn.innerText = "VINCULAR REGISTRO A BASE DE DATOS"; }
+                alert("✓ REGISTRO ÉXITOSO");
+            } catch (error) { alert("ERROR: " + error.message); }
+            finally { btn.disabled = false; btn.innerText = "VINCULAR Y GENERAR CÓDIGO QR"; }
         });
 
+        // Monitor en Tiempo Real
         onSnapshot(collection(db, "certificados"), (querySnapshot) => {
             const tabla = document.getElementById('tablaAlumnos');
             let total = 0;
             tabla.innerHTML = "";
-            querySnapshot.forEach((documento) => {
+            querySnapshot.forEach((doc) => {
                 total++;
-                const data = documento.data();
-                const id = documento.id;
-                const isActivo = data.activo !== false;
-                const statusHtml = isActivo ? '<span class="status-badge status-online">Validado</span>' : '<span class="status-badge status-paused">Pausado</span>';
-                const toggleBtn = isActivo ? `<button class="btn-action btn-pause" onclick="cambiarEstado('${id}', false)">Pausar</button>` : `<button class="btn-action btn-activate" onclick="cambiarEstado('${id}', true)">Activar</button>`;
-
+                const d = doc.data();
+                const id = doc.id;
+                const status = d.activo ? '<span class="status-badge status-online">ACTIVO</span>' : '<span class="status-badge status-paused">PAUSADO</span>';
+                
                 tabla.innerHTML += `<tr>
-                    <td><strong>${id}</strong><br><small class="text-muted">${data.nombre}</small></td>
-                    <td class="text-center"><span class="badge-visitas">${data.visitas || 0}</span></td>
-                    <td class="text-center">${statusHtml}</td>
-                    <td class="text-right">${toggleBtn} <button class="btn-action btn-delete" onclick="borrarRegistro('${id}')">Borrar</button></td>
+                    <td><strong>${id}</strong><br><small>${d.nombre}</small></td>
+                    <td class="text-center"><span class="badge-visitas">${d.visitas || 0}</span></td>
+                    <td class="text-center">${status}</td>
+                    <td class="text-right">
+                        <button class="btn-action btn-pause" onclick="cambiarEstado('${id}', ${!d.activo})">Toggle</button>
+                        <button class="btn-action btn-delete" onclick="borrarRegistro('${id}')">Eliminar</button>
+                    </td>
                 </tr>`;
             });
             document.getElementById('stat-total').innerText = total;
         });
 
-        window.cambiarEstado = async (id, nuevoEstado) => {
-            try { await updateDoc(doc(db, "certificados", id), { activo: nuevoEstado }); } 
-            catch (e) { alert("Error al cambiar estado: " + e.message); }
-        };
-
-        window.borrarRegistro = async (id) => {
-            if (confirm("¿Está seguro de eliminar este registro oficial permanentemente?")) {
-                try { await deleteDoc(doc(db, "certificados", id)); } 
-                catch (e) { alert("Error al eliminar: " + e.message); }
-            }
-        };
+        window.cambiarEstado = async (id, s) => { await updateDoc(doc(db, "certificados", id), { activo: s }); };
+        window.borrarRegistro = async (id) => { if(confirm("¿Eliminar?")) await deleteDoc(doc(db, "certificados", id)); };
     </script>
 </body>
-</html>
+    </html>
+    
