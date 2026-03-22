@@ -6,6 +6,7 @@
     <title>Panel Maestro SiDGBE | Control Total V6.0</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         body { background-color: #f4f7f6; font-family: 'Open Sans', sans-serif; padding-bottom: 50px; }
@@ -18,7 +19,6 @@
         label { font-weight: bold; color: #444; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
         .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; font-size: 14px; margin-bottom: 15px; }
         
-        /* Contenedores de campos dinámicos */
         #campos-especiales { display: none; background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #D4C19C; }
 
         .monitor-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
@@ -38,6 +38,25 @@
         .stat-box { background: #13322B; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
         .stat-box h3 { margin: 5px 0; color: #D4C19C; font-weight: bold; font-size: 28px; }
         .stat-box p { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+
+        /* Estilos para el Generador de QR */
+        #qr-result-container {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border: 2px solid #D4C19C;
+            border-radius: 10px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s;
+        }
+        #qrcode {
+            display: inline-block;
+            padding: 10px;
+            background: white;
+            border: 1px solid #eee;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -127,6 +146,15 @@
                              VINCULAR REGISTRO A BASE DE DATOS
                         </button>
                     </form>
+
+                    <div id="qr-result-container">
+                        <h5 style="color: #12322B; font-weight: bold;">✅ CÓDIGO QR GENERADO</h5>
+                        <p style="font-size: 10px; color: #666;">Folio vinculado exitosamente a la plataforma de validación.</p>
+                        <div id="qrcode"></div>
+                        <br><br>
+                        <button class="btn btn-default btn-sm" onclick="descargarQR()">Descargar Imagen QR</button>
+                        <button class="btn btn-link btn-sm" onclick="document.getElementById('qr-result-container').style.display='none'">Cerrar</button>
+                    </div>
                 </div>
             </div>
 
@@ -180,11 +208,9 @@
             const nivel = document.getElementById("nivel").value;
             const campos = document.getElementById("campos-especiales");
             
-            // Mostrar campos si es Técnico, Título o Cédula
             if(nivel === "Tecnico" || nivel === "Titulo" || nivel === "Cedula") {
                 campos.style.display = "block";
                 
-                // Personalización de etiquetas según el tipo
                 if(nivel === "Cedula") {
                     document.getElementById("label-carrera").innerText = "Título Alcanzado:";
                     document.getElementById("label-matricula").innerText = "Número de Cédula:";
@@ -212,13 +238,48 @@
             }
         };
 
+        // --- FUNCIÓN PARA GENERAR QR AUTOMÁTICO ---
+        window.generarQRAuto = (folio) => {
+            const qrContainer = document.getElementById("qrcode");
+            const resultBox = document.getElementById("qr-result-container");
+            
+            // Limpiar QR anterior
+            qrContainer.innerHTML = "";
+            
+            // URL Base que solicitaste
+            const urlFinal = `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${encodeURIComponent(folio)}`;
+            
+            // Crear el QR
+            new QRCode(qrContainer, {
+                text: urlFinal,
+                width: 180,
+                height: 180,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+            
+            resultBox.style.display = "block";
+        };
+
+        window.descargarQR = () => {
+            const img = document.querySelector("#qrcode img");
+            if(img) {
+                const link = document.createElement("a");
+                link.href = img.src;
+                link.download = `QR_FOLIO_${document.getElementById('folio').value}.png`;
+                link.click();
+            }
+        };
+
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
+            const folioValue = document.getElementById('folio').value.toUpperCase().trim();
+            
             btn.disabled = true;
             btn.innerText = "SINCRONIZANDO...";
 
-            const folio = document.getElementById('folio').value.toUpperCase().trim();
             const nivel = document.getElementById('nivel').value;
             
             let nivelTexto = "";
@@ -237,7 +298,6 @@
                 ciclo: document.getElementById('ciclo').value.trim(),
                 nivel: nivelTexto,
                 tipo: nivel,
-                // Datos extendidos
                 escuela: document.getElementById('escuela').value.toUpperCase().trim() || "SISTEMA EDUCATIVO NACIONAL",
                 matricula: document.getElementById('matricula').value.trim() || "N/A",
                 cct: document.getElementById('cct').value.toUpperCase().trim() || "N/A",
@@ -248,12 +308,16 @@
             };
 
             try {
-                await setDoc(doc(db, "certificados", folio), datos);
-                alert("¡Registro insertado correctamente en el Sistema Nacional!");
+                await setDoc(doc(db, "certificados", folioValue), datos);
+                
+                // --- DISPARAR GENERACIÓN DE QR ---
+                generarQRAuto(folioValue);
+                
+                alert("¡Registro insertado correctamente! QR generado abajo.");
                 document.getElementById('adminForm').reset();
                 document.getElementById('campos-especiales').style.display = "none";
             } catch (error) { alert("Error de Base de Datos: " + error.message); }
-            finally { btn.disabled = false; btn.innerText = "INSERTAR EN BASE DE DATOS"; }
+            finally { btn.disabled = false; btn.innerText = "VINCULAR REGISTRO A BASE DE DATOS"; }
         });
 
         onSnapshot(collection(db, "certificados"), (querySnapshot) => {
