@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Certificados | SIGED | gob.mx</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --gob-green: #0C231E;
+            --gob-gold: #BC955C;
+            --sep-red: #691C32;
+        }
+        body { background-color: #FFFFFF; font-family: 'Montserrat', sans-serif; }
+        .gob-header { background-color: var(--gob-green); height: 50px; }
+        .sep-border { border-bottom: 4px solid var(--gob-gold); }
+        .btn-status { background-color: #b91c1c; }
+        .alert-box { border-left: 5px solid #b91c1c; background-color: #fef2f2; }
+        .footer-gob { background-color: #13322B; color: white; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <nav class="gob-header flex items-center px-4 md:px-20 justify-between">
+        
+        <div class="hidden md:flex space-x-6 text-white text-xs font-bold uppercase">
+            <span>Publicaciones</span>
+            <span>Transparencia</span>
+            <span>Contacto</span>
+        </div>
+    </nav>
+
+    <header class="bg-white px-4 md:px-20 py-6 sep-border shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <img src="https://logowik.com/content/uploads/images/308_escudo_de_mexico.jpg" alt="SEP" class="h-16 mb-4 md:mb-0">
+            <div class="text-right">
+                <h2 class="text-sm font-bold text-gray-700">Sistema de Información y Gestión Educativa</h2>
+                <p class="text-xs text-gray-500 uppercase tracking-tighter font-semibold">Dirección General de Planeación, Programación y Estadística Educativa</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto my-10 p-4">
+        
+        <div class="text-[10px] text-gray-400 uppercase mb-6 space-x-2">
+            <span class="hover:underline cursor-pointer">Inicio</span>
+            <span>/</span>
+            <span class="hover:underline cursor-pointer">Consultas</span>
+            <span>/</span>
+            <span class="text-gray-600 font-bold italic">Validación de Documentos</span>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200">
+            
+            <div class="bg-gray-100 p-4 border-b border-gray-200">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Resultado de Validación de Certificado Digital
+                </h3>
+            </div>
+
+            <div class="p-6 md:p-10">
+                
+                <div class="alert-box p-6 mb-8">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="h-10 w-10 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-black text-red-800 uppercase italic mb-1">Estatus: Registro Restringido</h4>
+                            <p class="text-sm text-red-700 font-medium leading-relaxed">
+                                Se ha detectado un incumplimiento en la liberación de derechos administrativos para este folio. El acceso a la visualización y descarga del archivo original ha sido **suspendido temporalmente** por el servidor central de la Ciudad de México.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-4">
+                        <div class="border-b border-gray-100 pb-2">
+                            <span class="text-[10px] text-gray-400 uppercase font-bold block">Folio de Control:</span>
+                            <span class="text-sm font-mono text-gray-700">SIGED-RESTR-2026-X44</span>
+                        </div>
+                        <div class="border-b border-gray-100 pb-2">
+                            <span class="text-[10px] text-gray-400 uppercase font-bold block">Motivo:</span>
+                            <span class="text-sm font-semibold text-gray-600">Pendiente de Liquidación Campaña 2026</span>
+                        </div>
+                        <div class="border-b border-gray-100 pb-2">
+                            <span class="text-[10px] text-gray-400 uppercase font-bold block">Acción requerida:</span>
+                            <span class="text-xs text-red-600 font-bold italic">Contactar a su asesor para liberación de código</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl text-center border-2 border-dashed border-gray-200">
+                        <p class="text-xs text-gray-500 mb-4 font-semibold uppercase">Habilitar Visualización</p>
+                        <div class="btn-status text-white font-black py-4 px-6 rounded-lg shadow-md cursor-not-allowed uppercase tracking-tighter text-sm italic">
+                            PAGO DE DERECHOS PENDIENTE
+                        </div>
+                        <p class="text-[9px] text-gray-400 mt-4 leading-tight">
+                            Una vez efectuado el depósito, el sistema procesará la firma electrónica y habilitará el enlace de descarga en este mismo portal.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <p class="mt-8 text-[10px] text-gray-400 text-center leading-relaxed">
+            Este sistema es oficial y está protegido por la Ley General de Protección de Datos Personales en Posesión de Sujetos Obligados. <br>
+            Cualquier uso no autorizado de esta plataforma será reportado ante las autoridades correspondientes.
+        </p>
+
+    </main>
+
+    <footer class="footer-gob py-10 px-4 md:px-20 mt-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 opacity-80">
+            <div>
+                
+                <p class="text-xs leading-relaxed">Bienvenido al portal de la Secretaría de Educación Pública. El SIGED es la plataforma centralizada para la consulta de información educativa nacional.</p>
+            </div>
+            <div class="text-xs space-y-2">
+                <p class="font-bold mb-4 uppercase">Enlaces Rápidos</p>
+                <p class="hover:underline cursor-pointer">Participa</p>
+                <p class="hover:underline cursor-pointer">Datos</p>
+                <p class="hover:underline cursor-pointer">Publicaciones Oficiales</p>
+            </div>
+            <div class="text-xs space-y-2">
+                <p class="font-bold mb-4 uppercase">¿Qué es gob.mx?</p>
+                <p>Es el portal único de trámites, información y participación ciudadana. Leer más</p>
+                <p class="hover:underline cursor-pointer">Aviso de Privacidad</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
