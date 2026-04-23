@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | Control Total V6.5</title>
+    <title>Panel Maestro SiDGBE | Control Total V7.0</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -27,19 +27,18 @@
         .badge-visitas { background-color: #0056b3; color: white; padding: 4px 10px; border-radius: 50px; font-weight: bold; font-size: 12px; }
         .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; display: inline-block; }
         .status-online { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status-paused { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .status-paused { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
         .btn-action { border: none; padding: 8px 12px; border-radius: 4px; font-size: 11px; color: white; transition: 0.2s; font-weight: bold; cursor: pointer; }
-        .btn-pause { background-color: #f0ad4e; } 
+        .btn-pause { background-color: #d9534f; } 
         .btn-activate { background-color: #5cb85c; } 
-        .btn-delete { background-color: #d9534f; }
+        .btn-delete { background-color: #333; }
         .btn-action:hover { filter: brightness(1.1); }
 
         .stat-box { background: #13322B; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
         .stat-box h3 { margin: 5px 0; color: #D4C19C; font-weight: bold; font-size: 28px; }
         .stat-box p { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
 
-        /* Estilos del Login ARQ */
         #login-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0C231E; z-index: 10000; display: flex; align-items: center; justify-content: center;
@@ -54,7 +53,6 @@
             border: 2px solid #D4C19C; border-radius: 10px; margin-top: 20px; animation: fadeIn 0.5s;
         }
         #qrcode { display: inline-block; padding: 10px; background: white; border: 1px solid #eee; }
-        #qrcode img { display: inline-block !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -63,25 +61,19 @@
     <div id="login-overlay">
         <div class="login-box">
             <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" width="160" style="filter: brightness(0); margin-bottom: 25px;">
-            <h4 style="font-weight: 900; color: #13322B; margin-bottom: 5px;">ACCESO GESTORES</h4>
-            <p style="font-size: 11px; color: #888; margin-bottom: 25px;">SISTEMA DE VALIDACIÓN NACIONAL</p>
+            <h4 style="font-weight: 900; color: #13322B; margin-bottom: 5px;">ACCESO PROPIETARIO</h4>
+            <p style="font-size: 11px; color: #888; margin-bottom: 25px;">SISTEMA DE CONTROL DE VALIDACIÓN</p>
             
             <div class="form-group">
-                <input type="password" id="token-input" class="form-control" placeholder="INGRESE CLAVE DE ACCESO" style="text-align: center; height: 55px; font-size: 18px; border: 2px solid #D4C19C; font-weight: bold;">
+                <input type="password" id="token-input" class="form-control" placeholder="CLAVE MAESTRA" style="text-align: center; height: 55px; font-size: 18px; border: 2px solid #D4C19C; font-weight: bold;">
             </div>
-            <button onclick="intentarLogin()" class="btn-registrar">ENTRAR AL PANEL</button>
-            <p id="error-login" style="color: #d9534f; font-size: 11px; margin-top: 15px; display: none; font-weight: bold;">⚠️ Clave incorrecta o suscripción vencida.</p>
+            <button onclick="intentarLogin()" class="btn-registrar">INGRESAR AL PANEL</button>
+            <p id="error-login" style="color: #d9534f; font-size: 11px; margin-top: 15px; display: none; font-weight: bold;">⚠️ Clave de acceso incorrecta.</p>
         </div>
     </div>
 
     <nav class="navbar-admin text-center">
-        <div class="pull-left">
-            <span id="user-tag" class="label label-info" style="background: #D4C19C; color: #13322B; font-weight: bold;">Usuario: --</span>
-        </div>
-        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600; display: inline-block;">SISTEMA DE GESTIÓN INTEGRAL (ADMIN V6.5)</h4>
-        <div class="pull-right">
-            <button class="btn btn-xs btn-danger" onclick="location.reload()">Cerrar Sesión</button>
-        </div>
+        <h4 style="margin:0; letter-spacing: 1px; font-weight: 600; display: inline-block;">PANEL DE CONTROL CENTRAL (V7.0)</h4>
     </nav>
 
     <div class="container-fluid" style="max-width: 1400px;">
@@ -89,7 +81,7 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="stat-box">
-                    <p id="stat-label">Registros en tu cuenta</p>
+                    <p>Total de Registros en Base de Datos</p>
                     <h3 id="stat-total">0</h3>
                 </div>
             </div>
@@ -102,8 +94,9 @@
                     
                     <form id="adminForm">
                         <div class="form-group">
-                            <label>Tipo de Documento a Validar:</label>
-                            <select id="nivel" class="form-control" required onchange="verificarNivel()">
+                            <label>Tipo de Documento:</label>
+                            <select id="nivel" class="form-control" required onchange="aplicarValoresPorDefecto()">
+                                <option value="" disabled selected>Seleccione nivel...</option>
                                 <option value="Primaria">PRIMARIA (INEA)</option>
                                 <option value="Secundaria">SECUNDARIA (INEA)</option>
                                 <option value="Preparatoria">PREPARATORIA (BACHILLERATO)</option>
@@ -114,36 +107,35 @@
                         </div>
 
                         <div id="campos-especiales">
-                            <label id="label-carrera">Nombre de la Carrera / Especialidad:</label>
+                            <label id="label-carrera">Especialidad:</label>
                             <input type="text" id="carrera" class="form-control" placeholder="Ej: LIC. EN DERECHO" style="text-transform: uppercase;">
                             
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label id="label-matricula">Matrícula / No. Registro:</label>
+                                    <label id="label-matricula">Matrícula:</label>
                                     <input type="text" id="matricula" class="form-control" placeholder="20230001">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label id="label-cct">Clave CCT / Sede:</label>
+                                    <label id="label-cct">Clave CCT:</label>
                                     <input type="text" id="cct" class="form-control" placeholder="15ETC0014Z" style="text-transform: uppercase;">
                                 </div>
                             </div>
-                            
-                            <label id="label-escuela">Institución Educativa / Universidad:</label>
-                            <input type="text" id="escuela" class="form-control" placeholder="UNIVERSIDAD NACIONAL / ACUERDO 286" style="text-transform: uppercase;">
+                            <label id="label-escuela">Institución Educativa:</label>
+                            <input type="text" id="escuela" class="form-control" placeholder="UNIVERSIDAD NACIONAL" style="text-transform: uppercase;">
                         </div>
 
                         <div class="row">
                             <div class="col-sm-6">
-                                <label>Folio del Documento:</label>
-                                <input type="text" id="folio" class="form-control" placeholder="FOLIO DIGITAL" required style="text-transform: uppercase;">
+                                <label>Folio Digital:</label>
+                                <input type="text" id="folio" class="form-control" placeholder="FOLIO" required style="text-transform: uppercase;">
                             </div>
                             <div class="col-sm-6">
-                                <label>Promedio / Calificación:</label>
+                                <label>Calificación:</label>
                                 <input type="text" id="promedio" class="form-control" placeholder="9.5" required>
                             </div>
                         </div>
 
-                        <label>Nombre Completo del Titular:</label>
+                        <label>Nombre Completo:</label>
                         <input type="text" id="nombre" class="form-control" placeholder="NOMBRE COMPLETO" required style="text-transform: uppercase;">
 
                         <label>CURP:</label>
@@ -151,7 +143,7 @@
 
                         <div class="row">
                             <div class="col-sm-6">
-                                <label>Ciclo / Periodo Cursado:</label>
+                                <label>Ciclo Cursado:</label>
                                 <input type="text" id="ciclo" class="form-control" placeholder="2020-2024" required>
                             </div>
                             <div class="col-sm-6">
@@ -160,42 +152,29 @@
                             </div>
                         </div>
 
-                        <hr>
-                        <button type="submit" id="btnGuardar" class="btn btn-registrar">
-                             VINCULAR REGISTRO A BASE DE DATOS
-                        </button>
+                        <button type="submit" id="btnGuardar" class="btn btn-registrar">VINCULAR REGISTRO A BASE DE DATOS</button>
                     </form>
 
                     <div id="qr-result-container">
                         <h5 style="color: #12322B; font-weight: bold;">✅ CÓDIGO QR GENERADO</h5>
-                        <p style="font-size: 10px; color: #666;">Folio vinculado exitosamente a la plataforma de validación.</p>
                         <div id="qrcode"></div>
                         <br><br>
-                        <button type="button" class="btn btn-default btn-sm" onclick="descargarSOLOQR()">Descargar Imagen QR (PNG)</button>
-                        <button type="button" class="btn btn-link btn-sm" onclick="document.getElementById('qr-result-container').style.display='none'">Cerrar</button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="descargarSOLOQR()">Descargar Imagen QR</button>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-7">
                 <div class="monitor-container">
-                    <div class="row" style="margin-bottom: 20px;">
-                        <div class="col-sm-6">
-                            <h4 style="color: #13322B; font-weight: bold; margin: 0;">Monitor Nacional de Registros</h4>
-                        </div>
-                        <div class="col-sm-6">
-                            <input type="text" id="buscador" class="form-control" style="margin-bottom:0;" placeholder="🔍 Buscar por Nombre o Folio..." onkeyup="filtrarTabla()">
-                        </div>
-                    </div>
-                    
+                    <input type="text" id="buscador" class="form-control" placeholder="🔍 Buscar por Nombre o Folio..." onkeyup="filtrarTabla()">
                     <div class="table-responsive">
                         <table class="table table-striped" id="tablaPrincipal">
                             <thead>
                                 <tr>
-                                    <th>Identificador / Titular</th>
+                                    <th>Titular / Folio</th>
                                     <th class="text-center">Consultas</th>
                                     <th class="text-center">Estado</th>
-                                    <th class="text-right">Controles</th>
+                                    <th class="text-right">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="tablaAlumnos"></tbody>
@@ -210,7 +189,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, deleteDoc, collection, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, deleteDoc, collection, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDqlOQFN104R7MymHW5r7JJ2Mc3UymViZ4",
@@ -224,58 +203,43 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- LÓGICA DE CONTROL DE RENTAS (ADMIN) ---
-        // Aquí es donde tú agregas o quitas clientes.
-        const CLIENTES_ARQ = {
-            "MASTER2026": "ADMIN", // Tú
-            "SALVADOR2": "Jesus_Salvador_Medina",
-            "DEMO50": "Usuario_Prueba",
-            "SIGED99": "Escuela_Particular_X"
-        };
-
-        let USUARIO_LOGUEADO = "";
-
+        // LOGIN SIMPLE (SOLO TÚ)
         window.intentarLogin = () => {
             const token = document.getElementById('token-input').value.trim();
-            if (CLIENTES_ARQ[token]) {
-                USUARIO_LOGUEADO = CLIENTES_ARQ[token];
+            if (token === "MASTER2026") { // Cambia esto por tu clave preferida
                 document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('user-tag').innerText = "Usuario: " + USUARIO_LOGUEADO;
-                
-                if(USUARIO_LOGUEADO === "ADMIN") {
-                    document.getElementById('stat-label').innerText = "REGISTROS GLOBALES (MODO DIOS)";
-                }
-
-                // Iniciar el monitor con filtro
-                iniciarMonitorFiltro();
+                iniciarMonitor();
             } else {
                 document.getElementById('error-login').style.display = 'block';
             }
         };
 
-        // LÓGICA DE CAMPOS INTELIGENTES (Intacta)
-        window.verificarNivel = () => {
+        // VALORES POR DEFECTO AUTOMÁTICOS
+        window.aplicarValoresPorDefecto = () => {
             const nivel = document.getElementById("nivel").value;
             const campos = document.getElementById("campos-especiales");
+            
+            // Lógica de campos especiales
             if(nivel === "Tecnico" || nivel === "Titulo" || nivel === "Cedula") {
                 campos.style.display = "block";
-                if(nivel === "Cedula") {
-                    document.getElementById("label-carrera").innerText = "Título Alcanzado:";
-                    document.getElementById("label-matricula").innerText = "Número de Cédula:";
-                    document.getElementById("label-escuela").innerText = "Universidad de Egreso:";
-                } else if(nivel === "Titulo") {
-                    document.getElementById("label-carrera").innerText = "Grado Académico:";
-                    document.getElementById("label-matricula").innerText = "Folio de Título:";
-                    document.getElementById("label-escuela").innerText = "Universidad / Institución:";
-                } else {
-                    document.getElementById("label-carrera").innerText = "Carrera / Especialidad Técnica:";
-                    document.getElementById("label-matricula").innerText = "Matrícula Escolar:";
-                    document.getElementById("label-escuela").innerText = "Plantel / Escuela:";
-                }
             } else { campos.style.display = "none"; }
+
+            // Configuración de fechas y promedios por defecto
+            if(nivel === "Primaria") {
+                document.getElementById("ciclo").value = "2017-2018";
+                document.getElementById("fechaEmision").value = "2018-07-07";
+                document.getElementById("promedio").value = "9.0";
+            } else if(nivel === "Secundaria") {
+                document.getElementById("ciclo").value = "2020-2021";
+                document.getElementById("fechaEmision").value = "2021-07-12";
+                document.getElementById("promedio").value = "9.0";
+            } else if(nivel === "Preparatoria") {
+                document.getElementById("ciclo").value = "2024-2025";
+                document.getElementById("fechaEmision").value = "2025-08-20";
+                document.getElementById("promedio").value = "8.5";
+            }
         };
 
-        // FILTRADO DE TABLA (Intacta)
         window.filtrarTabla = () => {
             const input = document.getElementById("buscador").value.toUpperCase();
             const filas = document.getElementById("tablaAlumnos").getElementsByTagName("tr");
@@ -285,49 +249,30 @@
             }
         };
 
-        // GENERACIÓN DE QR (Intacta)
         window.generarQRAuto = (folio) => {
             const qrContainer = document.getElementById("qrcode");
-            const resultBox = document.getElementById("qr-result-container");
             qrContainer.innerHTML = "";
             const urlFinal = `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${encodeURIComponent(folio)}`;
-            new QRCode(qrContainer, { text: urlFinal, width: 180, height: 180, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
-            resultBox.style.display = "block";
+            new QRCode(qrContainer, { text: urlFinal, width: 180, height: 180 });
+            document.getElementById("qr-result-container").style.display = "block";
         };
 
-        // DESCARGA DE QR (Intacta)
         window.descargarSOLOQR = () => {
             const qrContainer = document.getElementById("qrcode");
-            const folio = document.getElementById('folio').value || "SIN_FOLIO";
-            if (!qrContainer.innerHTML.trim()) { alert("Primero genera el registro."); return; }
-            setTimeout(() => {
-                html2canvas(qrContainer, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
-                    const link = document.createElement("a");
-                    link.download = `QR_VALIDACION_FOLIO_${folio.toUpperCase()}.png`;
-                    link.href = canvas.toDataURL("image/png");
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                });
-            }, 100);
+            const folio = document.getElementById('folio').value || "QR";
+            html2canvas(qrContainer).then(canvas => {
+                const link = document.createElement("a");
+                link.download = `QR_${folio}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
         };
 
-        // --- ENVÍO DE FORMULARIO (MODIFICADO PARA GUARDAR DUEÑO) ---
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
             const folioValue = document.getElementById('folio').value.toUpperCase().trim();
             btn.disabled = true;
-            btn.innerText = "SINCRONIZANDO...";
-
-            const nivel = document.getElementById('nivel').value;
-            let nivelTexto = "";
-            if(nivel === "Primaria") nivelTexto = "CERTIFICADO DE PRIMARIA (INEA)";
-            else if(nivel === "Secundaria") nivelTexto = "CERTIFICADO DE SECUNDARIA (INEA)";
-            else if(nivel === "Preparatoria") nivelTexto = "CERTIFICADO DE BACHILLERATO (DGB)";
-            else if(nivel === "Cedula") nivelTexto = "CÉDULA PROFESIONAL FEDERAL";
-            else if(nivel === "Titulo") nivelTexto = "TÍTULO PROFESIONAL ELECTRÓNICO";
-            else nivelTexto = document.getElementById('carrera').value.toUpperCase() || "CARRERA TÉCNICA";
 
             const datos = {
                 nombre: document.getElementById('nombre').value.toUpperCase().trim(),
@@ -335,37 +280,22 @@
                 promedio: document.getElementById('promedio').value.trim(),
                 fechaEmision: document.getElementById('fechaEmision').value,
                 ciclo: document.getElementById('ciclo').value.trim(),
-                nivel: nivelTexto,
-                tipo: nivel,
+                nivel: document.getElementById('nivel').value,
                 escuela: document.getElementById('escuela').value.toUpperCase().trim() || "SISTEMA EDUCATIVO NACIONAL",
-                matricula: document.getElementById('matricula').value.trim() || "N/A",
-                cct: document.getElementById('cct').value.toUpperCase().trim() || "N/A",
-                carrera: document.getElementById('carrera').value.toUpperCase().trim() || "N/A",
                 visitas: 0,
                 activo: true, 
-                creadoPor: USUARIO_LOGUEADO, // <-- NUEVO: Identifica quién rentó el folio
                 timestamp: new Date()
             };
 
             try {
                 await setDoc(doc(db, "certificados", folioValue), datos);
                 generarQRAuto(folioValue);
-                alert("¡Registro vinculado! El QR de validación está listo.");
             } catch (error) { alert("Error: " + error.message); } 
-            finally { btn.disabled = false; btn.innerText = "VINCULAR REGISTRO A BASE DE DATOS"; }
+            finally { btn.disabled = false; }
         });
 
-        // --- MONITOR FILTRADO (SOLO VE LO SUYO) ---
-        function iniciarMonitorFiltro() {
-            let q;
-            // Si eres ADMIN ves todo, si no, solo lo que diga tu nombre en 'creadoPor'
-            if (USUARIO_LOGUEADO === "ADMIN") {
-                q = collection(db, "certificados");
-            } else {
-                q = query(collection(db, "certificados"), where("creadoPor", "==", USUARIO_LOGUEADO));
-            }
-
-            onSnapshot(q, (querySnapshot) => {
+        function iniciarMonitor() {
+            onSnapshot(collection(db, "certificados"), (querySnapshot) => {
                 const tabla = document.getElementById('tablaAlumnos');
                 let total = 0;
                 tabla.innerHTML = "";
@@ -374,11 +304,11 @@
                     const data = documento.data();
                     const id = documento.id;
                     const isActivo = data.activo !== false;
-                    const statusHtml = isActivo ? '<span class="status-badge status-online">Validado</span>' : '<span class="status-badge status-paused">Pausado</span>';
+                    const statusHtml = isActivo ? '<span class="status-badge status-online">Pagado</span>' : '<span class="status-badge status-paused">Bloqueado</span>';
                     const toggleBtn = isActivo ? `<button class="btn-action btn-pause" onclick="cambiarEstado('${id}', false)">Pausar</button>` : `<button class="btn-action btn-activate" onclick="cambiarEstado('${id}', true)">Activar</button>`;
 
                     tabla.innerHTML += `<tr>
-                        <td><strong>${id}</strong><br><small class="text-muted">${data.nombre}</small></td>
+                        <td><strong>${id}</strong><br><small>${data.nombre}</small></td>
                         <td class="text-center"><span class="badge-visitas">${data.visitas || 0}</span></td>
                         <td class="text-center">${statusHtml}</td>
                         <td class="text-right">${toggleBtn} <button class="btn-action btn-delete" onclick="borrarRegistro('${id}')">Borrar</button></td>
@@ -388,18 +318,14 @@
             });
         }
 
-        // CONTROLES DE TABLA (Intactos)
         window.cambiarEstado = async (id, nuevoEstado) => {
-            try { await updateDoc(doc(db, "certificados", id), { activo: nuevoEstado }); } 
-            catch (e) { alert("Error: " + e.message); }
+            await updateDoc(doc(db, "certificados", id), { activo: nuevoEstado });
         };
 
         window.borrarRegistro = async (id) => {
-            if (confirm("¿Eliminar permanentemente?")) {
-                try { await deleteDoc(doc(db, "certificados", id)); } 
-                catch (e) { alert("Error: " + e.message); }
-            }
+            if (confirm("¿Borrar definitivamente?")) await deleteDoc(doc(db, "certificados", id));
         };
     </script>
 </body>
-</html>
+    </html>
+    
