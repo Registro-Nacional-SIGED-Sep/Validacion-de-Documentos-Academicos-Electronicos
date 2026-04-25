@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | AI & PDF Automation V8.0</title>
+    <title>Panel Maestro SiDGBE | V8.0 Corregida</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -14,9 +14,9 @@
         .navbar-admin { background-color: #0C231E; padding: 20px; color: white; margin-bottom: 30px; }
         .card-admin { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 5px solid #D4C19C; margin-bottom: 30px; }
         .ia-container { background: #eef2ff; border: 2px solid #6366f1; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
-        .btn-ia { background-color: #6366f1 !important; color: white !important; font-weight: bold; width: 100%; padding: 12px; border: none; border-radius: 6px; margin-top: 10px; }
-        .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 14px; border-radius: 6px; width: 100%; border: none; }
-        .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; margin-bottom: 15px; }
+        .btn-ia { background-color: #6366f1 !important; color: white !important; font-weight: bold; width: 100%; padding: 12px; border: none; border-radius: 6px; margin-top: 10px; cursor: pointer; }
+        .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 14px; border-radius: 6px; width: 100%; border: none; cursor: pointer; }
+        .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; margin-bottom: 15px; width: 100%; padding: 10px; }
         label { font-weight: bold; color: #444; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0C231E; z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: white; padding: 40px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
@@ -27,14 +27,12 @@
 
     <div id="login-overlay">
         <div class="login-box">
-            <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" width="160" style="filter: brightness(0); margin-bottom: 25px;">
+            <img src="https://framework-gb.mx/gobmx/img/logo_blanco.svg" width="160" style="filter: brightness(0); margin-bottom: 25px;">
             <h4 style="font-weight: 900; color: #13322B;">ACCESO PROPIETARIO</h4>
-            <div class="form-group">
-                <input type="password" id="token-input" class="form-control" placeholder="CLAVE MAESTRA" style="text-align: center;">
-                <input type="password" id="api-key-input" class="form-control" placeholder="PEGAR OPENAI API KEY" style="text-align: center; border-color: #6366f1;">
-            </div>
+            <input type="password" id="token-input" class="form-control" placeholder="CLAVE MAESTRA" style="text-align: center;">
+            <input type="password" id="api-key-input" class="form-control" placeholder="OPENAI API KEY" style="text-align: center; border-color: #6366f1;">
             <button onclick="intentarLogin()" class="btn-registrar">ACTIVAR SISTEMA</button>
-            <p id="error-login" style="color: red; display: none; margin-top: 10px;">Clave incorrecta.</p>
+            <p id="error-login" style="color: red; display: none; margin-top: 10px;">Acceso denegado.</p>
         </div>
     </div>
 
@@ -42,13 +40,13 @@
         <h4 style="margin:0;">PANEL MAESTRO AUTOMATIZADO V8.0</h4>
     </nav>
 
-    <div class="container-fluid" style="max-width: 1400px;">
+    <div class="container-fluid" style="max-width: 1300px;">
         <div class="row">
             <div class="col-md-5">
                 <div class="ia-container">
                     <label style="color: #4338ca;">🤖 ASISTENTE DE EXTRACCIÓN IA</label>
-                    <textarea id="whatsapp-input" class="form-control" rows="4" placeholder="Pega aquí el mensaje desordenado del cliente..."></textarea>
-                    <button onclick="procesarConIA()" id="btn-ia" class="btn-ia">PROCESAR Y LLENAR FORMULARIO</button>
+                    <textarea id="whatsapp-input" class="form-control" rows="4" placeholder="Pega el mensaje del cliente aquí..."></textarea>
+                    <button onclick="procesarConIA()" id="btn-ia" class="btn-ia">PROCESAR DATOS</button>
                 </div>
 
                 <div class="card-admin">
@@ -62,14 +60,8 @@
                         </select>
 
                         <div class="row">
-                            <div class="col-sm-6">
-                                <label>Folio:</label>
-                                <input type="text" id="folio" class="form-control" required style="text-transform: uppercase;">
-                            </div>
-                            <div class="col-sm-6">
-                                <label>Calificación:</label>
-                                <input type="text" id="promedio" class="form-control" required>
-                            </div>
+                            <div class="col-sm-6"><label>Folio:</label><input type="text" id="folio" class="form-control" required></div>
+                            <div class="col-sm-6"><label>Promedio:</label><input type="text" id="promedio" class="form-control" required></div>
                         </div>
 
                         <label>Nombre Completo:</label>
@@ -79,36 +71,22 @@
                         <input type="text" id="curp" class="form-control" maxlength="18" required style="text-transform: uppercase;">
 
                         <div class="row">
-                            <div class="col-sm-6">
-                                <label>Ciclo:</label>
-                                <input type="text" id="ciclo" class="form-control" required>
-                            </div>
-                            <div class="col-sm-6">
-                                <label>Ciudad / Estado:</label>
-                                <input type="text" id="ubicacion" class="form-control" placeholder="Ej: Toluca, EdoMex">
-                            </div>
+                            <div class="col-sm-6"><label>Ciclo:</label><input type="text" id="ciclo" class="form-control" required></div>
+                            <div class="col-sm-6"><label>Ubicación:</label><input type="text" id="ubicacion" class="form-control"></div>
                         </div>
                         <input type="hidden" id="fechaEmision">
-                        <button type="submit" id="btnGuardar" class="btn btn-registrar">VINCULAR Y DESCARGAR PDF</button>
+                        <button type="submit" id="btnGuardar" class="btn-registrar">GUARDAR Y DESCARGAR PDF</button>
                     </form>
                 </div>
             </div>
 
             <div class="col-md-7">
-                <div class="monitor-container">
+                <div class="card-admin">
                     <h4 style="font-weight: bold; color: #13322B;">Monitor de Registros</h4>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Folio / Nombre</th>
-                                    <th class="text-center">Estado</th>
-                                    <th class="text-right">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tablaAlumnos"></tbody>
-                        </table>
-                    </div>
+                    <table class="table">
+                        <thead><tr><th>Folio / Alumno</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
+                        <tbody id="tablaAlumnos"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -131,91 +109,83 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let MI_LLAVE_OPENAI = "";
+        let API_KEY = "";
 
         window.intentarLogin = () => {
             const token = document.getElementById('token-input').value.trim();
-            const apiKey = document.getElementById('api-key-input').value.trim();
+            const key = document.getElementById('api-key-input').value.trim();
             if (token === "MASTER2026") {
-                MI_LLAVE_OPENAI = apiKey;
+                API_KEY = key;
                 document.getElementById('login-overlay').style.display = 'none';
                 iniciarMonitor();
-            } else { document.getElementById('error-login').style.display = 'block'; }
+            } else { alert("Clave Incorrecta"); }
         };
 
         window.procesarConIA = async () => {
-            if(!MI_LLAVE_OPENAI) { alert("Falta API Key"); return; }
-            const textoBusqueda = document.getElementById('whatsapp-input').value;
+            if(!API_KEY) return alert("Pega tu API Key de OpenAI");
             const btn = document.getElementById('btn-ia');
-            btn.innerText = "🤖 PROCESANDO..."; btn.disabled = true;
+            btn.innerText = "⏳ PROCESANDO..."; btn.disabled = true;
+            
             try {
+                const prompt = document.getElementById('whatsapp-input').value;
                 const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${MI_LLAVE_OPENAI}` },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
                     body: JSON.stringify({
                         model: "gpt-4o-mini",
                         messages: [
-                            { role: "system", content: "Eres un extractor de datos para certificados mexicanos. Extrae: nombre (MAYUSCULAS), curp (18 digitos), nivel (Primaria, Secundaria o Preparatoria), ubicacion (Ciudad y Estado). Responde estrictamente en JSON." },
-                            { role: "user", content: textoBusqueda }
+                            { role: "system", content: "Extrae de este mensaje: nombre (MAYUSCULAS), curp (18 chars), nivel (Primaria, Secundaria o Preparatoria), ubicacion (Ciudad y Estado). Responde solo JSON." },
+                            { role: "user", content: prompt }
                         ],
                         response_format: { type: "json_object" }
                     })
                 });
                 const data = await response.json();
-                const info = JSON.parse(data.choices[0].message.content);
+                const res = JSON.parse(data.choices[0].message.content);
                 
-                if(info.nombre) document.getElementById('nombre').value = info.nombre;
-                if(info.curp) document.getElementById('curp').value = info.curp;
-                if(info.ubicacion) document.getElementById('ubicacion').value = info.ubicacion;
-                if(info.nivel) { 
-                    document.getElementById('nivel').value = info.nivel; 
-                    aplicarValoresPorDefecto(); 
-                }
-                document.getElementById('folio').value = "SEP-" + Math.floor(Math.random() * 999999);
-            } catch (e) { 
-                console.error(e); 
-                alert("Error al conectar con la IA. Verifica tu API Key.");
-            } finally { 
-                btn.innerText = "PROCESAR Y LLENAR FORMULARIO"; 
-                btn.disabled = false; 
-            }
+                document.getElementById('nombre').value = res.nombre || "";
+                document.getElementById('curp').value = res.curp || "";
+                document.getElementById('ubicacion').value = res.ubicacion || "";
+                if(res.nivel) { document.getElementById('nivel').value = res.nivel; aplicarValoresPorDefecto(); }
+                document.getElementById('folio').value = "SEP-" + Math.floor(100000 + Math.random() * 900000);
+            } catch (e) { alert("Error con la IA: " + e.message); }
+            finally { btn.innerText = "PROCESAR DATOS"; btn.disabled = false; }
         };
 
         window.aplicarValoresPorDefecto = () => {
-            const nivel = document.getElementById("nivel").value;
-            if(nivel === "Primaria") { document.getElementById("ciclo").value = "2017-2018"; document.getElementById("fechaEmision").value = "2018-07-07"; document.getElementById("promedio").value = "9.0"; }
-            else if(nivel === "Secundaria") { document.getElementById("ciclo").value = "2020-2021"; document.getElementById("fechaEmision").value = "2021-07-12"; document.getElementById("promedio").value = "9.2"; }
-            else if(nivel === "Preparatoria") { document.getElementById("ciclo").value = "2024-2025"; document.getElementById("fechaEmision").value = "2025-08-20"; document.getElementById("promedio").value = "8.8"; }
+            const n = document.getElementById("nivel").value;
+            const vals = {
+                "Primaria": ["2017-2018", "2018-07-07", "9.0"],
+                "Secundaria": ["2020-2021", "2021-07-12", "9.2"],
+                "Preparatoria": ["2024-2025", "2025-08-20", "8.8"]
+            };
+            if(vals[n]) {
+                document.getElementById("ciclo").value = vals[n][0];
+                document.getElementById("fechaEmision").value = vals[n][1];
+                document.getElementById("promedio").value = vals[n][2];
+            }
         };
 
-        async function generarCertificadoPDF(datos, folio) {
+        async function descargarPDF(datos, folio) {
             const area = document.getElementById('pdf-render-area');
-            let plantillaHTML = "";
-            if(datos.nivel === "Primaria") plantillaHTML = PLANTILLAS.primaria(datos, folio);
-            else if(datos.nivel === "Secundaria") plantillaHTML = PLANTILLAS.secundaria(datos, folio);
-            else plantillaHTML = PLANTILLAS.prepa(datos, folio);
+            const nivelKey = datos.nivel === "Primaria" ? "primaria" : datos.nivel === "Secundaria" ? "secundaria" : "prepa";
+            area.innerHTML = PLANTILLAS[nivelKey](datos, folio);
             
-            area.innerHTML = plantillaHTML;
-            
-            const qrDiv = area.querySelector('#qr-pdf');
-            const urlFinal = `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${folio}`;
-            new QRCode(qrDiv, { text: urlFinal, width: 120, height: 120 });
-            
-            const opt = { 
-                margin: 0, 
-                filename: `CERTIFICADO_${datos.nombre}.pdf`, 
-                image: { type: 'jpeg', quality: 0.98 }, 
-                html2canvas: { scale: 2 }, 
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } 
-            };
+            const qrTarget = area.querySelector('#qr-pdf');
+            new QRCode(qrTarget, {
+                text: `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${folio}`,
+                width: 110, height: 110
+            });
+
+            const opt = { margin: 0, filename: `${folio}_${datos.nombre}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter' } };
             await html2pdf().set(opt).from(area).save();
         }
 
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
-            const folio = document.getElementById('folio').value.toUpperCase().trim();
             btn.disabled = true;
+            const f = document.getElementById('folio').value.toUpperCase().trim();
             const datos = {
                 nombre: document.getElementById('nombre').value.toUpperCase().trim(),
                 curp: document.getElementById('curp').value.toUpperCase().trim(),
@@ -224,79 +194,60 @@
                 nivel: document.getElementById('nivel').value,
                 ubicacion: document.getElementById('ubicacion').value,
                 fechaEmision: document.getElementById("fechaEmision").value,
-                activo: true, visitas: 0, timestamp: new Date()
+                activo: true, timestamp: new Date()
             };
             try {
-                await setDoc(doc(db, "certificados", folio), datos);
-                await generarCertificadoPDF(datos, folio);
-                alert("¡Éxito! Registro guardado y PDF descargado.");
-            } catch (error) { alert(error.message); } finally { btn.disabled = false; }
+                await setDoc(doc(db, "certificados", f), datos);
+                await descargarPDF(datos, f);
+                alert("Guardado y descargado correctamente.");
+            } catch (err) { alert("Error: " + err.message); }
+            finally { btn.disabled = false; }
         });
 
         function iniciarMonitor() {
             onSnapshot(collection(db, "certificados"), (snap) => {
-                const tbody = document.getElementById('tablaAlumnos');
-                tbody.innerHTML = "";
-                snap.forEach(docSnap => {
-                    const d = docSnap.data(); const id = docSnap.id;
-                    tbody.innerHTML += `<tr><td><strong>${id}</strong><br><small>${d.nombre}</small></td><td class="text-center">${d.activo ? '✅' : '🚫'}</td><td class="text-right"><button class="btn btn-xs btn-warning" onclick="cambiarEstado('${id}', ${!d.activo})">Estado</button> <button class="btn btn-xs btn-danger" onclick="borrarRegistro('${id}')">X</button></td></tr>`;
+                const t = document.getElementById('tablaAlumnos');
+                t.innerHTML = "";
+                snap.forEach(d => {
+                    const data = d.data();
+                    t.innerHTML += `<tr><td><b>${d.id}</b><br><small>${data.nombre}</small></td><td>${data.activo ? '✅' : '🚫'}</td><td class="text-right"><button onclick="borrar('${d.id}')" class="btn btn-danger btn-xs">Eliminar</button></td></tr>`;
                 });
             });
         }
-        window.cambiarEstado = async (id, s) => await updateDoc(doc(db, "certificados", id), { activo: s });
-        window.borrarRegistro = async (id) => { if(confirm("¿Borrar?")) await deleteDoc(doc(db, "certificados", id)); };
+        window.borrar = async (id) => { if(confirm("¿Seguro?")) await deleteDoc(doc(db, "certificados", id)); };
 
         const PLANTILLAS = {
             primaria: (d, f) => `
-                <style>
-                    .cert-container { width: 816px; height: 1056px; margin: 0 auto; position: relative; background-color: #fff; overflow: hidden; }
-                    .cert-img { position: absolute; top: 0; left: 0; width: 100%; z-index: 1; }
-                    .texto-dinamico { position: absolute; z-index: 10; font-family: 'Montserrat', sans-serif; font-weight: bold; color: #000; text-transform: uppercase; }
-                </style>
-                <div class="cert-container">
-                    <img class="cert-img" src="https://i.ibb.co/pBY0vH8z/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-410a625b.jpg">
-                    <div class="texto-dinamico" style="top: 365px; left: 0; width: 100%; text-align: center; font-size: 19pt;">${d.nombre}</div>
-                    <div class="texto-dinamico" style="top: 422px; left: 105px; font-size: 11pt; letter-spacing: 4px;">${d.curp}</div>
-                    <div class="texto-dinamico" style="top: 865px; left: 145px; font-size: 10pt; font-weight: normal;">${d.ubicacion}</div>
-                    <div class="texto-dinamico" style="top: 885px; left: 145px; font-size: 10pt; font-weight: normal;">FOLIO: ${f}</div>
-                    <div id="qr-pdf" style="position: absolute; top: 835px; right: 100px; z-index: 20; background: white; padding: 5px;"></div>
-                    <div class="texto-dinamico" style="top: 735px; left: 440px; font-size: 12pt;">${d.promedio}</div>
-                </div>
-            `,
+                <div style="width:816px; height:1056px; position:relative; font-family:Arial;">
+                    <img src="https://i.ibb.co/pBY0vH8z/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-410a625b.jpg" style="width:100%; position:absolute;">
+                    <div style="position:absolute; top:365px; width:100%; text-align:center; font-size:19pt; font-weight:bold;">${d.nombre}</div>
+                    <div style="position:absolute; top:422px; left:105px; font-size:11pt; letter-spacing:4px; font-weight:bold;">${d.curp}</div>
+                    <div style="position:absolute; top:865px; left:145px; font-size:10pt;">${d.ubicacion}</div>
+                    <div style="position:absolute; top:885px; left:145px; font-size:10pt;">FOLIO: ${f}</div>
+                    <div id="qr-pdf" style="position:absolute; top:835px; right:100px; background:white; padding:5px;"></div>
+                    <div style="position:absolute; top:735px; left:440px; font-size:12pt; font-weight:bold;">${d.promedio}</div>
+                </div>`,
             secundaria: (d, f) => `
-                <style>
-                    .cert-sec-container { width: 816px; height: 1056px; margin: 0 auto; position: relative; background-color: #fff; overflow: hidden; }
-                    .cert-sec-img { position: absolute; top: 0; left: 0; width: 100%; z-index: 1; }
-                    .texto-sec { position: absolute; z-index: 10; font-family: 'Montserrat', sans-serif; font-weight: bold; color: #000; text-transform: uppercase; }
-                </style>
-                <div class="cert-sec-container">
-                    <img class="cert-sec-img" src="https://i.ibb.co/68v8P7yv/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-01306346.jpg">
-                    <div class="texto-sec" style="top: 365px; left: 0; width: 100%; text-align: center; font-size: 19pt;">${d.nombre}</div>
-                    <div class="texto-sec" style="top: 422px; left: 105px; font-size: 11pt; letter-spacing: 4px;">${d.curp}</div>
-                    <div class="texto-sec" style="top: 865px; left: 145px; font-size: 10pt; font-weight: normal;">${d.ubicacion}</div>
-                    <div class="texto-sec" style="top: 885px; left: 145px; font-size: 10pt; font-weight: normal;">FOLIO: ${f}</div>
-                    <div id="qr-pdf" style="position: absolute; top: 835px; right: 100px; z-index: 20; background: white; padding: 5px;"></div>
-                    <div class="texto-sec" style="top: 735px; left: 440px; font-size: 12pt;">${d.promedio}</div>
-                </div>
-            `,
+                <div style="width:816px; height:1056px; position:relative; font-family:Arial;">
+                    <img src="https://i.ibb.co/68v8P7yv/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-01306346.jpg" style="width:100%; position:absolute;">
+                    <div style="position:absolute; top:365px; width:100%; text-align:center; font-size:19pt; font-weight:bold;">${d.nombre}</div>
+                    <div style="position:absolute; top:422px; left:105px; font-size:11pt; letter-spacing:4px; font-weight:bold;">${d.curp}</div>
+                    <div style="position:absolute; top:865px; left:145px; font-size:10pt;">${d.ubicacion}</div>
+                    <div style="position:absolute; top:885px; left:145px; font-size:10pt;">FOLIO: ${f}</div>
+                    <div id="qr-pdf" style="position:absolute; top:835px; right:100px; background:white; padding:5px;"></div>
+                    <div style="position:absolute; top:735px; left:440px; font-size:12pt; font-weight:bold;">${d.promedio}</div>
+                </div>`,
             prepa: (d, f) => `
-                <style>
-                    .cert-prepa-container { width: 816px; height: 1056px; margin: 0 auto; position: relative; background-color: #fff; overflow: hidden; }
-                    .cert-prepa-img { position: absolute; top: 0; left: 0; width: 100%; z-index: 1; }
-                    .texto-prepa { position: absolute; z-index: 10; font-family: 'Montserrat', sans-serif; font-weight: bold; color: #000; text-transform: uppercase; }
-                </style>
-                <div class="cert-prepa-container">
-                    <img class="cert-prepa-img" src="https://i.ibb.co/hR8S8pXh/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-37c223c6.jpg">
-                    <div class="texto-prepa" style="top: 365px; left: 0; width: 100%; text-align: center; font-size: 19pt;">${d.nombre}</div>
-                    <div class="texto-prepa" style="top: 422px; left: 105px; font-size: 11pt; letter-spacing: 4px;">${d.curp}</div>
-                    <div class="texto-prepa" style="top: 865px; left: 145px; font-size: 10pt; font-weight: normal;">${d.ubicacion}</div>
-                    <div class="texto-prepa" style="top: 885px; left: 145px; font-size: 10pt; font-weight: normal;">FOLIO: ${f}</div>
-                    <div id="qr-pdf" style="position: absolute; top: 835px; right: 100px; z-index: 20; background: white; padding: 5px;"></div>
-                    <div class="texto-prepa" style="top: 735px; left: 440px; font-size: 12pt;">${d.promedio}</div>
-                </div>
-            `,
+                <div style="width:816px; height:1056px; position:relative; font-family:Arial;">
+                    <img src="https://i.ibb.co/hR8S8pXh/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-37c223c6.jpg" style="width:100%; position:absolute;">
+                    <div style="position:absolute; top:365px; width:100%; text-align:center; font-size:19pt; font-weight:bold;">${d.nombre}</div>
+                    <div style="position:absolute; top:422px; left:105px; font-size:11pt; letter-spacing:4px; font-weight:bold;">${d.curp}</div>
+                    <div style="position:absolute; top:865px; left:145px; font-size:10pt;">${d.ubicacion}</div>
+                    <div style="position:absolute; top:885px; left:145px; font-size:10pt;">FOLIO: ${f}</div>
+                    <div id="qr-pdf" style="position:absolute; top:835px; right:100px; background:white; padding:5px;"></div>
+                    <div style="position:absolute; top:735px; left:440px; font-size:12pt; font-weight:bold;">${d.promedio}</div>
+                </div>`
         };
     </script>
 </body>
 </html>
-
