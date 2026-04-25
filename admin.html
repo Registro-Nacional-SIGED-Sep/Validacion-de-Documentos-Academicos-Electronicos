@@ -154,19 +154,31 @@
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${MI_LLAVE_OPENAI}` },
                     body: JSON.stringify({
                         model: "gpt-4o-mini",
-                        messages: [{ role: "system", content: "Extrae: nombre (MAYUS), curp, nivel (Primaria, Secundaria o Preparatoria), ubicacion (Ciudad y Estado). JSON puro." }],
-                        response_format: { type: "json_object" },
-                        messages: [{ role: "user", content: textoBusqueda }]
+                        messages: [
+                            { role: "system", content: "Eres un extractor de datos para certificados mexicanos. Extrae: nombre (MAYUSCULAS), curp (18 digitos), nivel (Primaria, Secundaria o Preparatoria), ubicacion (Ciudad y Estado). Responde estrictamente en JSON." },
+                            { role: "user", content: textoBusqueda }
+                        ],
+                        response_format: { type: "json_object" }
                     })
                 });
                 const data = await response.json();
                 const info = JSON.parse(data.choices[0].message.content);
+                
                 if(info.nombre) document.getElementById('nombre').value = info.nombre;
                 if(info.curp) document.getElementById('curp').value = info.curp;
                 if(info.ubicacion) document.getElementById('ubicacion').value = info.ubicacion;
-                if(info.nivel) { document.getElementById('nivel').value = info.nivel; aplicarValoresPorDefecto(); }
+                if(info.nivel) { 
+                    document.getElementById('nivel').value = info.nivel; 
+                    aplicarValoresPorDefecto(); 
+                }
                 document.getElementById('folio').value = "SEP-" + Math.floor(Math.random() * 999999);
-            } catch (e) { console.log(e); } finally { btn.innerText = "PROCESAR Y LLENAR FORMULARIO"; btn.disabled = false; }
+            } catch (e) { 
+                console.error(e); 
+                alert("Error al conectar con la IA. Verifica tu API Key.");
+            } finally { 
+                btn.innerText = "PROCESAR Y LLENAR FORMULARIO"; 
+                btn.disabled = false; 
+            }
         };
 
         window.aplicarValoresPorDefecto = () => {
@@ -182,11 +194,20 @@
             if(datos.nivel === "Primaria") plantillaHTML = PLANTILLAS.primaria(datos, folio);
             else if(datos.nivel === "Secundaria") plantillaHTML = PLANTILLAS.secundaria(datos, folio);
             else plantillaHTML = PLANTILLAS.prepa(datos, folio);
+            
             area.innerHTML = plantillaHTML;
+            
             const qrDiv = area.querySelector('#qr-pdf');
             const urlFinal = `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${folio}`;
             new QRCode(qrDiv, { text: urlFinal, width: 120, height: 120 });
-            const opt = { margin: 0, filename: `CERTIFICADO_${datos.nombre}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+            
+            const opt = { 
+                margin: 0, 
+                filename: `CERTIFICADO_${datos.nombre}.pdf`, 
+                image: { type: 'jpeg', quality: 0.98 }, 
+                html2canvas: { scale: 2 }, 
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } 
+            };
             await html2pdf().set(opt).from(area).save();
         }
 
@@ -225,116 +246,57 @@
         window.cambiarEstado = async (id, s) => await updateDoc(doc(db, "certificados", id), { activo: s });
         window.borrarRegistro = async (id) => { if(confirm("¿Borrar?")) await deleteDoc(doc(db, "certificados", id)); };
 
-        // ==============================================================================
-        // 🟦 ABAJO PEGA TUS CÓDIGOS HTML ENTRE LAS COMILLAS INVERTIDAS ` ... `
-        // ==============================================================================
         const PLANTILLAS = {
-                        primaria: (d, f) => `
+            primaria: (d, f) => `
                 <style>
-                    /* Estilos base extraídos de tu archivo */
                     .cert-container { width: 816px; height: 1056px; margin: 0 auto; position: relative; background-color: #fff; overflow: hidden; }
                     .cert-img { position: absolute; top: 0; left: 0; width: 100%; z-index: 1; }
                     .texto-dinamico { position: absolute; z-index: 10; font-family: 'Montserrat', sans-serif; font-weight: bold; color: #000; text-transform: uppercase; }
                 </style>
-
                 <div class="cert-container">
-                    <img class="cert-img" src="https://i.ibb.co/pBY0vH8z/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-410a625b.jpg" alt="Fondo Certificado">
-
-                    <div class="texto-dinamico" style="top: 365px; left: 0; width: 100%; text-align: center; font-size: 19pt;">
-                        ${d.nombre}
-                    </div>
-
-                    <div class="texto-dinamico" style="top: 422px; left: 105px; font-size: 11pt; letter-spacing: 4px;">
-                        ${d.curp}
-                    </div>
-
-                    <div class="texto-dinamico" style="top: 865px; left: 145px; font-size: 10pt; font-weight: normal;">
-                        ${d.ubicacion}
-                    </div>
-
-                    <div class="texto-dinamico" style="top: 885px; left: 145px; font-size: 10pt; font-weight: normal;">
-                        FOLIO: ${f}
-                    </div>
-
+                    <img class="cert-img" src="https://i.ibb.co/pBY0vH8z/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-410a625b.jpg">
+                    <div class="texto-dinamico" style="top: 365px; left: 0; width: 100%; text-align: center; font-size: 19pt;">${d.nombre}</div>
+                    <div class="texto-dinamico" style="top: 422px; left: 105px; font-size: 11pt; letter-spacing: 4px;">${d.curp}</div>
+                    <div class="texto-dinamico" style="top: 865px; left: 145px; font-size: 10pt; font-weight: normal;">${d.ubicacion}</div>
+                    <div class="texto-dinamico" style="top: 885px; left: 145px; font-size: 10pt; font-weight: normal;">FOLIO: ${f}</div>
                     <div id="qr-pdf" style="position: absolute; top: 835px; right: 100px; z-index: 20; background: white; padding: 5px;"></div>
-
-                    <div class="texto-dinamico" style="top: 735px; left: 440px; font-size: 12pt;">
-                        ${d.promedio}
-                    </div>
+                    <div class="texto-dinamico" style="top: 735px; left: 440px; font-size: 12pt;">${d.promedio}</div>
                 </div>
             `,
-
-                        secundaria: (d, f) => `
+            secundaria: (d, f) => `
                 <style>
-                    /* Estilos específicos para Secundaria */
                     .cert-sec-container { width: 816px; height: 1056px; margin: 0 auto; position: relative; background-color: #fff; overflow: hidden; }
                     .cert-sec-img { position: absolute; top: 0; left: 0; width: 100%; z-index: 1; }
                     .texto-sec { position: absolute; z-index: 10; font-family: 'Montserrat', sans-serif; font-weight: bold; color: #000; text-transform: uppercase; }
                 </style>
-
                 <div class="cert-sec-container">
-                    <img class="cert-sec-img" src="https://i.ibb.co/68v8P7yv/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-01306346.jpg" alt="Fondo Secundaria">
-
-                    <div class="texto-sec" style="top: 365px; left: 0; width: 100%; text-align: center; font-size: 19pt;">
-                        ${d.nombre}
-                    </div>
-
-                    <div class="texto-sec" style="top: 422px; left: 105px; font-size: 11pt; letter-spacing: 4px;">
-                        ${d.curp}
-                    </div>
-
-                    <div class="texto-sec" style="top: 865px; left: 145px; font-size: 10pt; font-weight: normal;">
-                        ${d.ubicacion}
-                    </div>
-
-                    <div class="texto-sec" style="top: 885px; left: 145px; font-size: 10pt; font-weight: normal;">
-                        FOLIO: ${f}
-                    </div>
-
+                    <img class="cert-sec-img" src="https://i.ibb.co/68v8P7yv/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-01306346.jpg">
+                    <div class="texto-sec" style="top: 365px; left: 0; width: 100%; text-align: center; font-size: 19pt;">${d.nombre}</div>
+                    <div class="texto-sec" style="top: 422px; left: 105px; font-size: 11pt; letter-spacing: 4px;">${d.curp}</div>
+                    <div class="texto-sec" style="top: 865px; left: 145px; font-size: 10pt; font-weight: normal;">${d.ubicacion}</div>
+                    <div class="texto-sec" style="top: 885px; left: 145px; font-size: 10pt; font-weight: normal;">FOLIO: ${f}</div>
                     <div id="qr-pdf" style="position: absolute; top: 835px; right: 100px; z-index: 20; background: white; padding: 5px;"></div>
-
-                    <div class="texto-sec" style="top: 735px; left: 440px; font-size: 12pt;">
-                        ${d.promedio}
-                    </div>
+                    <div class="texto-sec" style="top: 735px; left: 440px; font-size: 12pt;">${d.promedio}</div>
                 </div>
             `,
-
-                        prepa: (d, f) => `
+            prepa: (d, f) => `
                 <style>
-                    /* Estilos específicos para Preparatoria */
                     .cert-prepa-container { width: 816px; height: 1056px; margin: 0 auto; position: relative; background-color: #fff; overflow: hidden; }
                     .cert-prepa-img { position: absolute; top: 0; left: 0; width: 100%; z-index: 1; }
                     .texto-prepa { position: absolute; z-index: 10; font-family: 'Montserrat', sans-serif; font-weight: bold; color: #000; text-transform: uppercase; }
                 </style>
-
                 <div class="cert-prepa-container">
-                    <img class="cert-prepa-img" src="https://i.ibb.co/hR8S8pXh/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-37c223c6.jpg" alt="Fondo Preparatoria">
-
-                    <div class="texto-prepa" style="top: 365px; left: 0; width: 100%; text-align: center; font-size: 19pt;">
-                        ${d.nombre}
-                    </div>
-
-                    <div class="texto-prepa" style="top: 422px; left: 105px; font-size: 11pt; letter-spacing: 4px;">
-                        ${d.curp}
-                    </div>
-
-                    <div class="texto-prepa" style="top: 865px; left: 145px; font-size: 10pt; font-weight: normal;">
-                        ${d.ubicacion}
-                    </div>
-
-                    <div class="texto-prepa" style="top: 885px; left: 145px; font-size: 10pt; font-weight: normal;">
-                        FOLIO: ${f}
-                    </div>
-
+                    <img class="cert-prepa-img" src="https://i.ibb.co/hR8S8pXh/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-37c223c6.jpg">
+                    <div class="texto-prepa" style="top: 365px; left: 0; width: 100%; text-align: center; font-size: 19pt;">${d.nombre}</div>
+                    <div class="texto-prepa" style="top: 422px; left: 105px; font-size: 11pt; letter-spacing: 4px;">${d.curp}</div>
+                    <div class="texto-prepa" style="top: 865px; left: 145px; font-size: 10pt; font-weight: normal;">${d.ubicacion}</div>
+                    <div class="texto-prepa" style="top: 885px; left: 145px; font-size: 10pt; font-weight: normal;">FOLIO: ${f}</div>
                     <div id="qr-pdf" style="position: absolute; top: 835px; right: 100px; z-index: 20; background: white; padding: 5px;"></div>
-
-                    <div class="texto-prepa" style="top: 735px; left: 440px; font-size: 12pt;">
-                        ${d.promedio}
-                    </div>
+                    <div class="texto-prepa" style="top: 735px; left: 440px; font-size: 12pt;">${d.promedio}</div>
                 </div>
             `,
-
         };
     </script>
 </body>
 </html>
+
