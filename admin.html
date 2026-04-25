@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | V8.8 Definitiva</title>
+    <title>Panel Maestro SiDGBE | V9.0 Final</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
-        body { background-color: #f4f7f6; font-family: 'Open Sans', sans-serif; padding-bottom: 50px; }
-        .navbar-admin { background-color: #0C231E; padding: 20px; color: white; margin-bottom: 30px; border-bottom: 4px solid #D4C19C; }
+        body { background-color: #f4f7f6; font-family: 'Open Sans', sans-serif; }
+        .navbar-admin { background-color: #0C231E; padding: 20px; color: white; border-bottom: 4px solid #D4C19C; }
         .card-admin { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-top: 5px solid #D4C19C; margin-bottom: 30px; }
         .ia-container { background: #eef2ff; border: 2px solid #6366f1; padding: 25px; border-radius: 12px; margin-bottom: 25px; }
-        .btn-ia { background-color: #6366f1 !important; color: white !important; font-weight: bold; width: 100%; padding: 15px; border: none; border-radius: 8px; cursor: pointer; }
+        .btn-ia { background-color: #6366f1 !important; color: white !important; font-weight: bold; width: 100%; padding: 15px; border-radius: 8px; border: none; cursor: pointer; }
         .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 16px; border-radius: 8px; width: 100%; border: none; cursor: pointer; }
         .form-control { border-radius: 8px; height: 48px; border: 1px solid #ccc; margin-bottom: 20px; width: 100%; padding: 12px; }
         label { font-weight: bold; color: #13322B; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
@@ -22,14 +22,13 @@
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0C231E; z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
         
-        /* ÁREA DE RENDERIZADO MEJORADA */
+        /* Área de renderizado */
         #pdf-render-area { 
             position: absolute; 
             left: -10000px; 
             top: 0; 
             width: 816px; 
             height: 1056px; 
-            background: white;
         }
     </style>
 </head>
@@ -37,30 +36,29 @@
 
     <div id="login-overlay">
         <div class="login-box">
-            <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" width="160" style="filter: brightness(0); margin-bottom: 25px;">
-            <h4 style="font-weight: 900; color: #13322B;">ACCESO PRIVADO</h4>
-            <input type="password" id="token-input" class="form-control" placeholder="CLAVE MAESTRA" style="text-align: center;">
-            <input type="password" id="api-key-input" class="form-control" placeholder="OPENAI API KEY" style="text-align: center; border-color: #6366f1;">
-            <button onclick="intentarLogin()" class="btn-registrar">ENTRAR AL SISTEMA</button>
+            <h4 style="font-weight: 900; color: #13322B;">ACCESO MAESTRO</h4>
+            <input type="password" id="token-input" class="form-control" placeholder="CLAVE" style="text-align: center;">
+            <input type="password" id="api-key-input" class="form-control" placeholder="API KEY OPENAI" style="text-align: center; border-color: #6366f1;">
+            <button onclick="intentarLogin()" class="btn-registrar">DESBLOQUEAR</button>
         </div>
     </div>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0;">SISTEMA DE AUTOMATIZACIÓN DE CERTIFICADOS V8.8</h4>
+        <h4 style="margin:0;">SISTEMA SiDGBE V9.0 | GENERACIÓN SEGURA</h4>
     </nav>
 
-    <div class="container-fluid" style="max-width: 1300px;">
+    <div class="container-fluid" style="max-width: 1300px; margin-top: 30px;">
         <div class="row">
             <div class="col-md-5">
                 <div class="ia-container">
-                    <label style="color: #4338ca;">🤖 PROCESADOR DE TEXTO IA</label>
-                    <textarea id="whatsapp-input" class="form-control" rows="4" placeholder="Pega el mensaje aquí..."></textarea>
-                    <button onclick="procesarConIA()" id="btn-ia" class="btn-ia">EXTRAER INFORMACIÓN</button>
+                    <label>🤖 EXTRACCIÓN POR IA</label>
+                    <textarea id="whatsapp-input" class="form-control" rows="3" placeholder="Pega el mensaje..."></textarea>
+                    <button onclick="procesarConIA()" id="btn-ia" class="btn-ia">PROCESAR</button>
                 </div>
 
                 <div class="card-admin">
                     <form id="adminForm">
-                        <label>Tipo de Certificado:</label>
+                        <label>Nivel:</label>
                         <select id="nivel" class="form-control" required onchange="aplicarValoresPorDefecto()">
                             <option value="" disabled selected>Seleccione...</option>
                             <option value="Primaria">PRIMARIA (INEA)</option>
@@ -73,30 +71,26 @@
                             <div class="col-sm-6"><label>Promedio:</label><input type="text" id="promedio" class="form-control" required></div>
                         </div>
 
-                        <label>Nombre del Alumno:</label>
+                        <label>Nombre:</label>
                         <input type="text" id="nombre" class="form-control" required style="text-transform: uppercase;">
 
                         <label>CURP:</label>
                         <input type="text" id="curp" class="form-control" maxlength="18" required style="text-transform: uppercase;">
 
                         <div class="row">
-                            <div class="col-sm-6"><label>Ciclo Escolar:</label><input type="text" id="ciclo" class="form-control" required></div>
-                            <div class="col-sm-6"><label>Estado / Municipio:</label><input type="text" id="ubicacion" class="form-control"></div>
+                            <div class="col-sm-6"><label>Ciclo:</label><input type="text" id="ciclo" class="form-control" required></div>
+                            <div class="col-sm-6"><label>Ubicación:</label><input type="text" id="ubicacion" class="form-control"></div>
                         </div>
                         <input type="hidden" id="fechaEmision">
-                        
-                        <button type="submit" id="btnGuardar" class="btn-registrar">GUARDAR REGISTRO Y GENERAR PDF</button>
+                        <button type="submit" id="btnGuardar" class="btn-registrar">GUARDAR Y GENERAR PDF</button>
                     </form>
                 </div>
             </div>
 
             <div class="col-md-7">
                 <div class="card-admin">
-                    <h4 style="font-weight: bold; color: #13322B;">Monitor de Base de Datos</h4>
-                    <table class="table">
-                        <thead><tr><th>Folio / Alumno</th><th>Status</th><th class="text-right">Acciones</th></tr></thead>
-                        <tbody id="tablaAlumnos"></tbody>
-                    </table>
+                    <h4>Monitor de Registros</h4>
+                    <table class="table"><tbody id="tablaAlumnos"></tbody></table>
                 </div>
             </div>
         </div>
@@ -119,99 +113,106 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let API_KEY_OPENAI = "";
+        let API_KEY = "";
+
+        // FUNCIÓN CLAVE: Convierte URL de imagen a Base64 para saltar el error de PDF blanco
+        async function toDataURL(url) {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
 
         window.intentarLogin = () => {
             if(document.getElementById('token-input').value === "MASTER2026") {
-                API_KEY_OPENAI = document.getElementById('api-key-input').value;
+                API_KEY = document.getElementById('api-key-input').value;
                 document.getElementById('login-overlay').style.display = 'none';
                 iniciarMonitor();
-            } else { alert("Acceso denegado"); }
+            }
         };
 
         window.procesarConIA = async () => {
             const btn = document.getElementById('btn-ia');
-            btn.innerText = "⏳ LEYENDO..."; btn.disabled = true;
+            btn.innerText = "⏳..."; btn.disabled = true;
             try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                const res = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY_OPENAI}` },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
                     body: JSON.stringify({
                         model: "gpt-4o-mini",
-                        messages: [
-                            { role: "system", content: "Extrae: nombre (MAYUS), curp (18 chars), nivel (Primaria, Secundaria o Preparatoria), ubicacion. Responde SOLO JSON." },
-                            { role: "user", content: document.getElementById('whatsapp-input').value }
-                        ],
+                        messages: [{ role: "system", content: "Extrae JSON: nombre, curp, nivel, ubicacion." }, { role: "user", content: document.getElementById('whatsapp-input').value }],
                         response_format: { type: "json_object" }
                     })
                 });
-                const d = await response.json();
-                const res = JSON.parse(d.choices[0].message.content);
-                document.getElementById('nombre').value = res.nombre || "";
-                document.getElementById('curp').value = res.curp || "";
-                document.getElementById('ubicacion').value = res.ubicacion || "";
-                if(res.nivel) { document.getElementById('nivel').value = res.nivel; aplicarValoresPorDefecto(); }
+                const d = await res.json();
+                const info = JSON.parse(d.choices[0].message.content);
+                document.getElementById('nombre').value = info.nombre || "";
+                document.getElementById('curp').value = info.curp || "";
+                document.getElementById('ubicacion').value = info.ubicacion || "";
+                if(info.nivel) { document.getElementById('nivel').value = info.nivel; aplicarValoresPorDefecto(); }
                 document.getElementById('folio').value = "SEP-" + Math.floor(Math.random() * 999999);
-            } catch (e) { alert("Error de IA"); }
-            finally { btn.innerText = "EXTRAER INFORMACIÓN"; btn.disabled = false; }
+            } catch (e) { alert("Error IA"); }
+            finally { btn.innerText = "PROCESAR"; btn.disabled = false; }
         };
 
         window.aplicarValoresPorDefecto = () => {
             const n = document.getElementById("nivel").value;
-            const config = {
-                "Primaria": ["2017-2018", "2018-07-07", "9.0"],
-                "Secundaria": ["2020-2021", "2021-07-12", "9.2"],
-                "Preparatoria": ["2024-2025", "2025-08-20", "8.8"]
-            };
-            if(config[n]) {
-                document.getElementById("ciclo").value = config[n][0];
-                document.getElementById("fechaEmision").value = config[n][1];
-                document.getElementById("promedio").value = config[n][2];
-            }
+            const c = { "Primaria": ["2017-2018", "2018-07-07", "9.0"], "Secundaria": ["2020-2021", "2021-07-12", "9.2"], "Preparatoria": ["2024-2025", "2025-08-20", "8.8"] };
+            if(c[n]) { document.getElementById("ciclo").value = c[n][0]; document.getElementById("fechaEmision").value = c[n][1]; document.getElementById("promedio").value = c[n][2]; }
         };
 
-        async function crearPDF(datos, folio) {
+        async function descargarPDF(datos, folio) {
             const area = document.getElementById('pdf-render-area');
-            const slug = datos.nivel === "Primaria" ? "primaria" : datos.nivel === "Secundaria" ? "secundaria" : "prepa";
-            
-            // Inyectar HTML
-            area.innerHTML = PLANTILLAS[slug](datos, folio);
-            
-            // Generar QR
-            const qrTarget = area.querySelector('#qr-pdf');
-            new QRCode(qrTarget, {
+            const urls = {
+                "Primaria": "https://i.ibb.co/pBY0vH8z/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-410a625b.jpg",
+                "Secundaria": "https://i.ibb.co/68v8P7yv/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-01306346.jpg",
+                "Preparatoria": "https://i.ibb.co/hR8S8pXh/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-37c223c6.jpg"
+            };
+
+            // Paso 1: Convertir fondo a Base64
+            const base64Img = await toDataURL(urls[datos.nivel]);
+
+            // Paso 2: Dibujar Plantilla
+            area.innerHTML = `
+                <div id="capture-box" style="width:816px; height:1056px; position:relative; background:white;">
+                    <img src="${base64Img}" style="width:816px; height:1056px; position:absolute; top:0; left:0;">
+                    <div style="position:absolute; top:365px; width:100%; text-align:center; font-size:19pt; font-weight:bold; font-family:sans-serif; color:black;">${datos.nombre}</div>
+                    <div style="position:absolute; top:422px; left:105px; font-size:11pt; letter-spacing:4px; font-weight:bold; font-family:sans-serif; color:black;">${datos.curp}</div>
+                    <div style="position:absolute; top:865px; left:145px; font-size:10pt; font-family:sans-serif;">${datos.ubicacion}</div>
+                    <div style="position:absolute; top:885px; left:145px; font-size:10pt; font-family:sans-serif;">FOLIO: ${folio}</div>
+                    <div id="qr-target" style="position:absolute; top:835px; right:100px; background:white; padding:5px; border:1px solid #000;"></div>
+                    <div style="position:absolute; top:735px; left:440px; font-size:12pt; font-weight:bold; font-family:sans-serif;">${datos.promedio}</div>
+                </div>`;
+
+            // Paso 3: Generar QR
+            new QRCode(area.querySelector('#qr-target'), {
                 text: `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${folio}`,
                 width: 110, height: 110
             });
 
-            // ESPERAR CARGA DE IMAGEN REAL
-            const img = area.querySelector('.img-fondo');
-            
-            const guardar = async () => {
-                const opciones = {
-                    margin: 0,
-                    filename: `CERTIFICADO_${datos.nombre}.pdf`,
-                    image: { type: 'jpeg', quality: 1 },
-                    html2canvas: { scale: 3, useCORS: true, allowTaint: true, letterRendering: true },
-                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-                };
-                await html2pdf().set(opciones).from(area).save();
-                area.innerHTML = "";
+            // Paso 4: Exportar
+            const opt = {
+                margin: 0, filename: `CERTIFICADO_${datos.nombre}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, allowTaint: false },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
-
-            // Si la imagen ya cargó o cuando cargue
-            if (img.complete) {
-                setTimeout(guardar, 2000);
-            } else {
-                img.onload = () => setTimeout(guardar, 2000);
-            }
+            
+            // Un pequeño delay para que el QR se dibuje bien
+            setTimeout(async () => {
+                await html2pdf().set(opt).from(area.querySelector('#capture-box')).save();
+                area.innerHTML = "";
+            }, 800);
         }
 
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
-            btn.disabled = true; btn.innerText = "💾 PROCESANDO...";
-            
+            btn.disabled = true; btn.innerText = "GENERANDO...";
             const f = document.getElementById('folio').value.toUpperCase().trim();
             const d = {
                 nombre: document.getElementById('nombre').value.toUpperCase(),
@@ -220,62 +221,27 @@
                 ciclo: document.getElementById('ciclo').value,
                 nivel: document.getElementById('nivel').value,
                 ubicacion: document.getElementById('ubicacion').value,
-                fechaEmision: document.getElementById("fechaEmision").value,
-                activo: true, timestamp: new Date()
+                activo: true
             };
-
             try {
                 await setDoc(doc(db, "certificados", f), d);
-                await crearPDF(d, f);
-                alert("Registro exitoso y descarga iniciada.");
-            } catch (err) { alert("Error en Firebase"); }
-            finally { btn.disabled = false; btn.innerText = "GUARDAR REGISTRO Y GENERAR PDF"; }
+                await descargarPDF(d, f);
+                alert("Éxito");
+            } catch (err) { alert("Error"); }
+            finally { btn.disabled = false; btn.innerText = "GUARDAR Y GENERAR PDF"; }
         });
 
         function iniciarMonitor() {
             onSnapshot(collection(db, "certificados"), (s) => {
                 const t = document.getElementById('tablaAlumnos');
                 t.innerHTML = "";
-                s.forEach(docAlu => {
-                    const data = docAlu.data();
-                    t.innerHTML += `<tr><td><b>${docAlu.id}</b><br><small>${data.nombre}</small></td><td>✅</td><td class="text-right"><button onclick="eliminar('${docAlu.id}')" class="btn btn-danger btn-xs">Borrar</button></td></tr>`;
+                s.forEach(d => {
+                    t.innerHTML += `<tr><td><b>${d.id}</b><br>${d.data().nombre}</td><td class="text-right"><button onclick="eliminar('${d.id}')" class="btn btn-danger btn-xs">X</button></td></tr>`;
                 });
             });
         }
-        window.eliminar = async (id) => { if(confirm("¿Borrar?")) await deleteDoc(doc(db, "certificados", id)); };
-
-        const PLANTILLAS = {
-            primaria: (d, f) => `
-                <div style="width:816px; height:1056px; position:relative; background:white; overflow:hidden;">
-                    <img src="https://i.ibb.co/pBY0vH8z/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-410a625b.jpg" class="img-fondo" style="width:816px; height:1056px; position:absolute; top:0; left:0; z-index:1;">
-                    <div style="position:absolute; top:365px; width:100%; text-align:center; font-size:19pt; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">${d.nombre}</div>
-                    <div style="position:absolute; top:422px; left:105px; font-size:11pt; letter-spacing:4px; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">${d.curp}</div>
-                    <div style="position:absolute; top:865px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">${d.ubicacion}</div>
-                    <div style="position:absolute; top:885px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">FOLIO: ${f}</div>
-                    <div id="qr-pdf" style="position:absolute; top:835px; right:100px; background:white; padding:5px; z-index:10; border:1px solid #000;"></div>
-                    <div style="position:absolute; top:735px; left:440px; font-size:12pt; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">${d.promedio}</div>
-                </div>`,
-            secundaria: (d, f) => `
-                <div style="width:816px; height:1056px; position:relative; background:white; overflow:hidden;">
-                    <img src="https://i.ibb.co/68v8P7yv/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-01306346.jpg" class="img-fondo" style="width:816px; height:1056px; position:absolute; top:0; left:0; z-index:1;">
-                    <div style="position:absolute; top:365px; width:100%; text-align:center; font-size:19pt; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">${d.nombre}</div>
-                    <div style="position:absolute; top:422px; left:105px; font-size:11pt; letter-spacing:4px; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">${d.curp}</div>
-                    <div style="position:absolute; top:865px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">${d.ubicacion}</div>
-                    <div style="position:absolute; top:885px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">FOLIO: ${f}</div>
-                    <div id="qr-pdf" style="position:absolute; top:835px; right:100px; background:white; padding:5px; z-index:10; border:1px solid #000;"></div>
-                    <div style="position:absolute; top:735px; left:440px; font-size:12pt; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">${d.promedio}</div>
-                </div>`,
-            prepa: (d, f) => `
-                <div style="width:816px; height:1056px; position:relative; background:white; overflow:hidden;">
-                    <img src="https://i.ibb.co/hR8S8pXh/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-37c223c6.jpg" class="img-fondo" style="width:816px; height:1056px; position:absolute; top:0; left:0; z-index:1;">
-                    <div style="position:absolute; top:365px; width:100%; text-align:center; font-size:19pt; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">${d.nombre}</div>
-                    <div style="position:absolute; top:422px; left:105px; font-size:11pt; letter-spacing:4px; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">${d.curp}</div>
-                    <div style="position:absolute; top:865px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">${d.ubicacion}</div>
-                    <div style="position:absolute; top:885px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">FOLIO: ${f}</div>
-                    <div id="qr-pdf" style="position:absolute; top:835px; right:100px; background:white; padding:5px; z-index:10; border:1px solid #000;"></div>
-                    <div style="position:absolute; top:735px; left:440px; font-size:12pt; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">${d.promedio}</div>
-                </div>`
-        };
+        window.eliminar = async (id) => { if(confirm("¿?")) await deleteDoc(doc(db, "certificados", id)); };
     </script>
 </body>
 </html>
+
