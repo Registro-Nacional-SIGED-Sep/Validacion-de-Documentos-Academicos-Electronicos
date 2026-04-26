@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | V9.0 Final</title>
+    <title>Panel Maestro SiDGBE | V9.5 PostImages Edition</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -22,7 +22,7 @@
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0C231E; z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
         
-        /* Área de renderizado */
+        /* Área de renderizado oculta para el PDF */
         #pdf-render-area { 
             position: absolute; 
             left: -10000px; 
@@ -44,7 +44,7 @@
     </div>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0;">SISTEMA SiDGBE V9.0 | GENERACIÓN SEGURA</h4>
+        <h4 style="margin:0;">SISTEMA SiDGBE V9.5 | GENERACIÓN SEGURA</h4>
     </nav>
 
     <div class="container-fluid" style="max-width: 1300px; margin-top: 30px;">
@@ -52,15 +52,15 @@
             <div class="col-md-5">
                 <div class="ia-container">
                     <label>🤖 EXTRACCIÓN POR IA</label>
-                    <textarea id="whatsapp-input" class="form-control" rows="3" placeholder="Pega el mensaje..."></textarea>
-                    <button onclick="procesarConIA()" id="btn-ia" class="btn-ia">PROCESAR</button>
+                    <textarea id="whatsapp-input" class="form-control" rows="3" placeholder="Pega el mensaje de WhatsApp..."></textarea>
+                    <button onclick="procesarConIA()" id="btn-ia" class="btn-ia">PROCESAR DATOS</button>
                 </div>
 
                 <div class="card-admin">
                     <form id="adminForm">
-                        <label>Nivel:</label>
+                        <label>Nivel del Documento:</label>
                         <select id="nivel" class="form-control" required onchange="aplicarValoresPorDefecto()">
-                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="" disabled selected>Seleccione el nivel...</option>
                             <option value="Primaria">PRIMARIA (INEA)</option>
                             <option value="Secundaria">SECUNDARIA (INEA)</option>
                             <option value="Preparatoria">PREPARATORIA</option>
@@ -71,25 +71,25 @@
                             <div class="col-sm-6"><label>Promedio:</label><input type="text" id="promedio" class="form-control" required></div>
                         </div>
 
-                        <label>Nombre:</label>
+                        <label>Nombre Completo:</label>
                         <input type="text" id="nombre" class="form-control" required style="text-transform: uppercase;">
 
                         <label>CURP:</label>
                         <input type="text" id="curp" class="form-control" maxlength="18" required style="text-transform: uppercase;">
 
                         <div class="row">
-                            <div class="col-sm-6"><label>Ciclo:</label><input type="text" id="ciclo" class="form-control" required></div>
+                            <div class="col-sm-6"><label>Ciclo Escolar:</label><input type="text" id="ciclo" class="form-control" required></div>
                             <div class="col-sm-6"><label>Ubicación:</label><input type="text" id="ubicacion" class="form-control"></div>
                         </div>
                         <input type="hidden" id="fechaEmision">
-                        <button type="submit" id="btnGuardar" class="btn-registrar">GUARDAR Y GENERAR PDF</button>
+                        <button type="submit" id="btnGuardar" class="btn-registrar">GUARDAR Y DESCARGAR PDF</button>
                     </form>
                 </div>
             </div>
 
             <div class="col-md-7">
                 <div class="card-admin">
-                    <h4>Monitor de Registros</h4>
+                    <h4>Monitor de Registros en la Nube</h4>
                     <table class="table"><tbody id="tablaAlumnos"></tbody></table>
                 </div>
             </div>
@@ -115,7 +115,7 @@
         const db = getFirestore(app);
         let API_KEY = "";
 
-        // FUNCIÓN CLAVE: Convierte URL de imagen a Base64 para saltar el error de PDF blanco
+        // FUNCIÓN CLAVE: Evita que el PDF salga blanco al convertir la imagen a Base64 antes de procesar
         async function toDataURL(url) {
             const response = await fetch(url);
             const blob = await response.blob();
@@ -156,63 +156,87 @@
                 if(info.nivel) { document.getElementById('nivel').value = info.nivel; aplicarValoresPorDefecto(); }
                 document.getElementById('folio').value = "SEP-" + Math.floor(Math.random() * 999999);
             } catch (e) { alert("Error IA"); }
-            finally { btn.innerText = "PROCESAR"; btn.disabled = false; }
+            finally { btn.innerText = "PROCESAR DATOS"; btn.disabled = false; }
         };
 
         window.aplicarValoresPorDefecto = () => {
             const n = document.getElementById("nivel").value;
-            const c = { "Primaria": ["2017-2018", "2018-07-07", "9.0"], "Secundaria": ["2020-2021", "2021-07-12", "9.2"], "Preparatoria": ["2024-2025", "2025-08-20", "8.8"] };
-            if(c[n]) { document.getElementById("ciclo").value = c[n][0]; document.getElementById("fechaEmision").value = c[n][1]; document.getElementById("promedio").value = c[n][2]; }
+            const c = { 
+                "Primaria": ["2017-2018", "2018-07-07", "9.0"], 
+                "Secundaria": ["2020-2021", "2021-07-12", "9.2"], 
+                "Preparatoria": ["2024-2025", "2025-08-20", "8.8"] 
+            };
+            if(c[n]) { 
+                document.getElementById("ciclo").value = c[n][0]; 
+                document.getElementById("fechaEmision").value = c[n][1]; 
+                document.getElementById("promedio").value = c[n][2]; 
+            }
         };
 
         async function descargarPDF(datos, folio) {
             const area = document.getElementById('pdf-render-area');
+            
+            // TUS NUEVOS ENLACES DE POSTIMAGES
             const urls = {
-                "Primaria": "https://i.ibb.co/pBY0vH8z/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-410a625b.jpg",
-                "Secundaria": "https://i.ibb.co/68v8P7yv/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-01306346.jpg",
-                "Preparatoria": "https://i.ibb.co/hR8S8pXh/Imagen-de-Whats-App-2025-02-15-a-las-13-17-08-37c223c6.jpg"
+                "Primaria": "https://i.postimg.cc/zBHtQcJQ/primaria-demo-1.png",
+                "Secundaria": "https://i.postimg.cc/ZqCV9MyZ/secundaria-demo-1.png",
+                "Preparatoria": "https://i.postimg.cc/D0yhLhQy/PDF-demo-1.png"
             };
 
-            // Paso 1: Convertir fondo a Base64
             const base64Img = await toDataURL(urls[datos.nivel]);
 
-            // Paso 2: Dibujar Plantilla
             area.innerHTML = `
                 <div id="capture-box" style="width:816px; height:1056px; position:relative; background:white;">
-                    <img src="${base64Img}" style="width:816px; height:1056px; position:absolute; top:0; left:0;">
-                    <div style="position:absolute; top:365px; width:100%; text-align:center; font-size:19pt; font-weight:bold; font-family:sans-serif; color:black;">${datos.nombre}</div>
-                    <div style="position:absolute; top:422px; left:105px; font-size:11pt; letter-spacing:4px; font-weight:bold; font-family:sans-serif; color:black;">${datos.curp}</div>
-                    <div style="position:absolute; top:865px; left:145px; font-size:10pt; font-family:sans-serif;">${datos.ubicacion}</div>
-                    <div style="position:absolute; top:885px; left:145px; font-size:10pt; font-family:sans-serif;">FOLIO: ${folio}</div>
-                    <div id="qr-target" style="position:absolute; top:835px; right:100px; background:white; padding:5px; border:1px solid #000;"></div>
-                    <div style="position:absolute; top:735px; left:440px; font-size:12pt; font-weight:bold; font-family:sans-serif;">${datos.promedio}</div>
+                    <img src="${base64Img}" style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:1;">
+                    
+                    <div style="position:absolute; top:368px; width:100%; text-align:center; font-size:22pt; font-weight:bold; font-family:sans-serif; color:black; z-index:10;">
+                        ${datos.nombre}
+                    </div>
+                    
+                    <div style="position:absolute; top:425px; left:108px; font-size:12pt; letter-spacing:4.8px; font-weight:bold; font-family:monospace; color:black; z-index:10;">
+                        ${datos.curp}
+                    </div>
+                    
+                    <div style="position:absolute; top:865px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10;">
+                        ${datos.ubicacion}
+                    </div>
+                    
+                    <div style="position:absolute; top:885px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10;">
+                        FOLIO: ${folio}
+                    </div>
+                    
+                    <div id="qr-target" style="position:absolute; top:832px; right:102px; background:white; padding:4px; border:1px solid #000; z-index:10;"></div>
+                    
+                    <div style="position:absolute; top:736px; left:445px; font-size:13pt; font-weight:bold; font-family:sans-serif; z-index:10;">
+                        ${datos.promedio}
+                    </div>
                 </div>`;
 
-            // Paso 3: Generar QR
+            // Generar el QR dinámico
             new QRCode(area.querySelector('#qr-target'), {
                 text: `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${folio}`,
                 width: 110, height: 110
             });
 
-            // Paso 4: Exportar
             const opt = {
-                margin: 0, filename: `CERTIFICADO_${datos.nombre}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, allowTaint: false },
+                margin: 0,
+                filename: `CERTIFICADO_${datos.nombre}.pdf`,
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 3, useCORS: true, letterRendering: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
             
-            // Un pequeño delay para que el QR se dibuje bien
             setTimeout(async () => {
                 await html2pdf().set(opt).from(area.querySelector('#capture-box')).save();
                 area.innerHTML = "";
-            }, 800);
+            }, 1000);
         }
 
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
-            btn.disabled = true; btn.innerText = "GENERANDO...";
+            btn.disabled = true; btn.innerText = "PROCESANDO...";
+            
             const f = document.getElementById('folio').value.toUpperCase().trim();
             const d = {
                 nombre: document.getElementById('nombre').value.toUpperCase(),
@@ -223,12 +247,18 @@
                 ubicacion: document.getElementById('ubicacion').value,
                 activo: true
             };
+
             try {
                 await setDoc(doc(db, "certificados", f), d);
                 await descargarPDF(d, f);
-                alert("Éxito");
-            } catch (err) { alert("Error"); }
-            finally { btn.disabled = false; btn.innerText = "GUARDAR Y GENERAR PDF"; }
+                alert("Documento generado y guardado con éxito.");
+            } catch (err) { 
+                console.error(err);
+                alert("Error al conectar con Firebase."); 
+            } finally { 
+                btn.disabled = false; 
+                btn.innerText = "GUARDAR Y DESCARGAR PDF"; 
+            }
         });
 
         function iniciarMonitor() {
@@ -236,11 +266,22 @@
                 const t = document.getElementById('tablaAlumnos');
                 t.innerHTML = "";
                 s.forEach(d => {
-                    t.innerHTML += `<tr><td><b>${d.id}</b><br>${d.data().nombre}</td><td class="text-right"><button onclick="eliminar('${d.id}')" class="btn btn-danger btn-xs">X</button></td></tr>`;
+                    t.innerHTML += `
+                        <tr>
+                            <td><b>${d.id}</b><br>${d.data().nombre}</td>
+                            <td class="text-right">
+                                <button onclick="eliminar('${d.id}')" class="btn btn-danger btn-xs">ELIMINAR</button>
+                            </td>
+                        </tr>`;
                 });
             });
         }
-        window.eliminar = async (id) => { if(confirm("¿?")) await deleteDoc(doc(db, "certificados", id)); };
+
+        window.eliminar = async (id) => { 
+            if(confirm("¿Estás seguro de eliminar este registro?")) {
+                await deleteDoc(doc(db, "certificados", id)); 
+            }
+        };
     </script>
 </body>
 </html>
