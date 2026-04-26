@@ -3,57 +3,59 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | V10.5 Calibración</title>
+    <title>Panel Maestro SiDGBE | Control Total V11.0 IA</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
-        body { background-color: #f4f7f6; font-family: 'Open Sans', sans-serif; }
-        .navbar-admin { background-color: #0C231E; padding: 20px; color: white; border-bottom: 4px solid #D4C19C; }
-        .card-admin { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-top: 5px solid #D4C19C; margin-bottom: 30px; }
-        .ia-container { background: #eef2ff; border: 2px solid #6366f1; padding: 25px; border-radius: 12px; margin-bottom: 25px; }
-        .btn-ia { background-color: #6366f1 !important; color: white !important; font-weight: bold; width: 100%; padding: 15px; border-radius: 8px; border: none; cursor: pointer; }
-        .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 16px; border-radius: 8px; width: 100%; border: none; cursor: pointer; }
-        .form-control { border-radius: 8px; height: 48px; border: 1px solid #ccc; margin-bottom: 20px; width: 100%; padding: 12px; }
-        label { font-weight: bold; color: #13322B; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
+        body { background-color: #f4f7f6; font-family: 'Open Sans', sans-serif; padding-bottom: 50px; }
+        .navbar-admin { background-color: #0C231E; padding: 20px; color: white; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border-bottom: 4px solid #D4C19C; }
+        .card-admin { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 5px solid #D4C19C; margin-bottom: 30px; }
         
+        /* Estilos IA */
+        .ia-box { background: #eef2ff; border: 2px solid #6366f1; padding: 20px; border-radius: 12px; margin-bottom: 25px; position: relative; }
+        .btn-ia { background-color: #6366f1 !important; color: white !important; font-weight: bold; width: 100%; padding: 12px; border-radius: 6px; border: none; cursor: pointer; transition: 0.3s; }
+        .btn-ia:hover { background-color: #4f46e5 !important; }
+
+        .btn-registrar { background-color: #12322B !important; color: white !important; font-weight: bold; padding: 14px; font-size: 15px; border: none; transition: 0.3s; border-radius: 6px; width: 100%; }
+        .btn-registrar:hover { background-color: #1d4d42 !important; transform: translateY(-1px); }
+        
+        label { font-weight: bold; color: #444; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; }
+        .form-control { border-radius: 6px; height: 45px; border: 1px solid #ccc; font-size: 14px; margin-bottom: 15px; width: 100%; }
+        
+        .monitor-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        .stat-box { background: #13322B; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        .stat-box h3 { margin: 5px 0; color: #D4C19C; font-weight: bold; font-size: 28px; }
+
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0C231E; z-index: 10000; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
-        
-        /* Área de renderizado */
-        #pdf-render-area { 
-            position: absolute; 
-            left: -10000px; 
-            top: 0; 
-            width: 816px; 
-            height: 1056px; 
-        }
+        .login-box { background: white; padding: 40px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
+
+        #qr-result-container { display: none; text-align: center; padding: 20px; background: #fff; border: 2px solid #D4C19C; border-radius: 10px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <div id="login-overlay">
         <div class="login-box">
-            <h4 style="font-weight: 900; color: #13322B;">ACCESO MAESTRO</h4>
-            <input type="password" id="token-input" class="form-control" placeholder="CLAVE" style="text-align: center;">
+            <h4 style="font-weight: 900; color: #13322B;">PANEL MAESTRO</h4>
+            <input type="password" id="token-input" class="form-control" placeholder="CLAVE ACCESO" style="text-align: center;">
             <input type="password" id="api-key-input" class="form-control" placeholder="API KEY OPENAI" style="text-align: center; border-color: #6366f1;">
-            <button onclick="intentarLogin()" class="btn-registrar">DESBLOQUEAR</button>
+            <button onclick="intentarLogin()" class="btn-registrar">INGRESAR</button>
         </div>
     </div>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0;">SISTEMA SiDGBE V10.5 | CALIBRACIÓN MILIMÉTRICA</h4>
+        <h4 style="margin:0;">SISTEMA SiDGBE V11.0 | IA & QR GENERATOR</h4>
     </nav>
 
-    <div class="container-fluid" style="max-width: 1300px; margin-top: 30px;">
+    <div class="container-fluid" style="max-width: 1400px;">
         <div class="row">
             <div class="col-md-5">
-                <div class="ia-container">
-                    <label>🤖 EXTRACCIÓN POR IA</label>
-                    <textarea id="whatsapp-input" class="form-control" rows="3" placeholder="Pega el mensaje aquí..."></textarea>
-                    <button onclick="procesarConIA()" id="btn-ia" class="btn-ia">PROCESAR DATOS</button>
+                <div class="ia-box">
+                    <label style="color: #4338ca;">🤖 ASISTENTE DE EXTRACCIÓN IA</label>
+                    <textarea id="whatsapp-input" class="form-control" rows="3" placeholder="Pega aquí el mensaje del cliente..."></textarea>
+                    <button onclick="procesarConIA()" id="btn-ia" class="btn-ia">AUTO-COMPLETAR FORMULARIO</button>
                 </div>
 
                 <div class="card-admin">
@@ -71,7 +73,7 @@
                             <div class="col-sm-6"><label>Promedio:</label><input type="text" id="promedio" class="form-control" required></div>
                         </div>
 
-                        <label>Nombre:</label>
+                        <label>Nombre Titular:</label>
                         <input type="text" id="nombre" class="form-control" required style="text-transform: uppercase;">
 
                         <label>CURP:</label>
@@ -79,28 +81,38 @@
 
                         <div class="row">
                             <div class="col-sm-6"><label>Ciclo:</label><input type="text" id="ciclo" class="form-control" required></div>
-                            <div class="col-sm-6"><label>Ubicación:</label><input type="text" id="ubicacion" class="form-control"></div>
+                            <div class="col-sm-6"><label>Fecha Emisión:</label><input type="date" id="fechaEmision" class="form-control" required></div>
                         </div>
-                        <input type="hidden" id="fechaEmision">
-                        <button type="submit" id="btnGuardar" class="btn-registrar">GUARDAR Y GENERAR PDF</button>
+
+                        <button type="submit" id="btnGuardar" class="btn-registrar">VINCULAR Y GENERAR QR</button>
                     </form>
+
+                    <div id="qr-result-container">
+                        <h5 style="color: #12322B; font-weight: bold;">✅ QR LISTO PARA WHATSAPP</h5>
+                        <div id="qrcode"></div>
+                        <br><br>
+                        <button type="button" class="btn btn-default btn-sm" onclick="descargarQR()">Descargar Imagen QR</button>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-7">
-                <div class="card-admin">
-                    <h4>Monitor de Registros</h4>
+                <div class="stat-box">
+                    <p>Documentos Registrados</p>
+                    <h3 id="stat-total">0</h3>
+                </div>
+                <div class="monitor-container">
+                    <input type="text" id="buscador" class="form-control" placeholder="🔍 Buscar por nombre o folio..." onkeyup="filtrarTabla()">
                     <table class="table"><tbody id="tablaAlumnos"></tbody></table>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="pdf-render-area"></div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, deleteDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, deleteDoc, collection, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDqlOQFN104R7MymHW5r7JJ2Mc3UymViZ4",
@@ -113,49 +125,51 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let API_KEY = "";
-
-        async function toDataURL(url) {
-            const response = await fetch(url);
-            const blob = await response.blob();
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
-        }
+        let API_KEY_OPENAI = "";
 
         window.intentarLogin = () => {
             if(document.getElementById('token-input').value === "MASTER2026") {
-                API_KEY = document.getElementById('api-key-input').value;
+                API_KEY_OPENAI = document.getElementById('api-key-input').value;
                 document.getElementById('login-overlay').style.display = 'none';
                 iniciarMonitor();
             }
         };
 
         window.procesarConIA = async () => {
+            const prompt = document.getElementById('whatsapp-input').value;
             const btn = document.getElementById('btn-ia');
-            btn.innerText = "⏳..."; btn.disabled = true;
+            if(!prompt) return alert("Pega un mensaje");
+            
+            btn.innerText = "⏳ ANALIZANDO..."; btn.disabled = true;
+
             try {
-                const res = await fetch('https://api.openai.com/v1/chat/completions', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY_OPENAI}` },
                     body: JSON.stringify({
                         model: "gpt-4o-mini",
-                        messages: [{ role: "system", content: "Extrae JSON: nombre, curp, nivel, ubicacion." }, { role: "user", content: document.getElementById('whatsapp-input').value }],
+                        messages: [{
+                            role: "system",
+                            content: "Extrae datos de certificados mexicanos. Devuelve solo JSON: {nombre, curp, nivel, promedio, ciclo, folio}. Si falta el folio, invéntalo con formato SEP-XXXXXX. Nivel debe ser: Primaria, Secundaria o Preparatoria."
+                        }, { role: "user", content: prompt }],
                         response_format: { type: "json_object" }
                     })
                 });
-                const d = await res.json();
-                const info = JSON.parse(d.choices[0].message.content);
-                document.getElementById('nombre').value = info.nombre || "";
-                document.getElementById('curp').value = info.curp || "";
-                document.getElementById('ubicacion').value = info.ubicacion || "";
-                if(info.nivel) { document.getElementById('nivel').value = info.nivel; aplicarValoresPorDefecto(); }
-                document.getElementById('folio').value = "SEP-" + Math.floor(Math.random() * 999999);
-            } catch (e) { alert("Error IA"); }
-            finally { btn.innerText = "PROCESAR DATOS"; btn.disabled = false; }
+
+                const data = await response.json();
+                const info = JSON.parse(data.choices[0].message.content);
+
+                document.getElementById('nombre').value = info.nombre?.toUpperCase() || "";
+                document.getElementById('curp').value = info.curp?.toUpperCase() || "";
+                document.getElementById('folio').value = info.folio || "";
+                document.getElementById('promedio').value = info.promedio || "";
+                document.getElementById('ciclo').value = info.ciclo || "";
+                if(info.nivel) {
+                    document.getElementById('nivel').value = info.nivel;
+                    aplicarValoresPorDefecto();
+                }
+            } catch (e) { alert("Error con OpenAI. Revisa tu API Key."); }
+            finally { btn.innerText = "AUTO-COMPLETAR FORMULARIO"; btn.disabled = false; }
         };
 
         window.aplicarValoresPorDefecto = () => {
@@ -172,99 +186,70 @@
             }
         };
 
-        async function descargarPDF(datos, folio) {
-            const area = document.getElementById('pdf-render-area');
-            const urls = {
-                "Primaria": "https://i.postimg.cc/zBHtQcJQ/primaria-demo-1.png",
-                "Secundaria": "https://i.postimg.cc/ZqCV9MyZ/secundaria-demo-1.png",
-                "Preparatoria": "https://i.postimg.cc/D0yhLhQy/PDF-demo-1.png"
-            };
-
-            const base64Img = await toDataURL(urls[datos.nivel]);
-
-            area.innerHTML = `
-                <div id="capture-box" style="width:816px; height:1056px; position:relative; background:white;">
-                    <img src="${base64Img}" style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:1;">
-                    
-                    <div style="position:absolute; top:380px; width:100%; text-align:center; font-size:22pt; font-weight:bold; font-family:Arial, sans-serif; color:black; z-index:10;">
-                        ${datos.nombre}
-                    </div>
-                    
-                    <div style="position:absolute; top:438px; left:112px; font-size:12.5pt; letter-spacing:4.6px; font-weight:bold; font-family:monospace; color:black; z-index:10;">
-                        ${datos.curp}
-                    </div>
-                    
-                    <div style="position:absolute; top:860px; left:150px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">
-                        ${datos.ubicacion}
-                    </div>
-                    
-                    <div style="position:absolute; top:882px; left:150px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">
-                        FOLIO: ${folio}
-                    </div>
-                    
-                    <div id="qr-target" style="position:absolute; top:828px; right:105px; background:white; padding:4px; border:1px solid #000; z-index:10;"></div>
-                    
-                    <div style="position:absolute; top:738px; left:445px; font-size:14pt; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">
-                        ${datos.promedio}
-                    </div>
-                </div>`;
-
-            new QRCode(area.querySelector('#qr-target'), {
-                text: `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${folio}`,
-                width: 115, height: 115
-            });
-
-            const opt = {
-                margin: 0,
-                filename: `CERTIFICADO_${datos.nombre}.pdf`,
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { 
-                    scale: 4, 
-                    useCORS: true, 
-                    letterRendering: true,
-                    logging: false
-                },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            
-            setTimeout(async () => {
-                await html2pdf().set(opt).from(area.querySelector('#capture-box')).save();
-                area.innerHTML = "";
-            }, 1500);
-        }
-
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('btnGuardar');
-            btn.disabled = true; btn.innerText = "GENERANDO...";
             const f = document.getElementById('folio').value.toUpperCase().trim();
             const d = {
                 nombre: document.getElementById('nombre').value.toUpperCase(),
                 curp: document.getElementById('curp').value.toUpperCase(),
                 promedio: document.getElementById('promedio').value,
                 ciclo: document.getElementById('ciclo').value,
+                fechaEmision: document.getElementById('fechaEmision').value,
                 nivel: document.getElementById('nivel').value,
-                ubicacion: document.getElementById('ubicacion').value,
-                activo: true
+                visitas: 0, activo: true
             };
-            try {
-                await setDoc(doc(db, "certificados", f), d);
-                await descargarPDF(d, f);
-                alert("Guardado y generado con éxito");
-            } catch (err) { alert("Error en servidor"); }
-            finally { btn.disabled = false; btn.innerText = "GUARDAR Y GENERAR PDF"; }
+
+            await setDoc(doc(db, "certificados", f), d);
+            
+            // Generar QR
+            const qrC = document.getElementById("qrcode");
+            qrC.innerHTML = "";
+            new QRCode(qrC, {
+                text: `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${f}`,
+                width: 200, height: 200
+            });
+            document.getElementById("qr-result-container").style.display = "block";
         });
 
+        window.descargarQR = () => {
+            html2canvas(document.getElementById("qrcode")).then(canvas => {
+                const link = document.createElement("a");
+                link.download = `QR_${document.getElementById('folio').value}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        };
+
         function iniciarMonitor() {
-            onSnapshot(collection(db, "certificados"), (s) => {
+            onSnapshot(collection(db, "certificados"), (snapshot) => {
                 const t = document.getElementById('tablaAlumnos');
                 t.innerHTML = "";
-                s.forEach(d => {
-                    t.innerHTML += `<tr><td><b>${d.id}</b><br>${d.data().nombre}</td><td class="text-right"><button onclick="eliminar('${d.id}')" class="btn btn-danger btn-xs">X</button></td></tr>`;
+                let count = 0;
+                snapshot.forEach(docu => {
+                    count++;
+                    const data = docu.data();
+                    const id = docu.id;
+                    t.innerHTML += `<tr>
+                        <td><b>${id}</b><br>${data.nombre}</td>
+                        <td class="text-center"><span class="badge" style="background:#13322B; color:white;">${data.visitas}</span></td>
+                        <td class="text-right">
+                            <button onclick="cambiarEstado('${id}', ${!data.activo})" class="btn btn-xs ${data.activo?'btn-warning':'btn-success'}">${data.activo?'Pausar':'Activar'}</button>
+                            <button onclick="borrar('${id}')" class="btn btn-danger btn-xs">Eliminar</button>
+                        </td>
+                    </tr>`;
                 });
+                document.getElementById('stat-total').innerText = count;
             });
         }
-        window.eliminar = async (id) => { if(confirm("¿?")) await deleteDoc(doc(db, "certificados", id)); };
+
+        window.cambiarEstado = async (id, s) => { await updateDoc(doc(db, "certificados", id), { activo: s }); };
+        window.borrar = async (id) => { if(confirm("¿Borrar?")) await deleteDoc(doc(db, "certificados", id)); };
+        window.filtrarTabla = () => {
+            const val = document.getElementById("buscador").value.toUpperCase();
+            const filas = document.querySelectorAll("#tablaAlumnos tr");
+            filas.forEach(f => f.style.display = f.innerText.toUpperCase().includes(val) ? "" : "none");
+        };
     </script>
 </body>
 </html>
+
