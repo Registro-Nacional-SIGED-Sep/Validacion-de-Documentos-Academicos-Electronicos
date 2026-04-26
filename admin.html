@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | V10.0 Alta Resolución</title>
+    <title>Panel Maestro SiDGBE | V10.5 Calibración</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -22,6 +22,7 @@
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0C231E; z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .login-box { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
         
+        /* Área de renderizado */
         #pdf-render-area { 
             position: absolute; 
             left: -10000px; 
@@ -43,7 +44,7 @@
     </div>
 
     <nav class="navbar-admin text-center">
-        <h4 style="margin:0;">SISTEMA SiDGBE V10.0 | ALTA FIDELIDAD</h4>
+        <h4 style="margin:0;">SISTEMA SiDGBE V10.5 | CALIBRACIÓN MILIMÉTRICA</h4>
     </nav>
 
     <div class="container-fluid" style="max-width: 1300px; margin-top: 30px;">
@@ -185,25 +186,25 @@
                 <div id="capture-box" style="width:816px; height:1056px; position:relative; background:white;">
                     <img src="${base64Img}" style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:1;">
                     
-                    <div style="position:absolute; top:385px; width:100%; text-align:center; font-size:22pt; font-weight:bold; font-family:Arial, sans-serif; color:black; z-index:10;">
+                    <div style="position:absolute; top:380px; width:100%; text-align:center; font-size:22pt; font-weight:bold; font-family:Arial, sans-serif; color:black; z-index:10;">
                         ${datos.nombre}
                     </div>
                     
-                    <div style="position:absolute; top:442px; left:112px; font-size:12.5pt; letter-spacing:4.6px; font-weight:bold; font-family:monospace; color:black; z-index:10;">
+                    <div style="position:absolute; top:438px; left:112px; font-size:12.5pt; letter-spacing:4.6px; font-weight:bold; font-family:monospace; color:black; z-index:10;">
                         ${datos.curp}
                     </div>
                     
-                    <div style="position:absolute; top:865px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10;">
+                    <div style="position:absolute; top:860px; left:150px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">
                         ${datos.ubicacion}
                     </div>
                     
-                    <div style="position:absolute; top:885px; left:145px; font-size:10pt; font-family:sans-serif; z-index:10;">
+                    <div style="position:absolute; top:882px; left:150px; font-size:10pt; font-family:sans-serif; z-index:10; color:black;">
                         FOLIO: ${folio}
                     </div>
                     
-                    <div id="qr-target" style="position:absolute; top:830px; right:105px; background:white; padding:4px; border:1px solid #000; z-index:10;"></div>
+                    <div id="qr-target" style="position:absolute; top:828px; right:105px; background:white; padding:4px; border:1px solid #000; z-index:10;"></div>
                     
-                    <div style="position:absolute; top:745px; left:448px; font-size:14pt; font-weight:bold; font-family:sans-serif; z-index:10;">
+                    <div style="position:absolute; top:738px; left:445px; font-size:14pt; font-weight:bold; font-family:sans-serif; z-index:10; color:black;">
                         ${datos.promedio}
                     </div>
                 </div>`;
@@ -220,7 +221,8 @@
                 html2canvas: { 
                     scale: 4, 
                     useCORS: true, 
-                    letterRendering: true 
+                    letterRendering: true,
+                    logging: false
                 },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
@@ -228,7 +230,7 @@
             setTimeout(async () => {
                 await html2pdf().set(opt).from(area.querySelector('#capture-box')).save();
                 area.innerHTML = "";
-            }, 1200);
+            }, 1500);
         }
 
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
@@ -248,8 +250,8 @@
             try {
                 await setDoc(doc(db, "certificados", f), d);
                 await descargarPDF(d, f);
-                alert("Éxito");
-            } catch (err) { alert("Error Firebase"); }
+                alert("Guardado y generado con éxito");
+            } catch (err) { alert("Error en servidor"); }
             finally { btn.disabled = false; btn.innerText = "GUARDAR Y GENERAR PDF"; }
         });
 
