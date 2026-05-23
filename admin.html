@@ -16,7 +16,7 @@
 
         body { background-color: #ebedef; font-family: 'Open Sans', sans-serif; overflow-x: hidden; }
         
-        .navbar-admin { background-color: var(--gob-green); padding: 15px; color: white; border-bottom: 4px solid var(--gob-gold); }
+        .navbar-admin { background-color: var(--gob-green); padding: 15px; color: white; border-bottom: 4px solid var(--gob-gold); height: auto; }
         .card-admin { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; }
         .section-title { font-weight: 800; text-transform: uppercase; font-size: 13px; color: var(--gob-green); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
 
@@ -72,8 +72,8 @@
                         <label>Nivel Educativo:</label>
                         <select id="nivel" class="form-control" required onchange="actualizarInterfazNivel()">
                             <option value="" disabled selected>-- SELECCIONE NIVEL --</option>
-                            <option value="Primaria">PRIMARIA (INEA)</option>
-                            <option value="Secundaria">SECUNDARIA (INEA)</option>
+                            <option value="Primaria">PRIMARIA</option>
+                            <option value="Secundaria">SECUNDARIA</option>
                             <option value="Preparatoria">PREPARATORIA</option>
                         </select>
 
@@ -90,6 +90,20 @@
 
                         <label>CURP:</label>
                         <input type="text" id="curp" class="form-control" maxlength="18" required style="text-transform: uppercase; font-family: monospace;" placeholder="CURP18CARACTERES">
+
+                        <label>Tipo de Institución:</label>
+                        <select id="tipoEscuela" class="form-control" onchange="toggleCamposEscuela()">
+                            <option value="DEFECTO">POR DEFECTO (INEA / PREPARATORIA ABIERTA)</option>
+                            <option value="PERSONALIZADA">OTRA INSTITUCIÓN (EJ. TELESECUNDARIA, ETC.)</option>
+                        </select>
+
+                        <div id="campos-escuela-adicionales" style="display: none; background: #f9f9f9; padding: 10px; border: 1px solid #ddd; margin-top: 10px;">
+                            <label>Nombre de la Escuela:</label>
+                            <input type="text" id="escuela" class="form-control" style="text-transform: uppercase;" placeholder="EJ: TELESECUNDARIA N° 277">
+                            
+                            <label>Clave del Centro de Trabajo (CCT):</label>
+                            <input type="text" id="cct" class="form-control" style="text-transform: uppercase;" placeholder="EJ: 11DTV0277A">
+                        </div>
 
                         <div class="row">
                             <div class="col-sm-6"><label>Ciclo Escolar:</label><input type="text" id="ciclo" class="form-control" required placeholder="2023-2024"></div>
@@ -109,22 +123,22 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="stat-card">
-                            <small>REGISTROS TOTALES</small>
-                            <h3 id="stat-total">0</h3>
+                            <small>MONITOR DE CONTROL</small>
+                            <h3 style="font-size: 20px; color: var(--gob-gold);">ÚLTIMOS 15</h3>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="stat-card" style="background: #1d4d42;">
-                            <small>ESTADO</small>
-                            <h3 style="font-size: 20px; color: #2ecc71;">OPERATIVO</h3>
+                            <small>ESTADO BASE DE DATOS</small>
+                            <h3 style="font-size: 20px; color: #2ecc71;">OPTIMIZADO (RÁPIDO)</h3>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-admin" style="margin-top: 20px;">
                     <div class="section-title">
-                        <span>Monitor de Folios</span>
-                        <input type="text" id="buscador" onkeyup="filtrarTabla()" placeholder="Buscar por nombre o CURP..." style="width: 220px; border-radius: 15px; padding: 4px 12px; border: 1px solid #ccc; font-size: 12px;">
+                        <span>Monitor en Vivo (Recientes)</span>
+                        <input type="text" id="buscador" onkeyup="filtrarTabla()" placeholder="Filtrar en pantalla..." style="width: 220px; border-radius: 15px; padding: 4px 12px; border: 1px solid #ccc; font-size: 12px;">
                     </div>
                     
                     <div class="monitor-scroll">
@@ -147,7 +161,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, deleteDoc, collection, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, deleteDoc, collection, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDqlOQFN104R7MymHW5r7JJ2Mc3UymViZ4",
@@ -182,16 +196,45 @@
             }
         };
 
+        window.toggleCamposEscuela = () => {
+            const tipo = document.getElementById("tipoEscuela").value;
+            const contenedor = document.getElementById("campos-escuela-adicionales");
+            if(tipo === "PERSONALIZADA") {
+                contenedor.style.display = "block";
+                document.getElementById("escuela").required = true;
+            } else {
+                contenedor.style.display = "none";
+                document.getElementById("escuela").required = false;
+                document.getElementById("escuela").value = "";
+                document.getElementById("cct").value = "";
+            }
+        };
+
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const f = document.getElementById('folio').value;
+            const nivelSeleccionado = document.getElementById('nivel').value;
+            const tipoEscuela = document.getElementById("tipoEscuela").value;
+
+            // Determinar valores de la escuela por defecto o personalizada
+            let escuelaFinal = "";
+            if (tipoEscuela === "DEFECTO") {
+                escuelaFinal = nivelSeleccionado === "Preparatoria" ? "PREPARATORIA ABIERTA" : "INSTITUTO NACIONAL PARA LA EDUCACIÓN DE LOS ADULTOS (INEA)";
+            } else {
+                escuelaFinal = document.getElementById('escuela').value.toUpperCase();
+            }
+
+            const cctFinal = document.getElementById('cct').value.toUpperCase() || "N/A";
+
             const d = {
                 nombre: document.getElementById('nombre').value.toUpperCase(),
                 curp: document.getElementById('curp').value.toUpperCase(),
                 promedio: document.getElementById('promedio').value,
                 ciclo: document.getElementById('ciclo').value,
                 fechaEmision: document.getElementById('fechaEmision').value,
-                nivel: document.getElementById('nivel').value,
+                nivel: nivelSeleccionado,
+                escuela: escuelaFinal,
+                cct: cctFinal,
                 visitas: 0, 
                 activo: true,
                 createdAt: Date.now()
@@ -213,22 +256,27 @@
         window.cerrarModalQR = () => {
             document.getElementById("qr-modal").style.display = "none";
             document.getElementById("adminForm").reset();
+            document.getElementById("campos-escuela-adicionales").style.display = "none";
+            document.getElementById("tipoEscuela").value = "DEFECTO";
         };
 
         function iniciarMonitor() {
-            onSnapshot(collection(db, "certificados"), (snapshot) => {
+            // OPTIMIZACIÓN: Consulta limitada únicamente a los últimos 15 registros ordenados por fecha de creación
+            const q = query(collection(db, "certificados"), orderBy("createdAt", "desc"), limit(15));
+            
+            onSnapshot(q, (snapshot) => {
                 const t = document.getElementById('tablaAlumnos');
                 t.innerHTML = "";
                 let registros = [];
                 snapshot.forEach(docu => { registros.push({ id: docu.id, ...docu.data() }); });
-                registros.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
                 registros.forEach(data => {
                     t.innerHTML += `<tr>
                         <td>
                             <small style="color:#c0392b; font-weight:bold;">${data.id}</small><br>
                             <b style="font-size:12px;">${data.nombre}</b><br>
-                            <small>${data.curp}</small>
+                            <small>${data.curp}</small><br>
+                            <small class="text-muted" style="font-size:9px;">${data.escuela || "INEA"}</small>
                         </td>
                         <td class="text-center"><span class="badge-visitas">${data.visitas || 0}</span></td>
                         <td class="text-center">
@@ -244,7 +292,6 @@
                         </td>
                     </tr>`;
                 });
-                document.getElementById('stat-total').innerText = registros.length;
             });
         }
 
@@ -268,3 +315,4 @@
     </script>
 </body>
 </html>
+
