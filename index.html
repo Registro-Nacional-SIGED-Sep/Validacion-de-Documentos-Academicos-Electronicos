@@ -16,7 +16,7 @@
 
         body { background-color: #f2f2f2; font-family: 'Open Sans', sans-serif; }
         
-        /* Navbar Superior Oficial */
+        /* Navbar Superior Oficial GobMx */
         .navbar-inverse { background-color: var(--gob-green); border: none; border-bottom: 4px solid var(--gob-gold); height: 70px; }
         
         #seccion-resultados, #seccion-error, #loader { display: none; } 
@@ -29,37 +29,41 @@
         }
         .btn-buscar:hover { background-color: #1d4d42; color: white; }
         
-        /* Tipografía Institucional */
+        /* Tipografía e Identidad Institucional */
         .label-institucional { color: #545454; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
         .header-oficial { color: var(--gob-green); font-weight: 800; border-bottom: 2px solid var(--gob-gold); padding-bottom: 15px; margin-bottom: 30px; text-transform: uppercase; font-size: 20px; }
         
-        /* Contenedores de Información - Estilo Ficha Oficial */
+        /* Contenedores de Información - Estilo Ficha Oficial SIGED */
         .res-box { background: white; padding: 40px; border: 1px solid #ccc; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .data-value { 
-            font-size: 18px; font-weight: 800; color: #000; 
-            margin-bottom: 20px; text-transform: uppercase; /* TODO EN MAYÚSCULAS */
-            line-height: 1.1; 
+            font-size: 16px; font-weight: 800; color: #111; 
+            margin-bottom: 20px; text-transform: uppercase;
+            line-height: 1.2; font-family: 'Open Sans', sans-serif;
         }
         
-        /* Sellos y Badges */
+        /* Estatus Gubernamental */
         .badge-estatus {
-            background-color: #28a745; color: white; padding: 8px 15px;
+            background-color: #135838; color: white; padding: 8px 15px;
             font-weight: 800; text-transform: uppercase; display: inline-block;
-            font-size: 12px; margin-bottom: 20px;
+            font-size: 12px; margin-bottom: 25px; letter-spacing: 0.5px;
         }
 
+        /* Tabla Estructurada Interna */
+        .ficha-registro { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .ficha-registro td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: top; }
+        .ficha-registro tr:nth-child(even) { background-color: #fcfcfc; }
+        
         /* Animación de Carga */
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .spinner-custom { width: 60px; height: 60px; border: 6px solid #ddd; border-top: 6px solid var(--gob-gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 30px auto; }
         
         .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 120px; color: rgba(0,0,0,0.01); font-weight: 900; z-index: -1; pointer-events: none; }
-        
         .panel-sidebar { border-radius: 0; border: 1px solid #ccc; background: #f9f9f9; }
         
         .cadena-texto { 
             font-family: 'Courier New', Courier, monospace; font-size: 10px; 
-            background: #eee; padding: 15px; border: 1px solid #ddd; 
-            color: #444; word-break: break-all; text-transform: uppercase;
+            background: #f5f5f5; padding: 15px; border: 1px solid #ddd; 
+            color: #555; word-break: break-all; text-transform: uppercase; line-height: 1.4;
         }
     </style>
 </head>
@@ -74,7 +78,7 @@
                     <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" width="140" height="55" style="padding: 10px 0;">
                 </div>
                 <div class="pull-right hidden-xs" style="color: white; padding-top: 20px;">
-                    <span style="font-weight: 700; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">Portal de Obligaciones de Transparencia</span>
+                    <span style="font-weight: 700; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">Portal Nacional de Validación Académica</span>
                 </div>
             </div>
         </nav>
@@ -84,10 +88,10 @@
         
         <div class="row">
             <div class="col-md-12 text-right" style="margin-bottom: 10px;">
-                <span style="font-size: 10px; font-weight: bold; color: #666;">CÓDIGO DE VERIFICACIÓN: <span id="folio-display">PENDIENTE</span></span>
+                <span style="font-size: 10px; font-weight: bold; color: #666;">ID VERIFICACIÓN DIGITAL: <span id="folio-display" style="color: var(--gob-red);">PENDIENTE</span></span>
             </div>
             <div class="col-md-12">
-                <h1 class="header-oficial">Consulta de Registro Nacional de Emisiones Académicas</h1>
+                <h1 class="header-oficial">Consulta de Registro Nacional de Emisiones Académicas | SIGED</h1>
             </div>
         </div>
 
@@ -95,26 +99,26 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="res-box">
-                        <h4 style="margin-top: 0; font-weight: 800; color: var(--gob-green);">VERIFICACIÓN ELECTRÓNICA</h4>
+                        <h4 style="margin-top: 0; font-weight: 800; color: var(--gob-green);">VERIFICACIÓN ELECTRÓNICA DE DOCUMENTOS</h4>
                         <p class="text-muted" style="font-size: 13px;">Ingrese el folio único de identificación del documento. El sistema validará la firma electrónica y la existencia del registro en la base nacional.</p>
                         <hr>
                         <div class="form-group">
-                            <label class="label-institucional">Folio de Consulta:</label>
-                            <input type="text" id="folio-input" class="form-control" placeholder="EJEMPLO: SEP-123456" style="height: 55px; font-size: 20px; font-weight: 800; border-radius: 0; text-transform: uppercase; border: 2px solid #aaa;">
+                            <label class="label-institucional">Folio de Consulta Federal:</label>
+                            <input type="text" id="folio-input" class="form-control" placeholder="EJEMPLO: SEP-PREP-XXXXX-000" style="height: 55px; font-size: 20px; font-weight: 800; border-radius: 0; text-transform: uppercase; border: 2px solid #aaa; letter-spacing: 0.5px;">
                         </div>
                         <button type="button" onclick="consultarFirebase()" class="btn btn-buscar btn-block btn-lg">
-                            Validar ante el Registro Federal
+                            Validar Sello ante el Registro Federal
                         </button>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div style="background: #FFF9E6; border: 1px solid #D4C19C; padding: 20px; font-size: 12px; color: #333;">
-                        <h5 style="font-weight: 800; margin-top: 0;">INSTRUCCIONES</h5>
-                        <p>1. Localice el folio en la parte inferior de su documento.</p>
-                        <p>2. Escríbalo respetando guiones.</p>
-                        <p>3. El sistema arrojará un dictamen oficial de autenticidad.</p>
+                        <h5 style="font-weight: 800; margin-top: 0;">INSTRUCCIONES DE CONSULTA</h5>
+                        <p>1. Localice el número de folio en el área de validación perimetral de su documento digital.</p>
+                        <p>2. Transcríbalo respetando los guiones y mayúsculas establecidos.</p>
+                        <p>3. El sistema arrojará el dictamen inmediato de inscripción oficial.</p>
                         <hr style="border-top: 1px solid #D4C19C;">
-                        <small>Este servicio no tiene costo y es de carácter público.</small>
+                        <small>Esta consulta pública constituye una herramienta de transparencia institucional de conformidad con la normativa de la SEP.</small>
                     </div>
                 </div>
             </div>
@@ -122,60 +126,72 @@
 
         <div id="loader" class="text-center">
             <div class="spinner-custom"></div>
-            <h4 style="color: var(--gob-green); font-weight: 800;">AUTENTICANDO SELLO DIGITAL</h4>
-            <p class="text-muted">Conectando con los servidores del Registro Nacional...</p>
+            <h4 style="color: var(--gob-green); font-weight: 800; letter-spacing: 0.5px;">AUTENTICANDO SELLO DIGITAL Y FIRMA ELECTRÓNICA</h4>
+            <p class="text-muted">Conectando con los nodos del Registro Nacional de Emisiones Educativas...</p>
         </div>
 
         <section id="seccion-resultados">
             <div class="row">
                 <div class="col-md-9">
-                    <div class="res-box" style="border-top: 10px solid var(--gob-green);">
+                    <div class="res-box" style="border-top: 10px solid var(--gob-green); padding: 35px;">
                         <div class="row">
-                            <div class="col-sm-8">
-                                <div class="badge-estatus">✓ Registro Localizado y Vigente</div>
-                                <p class="label-institucional">Nombre del Titular:</p>
-                                <h2 id="res-nombre" class="data-value" style="font-size: 26px; color: var(--gob-green);">--</h2>
+                            <div class="col-xs-8">
+                                <div class="badge-estatus">✓ Registro Localizado y Válido ante la Federación</div>
                             </div>
-                            <div class="col-sm-4 text-right">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f4/Escudo_Nacional_de_M%C3%A9xico_oficial.png" width="90" style="opacity: 0.15;">
+                            <div class="col-xs-4 text-right">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f4/Escudo_Nacional_de_M%C3%A9xico_oficial.png" width="85" style="opacity: 0.85; margin-top: -10px;">
                             </div>
                         </div>
 
-                        <hr>
+                        <table class="ficha-registro">
+                            <tr>
+                                <td style="width: 35%;"><p class="label-institucional">Nombre del Titular:</p></td>
+                                <td><div id="res-nombre" class="data-value" style="font-size: 20px; color: var(--gob-green);">--</div></td>
+                            </tr>
+                            <tr>
+                                <td><p class="label-institucional">CURP:</p></td>
+                                <td><div id="res-curp-tabla" class="data-value" style="font-family: monospace; font-size: 15px; letter-spacing: 0.5px;">--</div></td>
+                            </tr>
+                            <tr>
+                                <td><p class="label-institucional">Nivel Educativo:</p></td>
+                                <td><div id="res-nivel" class="data-value">--</div></td>
+                            </tr>
+                            <tr id="contenedor-especialidad" style="display:none;">
+                                <td><p class="label-institucional">Carrera / Especialidad:</p></td>
+                                <td><div id="res-carrera" class="data-value" style="background: #f4f4f4; padding: 5px 10px;">--</div></td>
+                            </tr>
+                            <tr>
+                                <td><p class="label-institucional">Institución Educativa:</p></td>
+                                <td><div id="res-escuela" class="data-value" style="font-size: 14px; font-weight: 700;">--</div></td>
+                            </tr>
+                            <tr>
+                                <td><p class="label-institucional">Clave de Centro de Trabajo (CCT):</p></td>
+                                <td><div id="res-cct" class="data-value" style="font-family: monospace; font-size: 14px; color: #444;">--</div></td>
+                            </tr>
+                            <tr>
+                                <td><p class="label-institucional">Ciclo Escolar:</p></td>
+                                <td><div id="res-ciclo" class="data-value">--</div></td>
+                            </tr>
+                            <tr>
+                                <td><p class="label-institucional">Fecha de Acreditación:</p></td>
+                                <td><div id="res-fecha" class="data-value">--</div></td>
+                            </tr>
+                        </table>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p class="label-institucional">Nivel Educativo:</p>
-                                <p id="res-nivel" class="data-value">--</p>
-                                
-                                <div id="contenedor-especialidad" style="display:none;">
-                                    <p class="label-institucional">Carrera / Especialidad Técnica:</p>
-                                    <p id="res-carrera" class="data-value" style="background: #f4f4f4; padding: 10px;">--</p>
-                                </div>
-
-                                <p class="label-institucional">Institución Emisora:</p>
-                                <p id="res-escuela" class="data-value" style="font-size: 15px;">--</p>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <p class="label-institucional">Ciclo Escolar:</p>
-                                <p id="res-ciclo" class="data-value">--</p>
-
-                                <p class="label-institucional">Fecha de Expedición:</p>
-                                <p id="res-fecha" class="data-value">--</p>
-                                
-                                <p class="label-institucional">Promedio de Aprovechamiento:</p>
-                                <p id="res-promedio" style="font-size: 32px; font-weight: 900; color: #000;">--</p>
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col-sm-4 col-sm-offset-8 text-right">
+                                <p class="label-institucional" style="margin-bottom:0;">Promedio Global:</p>
+                                <div id="res-promedio" style="font-size: 38px; font-weight: 900; color: #111; line-height: 1;">--</div>
                             </div>
                         </div>
 
-                        <hr>
+                        <hr style="border-top: 1px solid #ccc; margin: 25px 0 15px 0;">
                         
                         <div class="row">
                             <div class="col-md-12">
-                                <p class="label-institucional">Cadena Original de Certificación Digital:</p>
+                                <p class="label-institucional">Sello Digital de Validación Federal (Cadena Original):</p>
                                 <div class="cadena-texto">
-                                    ||SEP|SIGED|FEDERAL|<span id="res-curp-sello"></span>|<span id="res-folio-sello"></span>|CERT_MX_2026|<span id="res-hash-falso"></span>||
+                                    ||SEP|SIGED|CENTRAL|AER2026|<span id="res-curp-sello"></span>|<span id="res-folio-sello"></span>|PROMEDIO_<span id="res-promedio-sello"></span>|<span id="res-hash-falso"></span>||
                                 </div>
                             </div>
                         </div>
@@ -184,35 +200,36 @@
 
                 <div class="col-md-3">
                     <div class="panel panel-default panel-sidebar">
-                        <div class="panel-body">
-                            <label class="label-institucional">CURP del Titular:</label>
-                            <p id="res-curp" style="font-family: monospace; font-weight: 700; font-size: 15px; margin-bottom: 20px;">--</p>
-                            
+                        <div class="panel-body" style="padding: 20px;">
                             <label class="label-institucional">Folio Único Federal:</label>
-                            <p id="res-folio" style="font-weight: 800; font-size: 17px; color: var(--gob-red); margin-bottom: 20px;">--</p>
+                            <p id="res-folio" style="font-weight: 800; font-size: 16px; color: var(--gob-red); margin-bottom: 20px; font-family: monospace;">--</p>
                             
-                            <hr>
-                            <label class="label-institucional">Fecha de Validación:</label>
+                            <label class="label-institucional">Estatus del Registro:</label>
+                            <p style="color: #135838; font-weight: 900; font-size: 12px; letter-spacing: 0.3px; margin-bottom: 20px;">✓ VIGENTE / AUTÉNTICO</p>
+                            
+                            <label class="label-institucional">Tipo de Documentación:</label>
+                            <p style="font-weight: 700; font-size: 11px; color: #444; text-transform: uppercase; margin-bottom: 20px;">Certificado de Estudios Electrónico</p>
+                            
+                            <hr style="margin: 15px 0;">
+                            
+                            <label class="label-institucional">Fecha e Hora de Consulta:</label>
                             <p id="fecha-actual" style="font-size: 10px; font-weight: bold; color: #333; text-transform: uppercase;">--</p>
                             
-                            <label class="label-institucional">Estado del Registro:</label>
-                            <p style="color: #28a745; font-weight: 900; font-size: 11px;">ACTIVO / SIN ANOTACIONES</p>
-                            
-                            <p id="res-visitas" style="font-size: 9px; color: #aaa; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px;">--</p>
+                            <p id="res-visitas" style="font-size: 9px; color: #999; margin-top: 25px; border-top: 1px solid #ddd; padding-top: 10px; font-weight: 600;">--</p>
                         </div>
                     </div>
-                    <button class="btn btn-default btn-block" onclick="location.reload()" style="margin-top: 20px; border-radius: 0; font-weight: bold; text-transform: uppercase; font-size: 11px;">Nueva Consulta</button>
+                    <button class="btn btn-default btn-block" onclick="location.reload()" style="margin-top: 15px; border-radius: 0; font-weight: bold; text-transform: uppercase; font-size: 11px; border: 1px solid #aaa; padding: 10px;">Realizar Nueva Validación</button>
                 </div>
             </div>
         </section>
 
         <section id="seccion-error" class="text-center" style="margin-top: 50px;">
-            <div class="res-box" style="border-left: 8px solid var(--gob-red);">
-                <i class="glyphicon glyphicon-warning-sign" style="font-size: 50px; color: var(--gob-red);"></i>
-                <h2 style="font-weight: 900; color: var(--gob-red);">DATOS NO LOCALIZADOS</h2>
-                <p>El folio ingresado no se encuentra en el Registro Nacional de Profesionistas o se encuentra en proceso de carga administrativa.</p>
+            <div class="res-box" style="border-top: 10px solid var(--gob-red); max-width: 700px; margin: 0 auto;">
+                <i class="glyphicon glyphicon-warning-sign" style="font-size: 45px; color: var(--gob-red); margin-bottom: 15px;"></i>
+                <h2 style="font-weight: 900; color: var(--gob-red); text-transform: uppercase; font-size: 22px;">Código o Datos No Localizados</h2>
+                <p class="text-muted" style="font-size: 14px; padding: 0 20px;">El identificador digital ingresado no se encuentra dado de alta en la Base Nacional del Sistema de Información y Gestión Educativa (SIGED) o bien cuenta con una restricción de actualización administrativa.</p>
                 <hr>
-                <button class="btn btn-danger btn-lg" onclick="location.reload()" style="border-radius: 0;">REGRESAR</button>
+                <button class="btn btn-danger" onclick="location.reload()" style="border-radius: 0; font-weight: bold; text-transform: uppercase; padding: 10px 30px;">Intentar Nuevamente</button>
             </div>
         </section>
     </main>
@@ -221,9 +238,9 @@
         <div class="container text-center">
             <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" width="180" style="margin-bottom: 30px;">
             <div style="font-size: 11px; opacity: 0.7; max-width: 800px; margin: 0 auto; line-height: 1.6;">
-                <p>Secretaría de Educación Pública | Registro Nacional de Profesionistas</p>
-                <p>Portal de Validación de Certificados Digitales - 2026</p>
-                <p style="margin-top: 15px;">Este sitio cumple con los estándares de accesibilidad y seguridad para la consulta ciudadana de registros educativos nacionales.</p>
+                <p style="font-weight: 700; font-size: 12px; letter-spacing: 0.5px;">SECRETARÍA DE EDUCACIÓN PÚBLICA | DIRECCIÓN GENERAL DE ACREDITACIÓN, INCORPORACIÓN Y REVALIDACIÓN</p>
+                <p>Sistema de Información y Gestión Educativa (SIGED) - Portal de Validación Electrónica 2026</p>
+                <p style="margin-top: 15px; font-size: 10px;">La consulta e impresión de la información contenida en este sitio web no genera derechos de certificación o titulación adicionales a los emitidos físicamente por las autoridades competentes.</p>
             </div>
         </div>
     </footer>
@@ -247,7 +264,7 @@
         function generateFakeHash() {
             let res = "";
             let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            for (let i = 0; i < 50; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+            for (let i = 0; i < 45; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
             return res;
         }
 
@@ -262,6 +279,7 @@
                 const docRef = doc(db, "certificados", f);
                 const docSnap = await getDoc(docRef);
 
+                // Si no existe o "activo" es explícitamente false (Pausado), manda a la pantalla de error
                 if (docSnap.exists() && docSnap.data().activo !== false) {
                     const data = docSnap.data();
                     await updateDoc(docRef, { visitas: increment(1) });
@@ -270,14 +288,16 @@
                         document.getElementById('loader').style.display = 'none';
                         document.getElementById('res-nombre').innerText = data.nombre;
                         document.getElementById('res-nivel').innerText = data.nivel;
-                        document.getElementById('res-curp').innerText = data.curp;
+                        document.getElementById('res-curp-tabla').innerText = data.curp;
                         document.getElementById('res-curp-sello').innerText = data.curp;
                         document.getElementById('res-folio-sello').innerText = f;
                         document.getElementById('res-promedio').innerText = data.promedio;
+                        document.getElementById('res-promedio-sello').innerText = data.promedio;
                         document.getElementById('res-folio').innerText = f;
                         document.getElementById('res-ciclo').innerText = data.ciclo;
-                        document.getElementById('res-escuela').innerText = data.escuela || "REGISTRO FEDERAL EDUCATIVO";
-                        document.getElementById('res-visitas').innerText = "VISTAS DEL REGISTRO: " + ((data.visitas || 0) + 1);
+                        document.getElementById('res-escuela').innerText = data.escuela || "INSTITUTO NACIONAL PARA LA EDUCACIÓN DE LOS ADULTOS";
+                        document.getElementById('res-cct').innerText = data.cct || "N/A";
+                        document.getElementById('res-visitas').innerText = "VERIFICACIONES INTEGRALES: " + ((data.visitas || 0) + 1);
                         document.getElementById('res-hash-falso').innerText = generateFakeHash();
                         document.getElementById('folio-display').innerText = f;
                         
@@ -290,16 +310,20 @@
                         }
 
                         if(data.nivel === "TECNICO" || data.nivel === "TITULO" || data.nivel === "CEDULA" || data.nivel === "Título" || data.nivel === "Técnico") {
-                            document.getElementById('contenedor-especialidad').style.display = "block";
+                            document.getElementById('contenedor-especialidad').style.display = "table-row";
                             document.getElementById('res-carrera').innerText = data.carrera || "GENERAL";
+                        } else {
+                            document.getElementById('contenedor-especialidad').style.display = "none";
                         }
 
                         document.getElementById('seccion-resultados').style.display = 'block';
                         window.scrollTo(0,0);
-                    }, 1500);
+                    }, 1200);
                 } else {
-                    document.getElementById('loader').style.display = 'none';
-                    document.getElementById('seccion-error').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('loader').style.display = 'none';
+                        document.getElementById('seccion-error').style.display = 'block';
+                    }, 1200);
                 }
             } catch (e) {
                 console.error(e);
