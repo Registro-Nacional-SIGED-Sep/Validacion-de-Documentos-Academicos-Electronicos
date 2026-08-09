@@ -158,41 +158,87 @@
 
                         <table class="ficha-registro">
                             <tr>
-                                <td style="width: 35%;"><p class="label-institucional">Nombre del Titular:</p></td>
-                                <td><div id="res-nombre" class="data-value" style="font-size: 20px; color: var(--gob-green);">--</div></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label-institucional">CURP:</p></td>
-                                <td><div id="res-curp-tabla" class="data-value" style="font-family: monospace; font-size: 15px; letter-spacing: 0.5px;">--</div></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label-institucional">Nivel Educativo:</p></td>
-                                <td><div id="res-nivel" class="data-value">--</div></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label-institucional">Institución Educativa:</p></td>
-                                <td><div id="res-escuela" class="data-value" style="font-size: 14px; font-weight: 700;">--</div></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label-institucional">Clave CCT:</p></td>
-                                <td><div id="res-cct" class="data-value" style="font-family: monospace; font-size: 14px; color: #444;">--</div></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label-institucional">Ciclo Escolar:</p></td>
-                                <td><div id="res-ciclo" class="data-value">--</div></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label-institucional">Fecha de Acreditación:</p></td>
-                                <td><div id="res-fecha" class="data-value">--</div></td>
-                            </tr>
-                        </table>
+                                <style>
+/* Agrega esto en tu sección de estilos para que la tabla funcione bien en móvil */
+.ficha-registro {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.ficha-registro td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+  display: table-cell;
+}
+.ficha-registro tr:nth-child(even) {
+  background-color: #fcfcfc;
+}
 
-                        <div class="row" style="margin-top: 15px;">
-                            <div class="col-sm-4 col-sm-offset-8 text-right">
-                                <p class="label-institucional" style="margin-bottom:0;">Promedio Global:</p>
-                                <div id="res-promedio" style="font-size: 38px; font-weight: 900; color: #111; line-height: 1;">--</div>
-                            </div>
-                        </div>
+/* Ajustes automáticos para móviles */
+@media (max-width: 768px) {
+  .ficha-registro td {
+    display: block;
+    width: 100% !important;
+  }
+  .ficha-registro td:first-child {
+    padding-bottom: 2px;
+  }
+  .ficha-registro td:last-child {
+    padding-top: 2px;
+  }
+  .label-institucional {
+    margin-bottom: 2px;
+  }
+  .data-value {
+    font-size: clamp(15px, 4.5vw, 20px) !important;
+    word-break: break-word;
+  }
+  #res-promedio {
+    font-size: clamp(28px, 12vw, 38px) !important;
+  }
+}
+</style>
+
+<!-- Tu tabla corregida -->
+<table class="ficha-registro">
+  <tr>
+    <td style="width: 35%;"><p class="label-institucional">Nombre del Titular:</p></td>
+    <td><div id="res-nombre" class="data-value" style="color: var(--gob-green);">--</div></td>
+  </tr>
+  <tr>
+    <td><p class="label-institucional">CURP:</p></td>
+    <td><div id="res-curp-tabla" class="data-value" style="font-family: monospace; letter-spacing: 0.5px; word-break: break-all;">--</div></td>
+  </tr>
+  <tr>
+    <td><p class="label-institucional">Nivel Educativo:</p></td>
+    <td><div id="res-nivel" class="data-value">--</div></td>
+  </tr>
+  <tr>
+    <td><p class="label-institucional">Institución Educativa:</p></td>
+    <td><div id="res-escuela" class="data-value" style="font-weight: 700;">--</div></td>
+  </tr>
+  <tr>
+    <td><p class="label-institucional">Clave CCT:</p></td>
+    <td><div id="res-cct" class="data-value" style="font-family: monospace; color: #444;">--</div></td>
+  </tr>
+  <tr>
+    <td><p class="label-institucional">Ciclo Escolar:</p></td>
+    <td><div id="res-ciclo" class="data-value">--</div></td>
+  </tr>
+  <tr>
+    <td><p class="label-institucional">Fecha de Acreditación:</p></td>
+    <td><div id="res-fecha" class="data-value">--</div></td>
+  </tr>
+</table>
+
+<div class="row" style="margin-top: 15px;">
+  <div class="col-sm-4 col-sm-offset-8 text-right" style="text-align: right;">
+    <p class="label-institucional" style="margin-bottom:0;">Promedio Global:</p>
+    <div id="res-promedio" style="font-weight: 900; color: #111; line-height: 1;">--</div>
+  </div>
+</div>
+
 
                         <div id="descarga-bloqueada" class="caja-descarga desc-bloqueada">
                             <p style="font-weight: 700; margin: 0;">⚠️ DOCUMENTO EN PROCESO DE VALIDACIÓN</p>
