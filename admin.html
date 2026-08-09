@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Maestro SiDGBE | Control Total V13.1</title>
+    <title>Panel Maestro SiDGBE | Control Total V13.2</title>
     
     <link href="https://framework-gb.cdn.gob.mx/assets/styles/main.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -20,240 +20,56 @@
             --gray-medium: #6c757d;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body { 
-            background-color: #ebedef; 
-            font-family: 'Open Sans', sans-serif; 
-            overflow-x: hidden;
-            line-height: 1.5;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #ebedef; font-family: 'Open Sans', sans-serif; overflow-x: hidden; line-height: 1.5; }
         
-        .navbar-admin { 
-            background-color: var(--gob-green); 
-            padding: 18px 25px; 
-            color: white; 
-            border-bottom: 4px solid var(--gob-gold); 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
+        .navbar-admin { background-color: var(--gob-green); padding: 18px 25px; color: white; border-bottom: 4px solid var(--gob-gold); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .navbar-admin h4 { margin: 0; font-weight: 700; letter-spacing: 0.5px; }
 
-        .navbar-admin h4 {
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+        .card-admin { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 3px 12px rgba(0,0,0,0.08); margin-bottom: 25px; border-top: 4px solid var(--gob-gold); transition: all 0.2s ease; }
+        .card-admin:hover { box-shadow: 0 5px 18px rgba(0,0,0,0.12); }
 
-        .card-admin { 
-            background: white; 
-            padding: 25px; 
-            border-radius: 10px; 
-            box-shadow: 0 3px 12px rgba(0,0,0,0.08); 
-            margin-bottom: 25px; 
-            border-top: 4px solid var(--gob-gold);
-            transition: all 0.2s ease;
-        }
+        .section-title { font-weight: 800; text-transform: uppercase; font-size: 14px; color: var(--gob-green); border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; letter-spacing: 0.3px; }
 
-        .card-admin:hover {
-            box-shadow: 0 5px 18px rgba(0,0,0,0.12);
-        }
-
-        .section-title { 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            font-size: 14px; 
-            color: var(--gob-green); 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 12px; 
-            margin-bottom: 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            letter-spacing: 0.3px;
-        }
-
-        .btn-registrar { 
-            background-color: var(--gob-green) !important; 
-            color: white !important; 
-            font-weight: 700; 
-            padding: 14px; 
-            border: none; 
-            border-radius: 6px; 
-            width: 100%; 
-            text-transform: uppercase; 
-            cursor: pointer;
-            transition: background 0.2s ease;
-            letter-spacing: 0.5px;
-        }
-        .btn-registrar:hover { 
-            background-color: var(--gob-green-light) !important; 
-        }
+        .btn-registrar { background-color: var(--gob-green) !important; color: white !important; font-weight: 700; padding: 14px; border: none; border-radius: 6px; width: 100%; text-transform: uppercase; cursor: pointer; transition: background 0.2s ease; letter-spacing: 0.5px; }
+        .btn-registrar:hover { background-color: var(--gob-green-light) !important; }
         
-        label { 
-            font-weight: 700; 
-            color: #495057; 
-            text-transform: uppercase; 
-            font-size: 11px; 
-            margin-top: 12px; 
-            margin-bottom: 5px;
-            display: block; 
-            letter-spacing: 0.3px;
-        }
-        .form-control { 
-            border-radius: 6px; 
-            height: 40px; 
-            font-size: 14px; 
-            font-weight: 500;
-            border: 1px solid #ced4da;
-            transition: border 0.2s ease;
-        }
-        .form-control:focus {
-            border-color: var(--gob-green);
-            box-shadow: 0 0 0 0.2rem rgba(12, 35, 30, 0.15);
-        }
+        label { font-weight: 700; color: #495057; text-transform: uppercase; font-size: 11px; margin-top: 12px; margin-bottom: 5px; display: block; letter-spacing: 0.3px; }
+        .form-control { border-radius: 6px; height: 40px; font-size: 14px; font-weight: 500; border: 1px solid #ced4da; transition: border 0.2s ease; }
+        .form-control:focus { border-color: var(--gob-green); box-shadow: 0 0 0 0.2rem rgba(12, 35, 30, 0.15); }
         
-        .monitor-scroll { 
-            max-height: 550px; 
-            overflow-y: auto; 
-            background: white; 
-            border-radius: 8px; 
-        }
-        .stat-card { 
-            background: var(--gob-green); 
-            color: white; 
-            padding: 20px; 
-            border-radius: 8px; 
-            text-align: center;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-2px);
-        }
-        .stat-card h3 { 
-            color: var(--gob-gold); 
-            font-weight: 900; 
-            font-size: 32px; 
-            margin: 5px 0 0 0; 
-        }
-        .stat-card small {
-            opacity: 0.9;
-            font-weight: 500;
-        }
+        .monitor-scroll { max-height: 550px; overflow-y: auto; background: white; border-radius: 8px; }
+        .stat-card { background: var(--gob-green); color: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 3px 8px rgba(0,0,0,0.1); transition: transform 0.2s ease; }
+        .stat-card:hover { transform: translateY(-2px); }
+        .stat-card h3 { color: var(--gob-gold); font-weight: 900; font-size: 32px; margin: 5px 0 0 0; }
+        .stat-card small { opacity: 0.9; font-weight: 500; }
         
-        .modal-custom { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            z-index: 10000; 
-            display: none; 
-            align-items: center; 
-            justify-content: center; 
-            background: rgba(0,0,0,0.85); 
-            backdrop-filter: blur(3px);
-        }
-        .modal-content-custom { 
-            background: white; 
-            padding: 35px; 
-            border-radius: 12px; 
-            width: 92%; 
-            max-width: 500px; 
-            border-top: 10px solid var(--gob-gold);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .modal-content-custom h4 {
-            color: var(--gob-green);
-            font-weight: 800;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+        .modal-custom { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); backdrop-filter: blur(3px); }
+        .modal-content-custom { background: white; padding: 35px; border-radius: 12px; width: 92%; max-width: 500px; border-top: 10px solid var(--gob-gold); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .modal-content-custom h4 { color: var(--gob-green); font-weight: 800; margin-bottom: 20px; text-align: center; }
         
-        .badge-visitas { 
-            background: var(--gob-gold); 
-            color: var(--gob-green); 
-            font-weight: 900; 
-            padding: 3px 8px; 
-            border-radius: 4px; 
-            font-size: 12px;
-        }
-        .label-status { 
-            padding: 3px 8px; 
-            border-radius: 4px; 
-            font-size: 10px; 
-            font-weight: bold; 
-            text-transform: uppercase; 
-        }
+        .badge-visitas { background: var(--gob-gold); color: var(--gob-green); font-weight: 900; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+        .label-status { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .status-active { background: var(--success); color: white; }
         .status-paused { background: var(--warning); color: white; }
-        .folio-box { 
-            background: #fffcf5; 
-            border: 2px dashed var(--gob-gold); 
-            padding: 12px; 
-            text-align: center; 
-            font-family: monospace; 
-            font-size: 15px; 
-            font-weight: 900; 
-            color: var(--danger); 
-            margin: 15px 0; 
-            border-radius: 6px;
-            word-break: break-all;
-        }
+        .folio-box { background: #fffcf5; border: 2px dashed var(--gob-gold); padding: 12px; text-align: center; font-family: monospace; font-size: 15px; font-weight: 900; color: var(--danger); margin: 15px 0; border-radius: 6px; word-break: break-all; }
 
-        .btn-accion {
-            padding: 4px 8px;
-            font-size: 11px;
-            border-radius: 4px;
-            margin: 1px;
-        }
+        .btn-accion { padding: 4px 8px; font-size: 11px; border-radius: 4px; margin: 1px; }
         .btn-bloquear { background: var(--warning); color: white; border: none; }
         .btn-desbloquear { background: var(--success); color: white; border: none; }
         .btn-descarga { background: var(--gob-green); color: white; border: none; }
         .btn-editar { background: #3498db; color: white; border: none; }
 
-        .datos-validacion {
-            background: var(--gray-light);
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--gob-gold);
-        }
-        .datos-validacion p {
-            margin: 4px 0;
-            font-size: 13px;
-        }
-        .datos-validacion strong {
-            color: var(--gob-green);
-            min-width: 140px;
-            display: inline-block;
-        }
+        .datos-validacion { background: var(--gray-light); padding: 15px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid var(--gob-gold); }
+        .datos-validacion p { margin: 4px 0; font-size: 13px; }
+        .datos-validacion strong { color: var(--gob-green); min-width: 140px; display: inline-block; }
 
-        tr { 
-            contain: layout; 
-            transition: background 0.15s ease;
-        }
-        tr:hover {
-            background: #f8f9fa;
-        }
+        tr { contain: layout; transition: background 0.15s ease; }
+        tr:hover { background: #f8f9fa; }
 
-        .buscador {
-            border-radius: 20px;
-            padding: 5px 15px;
-            border: 1px solid #ddd;
-            font-size: 13px;
-        }
+        .buscador { border-radius: 20px; padding: 5px 15px; border: 1px solid #ddd; font-size: 13px; }
 
-        .alerta {
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin: 10px 0;
-            font-size: 13px;
-            display: none;
-        }
+        .alerta { padding: 10px 15px; border-radius: 6px; margin: 10px 0; font-size: 13px; display: none; }
         .alerta.exito { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .alerta.aviso { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
     </style>
@@ -275,8 +91,8 @@
             <div id="contenedor-datos" class="datos-validacion"></div>
             
             <div class="form-group">
-                <label>Enlace de descarga del certificado:</label>
-                <input type="url" id="enlaceDescarga" class="form-control" placeholder="https://tu-sitio.com/certificados/folio.pdf">
+                <label>ENLACE DE DESCARGA DEL CERTIFICADO:</label>
+                <input type="url" id="enlaceDescarga" class="form-control" placeholder="https://drive.google.com/... o enlace directo">
                 <small class="text-muted">El enlace solo será accesible si el registro está DESBLOQUEADO</small>
             </div>
 
@@ -291,6 +107,7 @@
                     <button class="btn btn-default btn-block" onclick="cerrarModalValidacion()">CERRAR</button>
                 </div>
             </div>
+            <!-- ✅ BOTÓN CORREGIDO Y ASEGURADO -->
             <button class="btn btn-success btn-block" style="margin-top: 10px;" onclick="guardarEnlace()">GUARDAR ENLACE Y CAMBIOS</button>
         </div>
     </div>
@@ -417,7 +234,7 @@
         const db = getFirestore(app);
         let folioActual = null;
 
-        // ✅ NUEVO FOLIO: largo, aleatorio, mayús, minús, números y guiones
+        // ✅ Generador de folio aleatorio largo
         function generarFolio() {
             const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             let partes = [];
@@ -431,103 +248,125 @@
             return partes.join("-");
         }
 
-        // Genera folio nuevo al seleccionar cualquier nivel
-         document.getElementById("nivel").addEventListener("change", () => {
-             document.getElementById("folio").value = generarFolio();
-         });
-         window.toggleCamposEscuela = () => {
-             const tipo = document.getElementById("tipoEscuela").value;
-             const contenedor = document.getElementById("campos-escuela-adicionales");
-             if(tipo === "PERSONALIZADA") {
-                 contenedor.style.display = "block";
-                 document.getElementById("escuela").required = true;
-             } else {
-                 contenedor.style.display = "none";
-                 document.getElementById("escuela").required = false;
-                 document.getElementById("escuela").value = "";
-                 document.getElementById("cct").value = "";
+        document.getElementById("nivel").addEventListener("change", () => {
+            document.getElementById("folio").value = generarFolio();
+        });
+
+        window.toggleCamposEscuela = () => {
+            const tipo = document.getElementById("tipoEscuela").value;
+            const contenedor = document.getElementById("campos-escuela-adicionales");
+            if(tipo === "PERSONALIZADA") {
+                contenedor.style.display = "block";
+                document.getElementById("escuela").required = true;
+            } else {
+                contenedor.style.display = "none";
+                document.getElementById("escuela").required = false;
+                document.getElementById("escuela").value = "";
+                document.getElementById("cct").value = "";
+            }
+        };
+
+        document.getElementById('adminForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const f = document.getElementById('folio').value.trim() || generarFolio();
+            const nivelSeleccionado = document.getElementById('nivel').value;
+            const tipoEscuela = document.getElementById("tipoEscuela").value;
+
+            let escuelaFinal = "";
+            if (tipoEscuela === "DEFECTO") {
+                escuelaFinal = nivelSeleccionado === "Preparatoria" ? "PREPARATORIA ABIERTA EN LINEA" : "INSTITUTO NACIONAL PARA LA EDUCACIÓN DE LOS ADULTOS (INEA)";
+            } else {
+                escuelaFinal = document.getElementById('escuela').value.toUpperCase();
+            }
+            const cctFinal = document.getElementById('cct').value.toUpperCase() || "N/A";
+
+            const d = {
+                nombre: document.getElementById('nombre').value.toUpperCase(),
+                curp: document.getElementById('curp').value.toUpperCase(),
+                promedio: document.getElementById('promedio').value,
+                ciclo: document.getElementById('ciclo').value,
+                fechaEmision: document.getElementById('fechaEmision').value,
+                nivel: nivelSeleccionado,
+                escuela: escuelaFinal,
+                cct: cctFinal,
+                visitas: 0, 
+                activo: true,
+                enlaceDescarga: "",
+                createdAt: Date.now()
+            };
+
+            await setDoc(doc(db, "certificados", f), d);
+            
+            const qrC = document.getElementById("qrcode");
+            qrC.innerHTML = "";
+            new QRCode(qrC, {
+                text: `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${f}`,
+                width: 180, height: 180, colorDark : "#0C231E"
+            });
+            
+            document.getElementById("folio-final").innerText = f;
+            document.getElementById("qr-modal").style.display = "flex";
+        });
+
+        window.cerrarModalQR = () => {
+            document.getElementById("qr-modal").style.display = "none";
+            document.getElementById("adminForm").reset();
+            document.getElementById("campos-escuela-adicionales").style.display = "none";
+            document.getElementById("tipoEscuela").value = "DEFECTO";
+        };
+
+        window.abrirModalValidacion = (datos, id) => {
+            folioActual = id;
+            const contenedor = document.getElementById("contenedor-datos");
+            contenedor.innerHTML = `
+                <p><strong>Folio:</strong> ${id}</p>
+                <p><strong>Nombre:</strong> ${datos.nombre}</p>
+                <p><strong>CURP:</strong> ${datos.curp}</p>
+                <p><strong>Nivel:</strong> ${datos.nivel}</p>
+                <p><strong>Escuela:</strong> ${datos.escuela}</p>
+                <p><strong>CCT:</strong> ${datos.cct}</p>
+                <p><strong>Promedio:</strong> ${datos.promedio}</p>
+                <p><strong>Ciclo:</strong> ${datos.ciclo}</p>
+                <p><strong>Fecha emisión:</strong> ${datos.fechaEmision}</p>
+                <p><strong>Visitas:</strong> ${datos.visitas || 0}</p>
+            `;
+            document.getElementById("enlaceDescarga").value = datos.enlaceDescarga || "";
+            actualizarEstadoBloqueo(datos.activo);
+            document.getElementById("validacion-modal").style.display = "flex";
+        };
+
+        window.cerrarModalValidacion = () => {
+            document.getElementById("validacion-modal").style.display = "none";
+            folioActual = null;
+        };
+
+        window.alternarBloqueo = async () => {
+            if(!folioActual) return;
+            const docRef = doc(db, "certificados", folioActual);
+            const nuevoEstado = !document.getElementById("btnBloqueo").innerText.includes("BLOQUEAR");
+            await updateDoc(docRef, { activo: nuevoEstado });
+            actualizarEstadoBloqueo(nuevoEstado);
+        };
+
+        // ✅ FUNCIÓN CORREGIDA Y ASEGURADA PARA GUARDAR EL ENLACE
+         window.guardarEnlace = async () => {
+             if(!folioActual) {
+                 alert("⚠️ No hay ningún folio seleccionado");
+                 return;
              }
-         };
-         document.getElementById('adminForm').addEventListener('submit', async (e) => {
-             e.preventDefault();
-             const f = document.getElementById('folio').value || generarFolio();
-             const nivelSeleccionado = document.getElementById('nivel').value;
-             const tipoEscuela = document.getElementById("tipoEscuela").value;
-             let escuelaFinal = "";
-             if (tipoEscuela === "DEFECTO") {
-                 escuelaFinal = nivelSeleccionado === "Preparatoria" ? "PREPARATORIA ABIERTA" : "INSTITUTO NACIONAL PARA LA EDUCACIÓN DE LOS ADULTOS (INEA)";
-             } else {
-                 escuelaFinal = document.getElementById('escuela').value.toUpperCase();
-             }
-             const cctFinal = document.getElementById('cct').value.toUpperCase() || "N/A";
-             const d = {
-                 nombre: document.getElementById('nombre').value.toUpperCase(),
-                 curp: document.getElementById('curp').value.toUpperCase(),
-                 promedio: document.getElementById('promedio').value,
-                 ciclo: document.getElementById('ciclo').value,
-                 fechaEmision: document.getElementById('fechaEmision').value,
-                 nivel: nivelSeleccionado,
-                 escuela: escuelaFinal,
-                 cct: cctFinal,
-                 visitas: 0, 
-                 activo: true,
-                 enlaceDescarga: "",
-                 createdAt: Date.now()
-             };
-             await setDoc(doc(db, "certificados", f), d);
-             
-             const qrC = document.getElementById("qrcode");
-             qrC.innerHTML = "";
-             new QRCode(qrC, {
-                 text: `https://registro-nacional-siged-sep.github.io/Validacion-de-Documentos-Academicos-Electronicos/?folio=${f}`,
-                 width: 180, height: 180, colorDark : "#0C231E"
-             });
-             
-             document.getElementById("folio-final").innerText = f;
-             document.getElementById("qr-modal").style.display = "flex";
-         });
-         window.cerrarModalQR = () => {
-             document.getElementById("qr-modal").style.display = "none";
-             document.getElementById("adminForm").reset();
-             document.getElementById("campos-escuela-adicionales").style.display = "none";
-             document.getElementById("tipoEscuela").value = "DEFECTO";
-         };
-         window.abrirModalValidacion = (datos, id) => {
-             folioActual = id;
-             const contenedor = document.getElementById("contenedor-datos");
-             contenedor.innerHTML = `
-                 <p><strong>Folio:</strong> ${id}</p>
-                 <p><strong>Nombre:</strong> ${datos.nombre}</p>
-                 <p><strong>CURP:</strong> ${datos.curp}</p>
-                 <p><strong>Nivel:</strong> ${datos.nivel}</p>
-                 <p><strong>Escuela:</strong> ${datos.escuela}</p>
-                 <p><strong>CCT:</strong> ${datos.cct}</p>
-                 <p><strong>Promedio:</strong> ${datos.promedio}</p>
-                 <p><strong>Ciclo:</strong> ${datos.ciclo}</p>
-                 <p><strong>Fecha emisión:</strong> ${datos.fechaEmision}</p>
-                 <p><strong>Visitas:</strong> ${datos.visitas || 0}</p>
-             `;
-             document.getElementById("enlaceDescarga").value = datos.enlaceDescarga || "";
-             actualizarEstadoBloqueo(datos.activo);
-             document.getElementById("validacion-modal").style.display = "flex";
-         };
-         window.cerrarModalValidacion = () => {
-             document.getElementById("validacion-modal").style.display = "none";
-             folioActual = null;
-         };
-         window.alternarBloqueo = async () => {
-             if(!folioActual) return;
-             const docRef = doc(db, "certificados", folioActual);
-             const nuevoEstado = !document.getElementById("btnBloqueo").innerText.includes("BLOQUEAR");
-             await updateDoc(docRef, { activo: nuevoEstado });
-             actualizarEstadoBloqueo(nuevoEstado);
-         };
-         async function guardarEnlace() {
-             if(!folioActual) return;
              const enlace = document.getElementById("enlaceDescarga").value.trim();
-             await updateDoc(doc(db, "certificados", folioActual), { enlaceDescarga: enlace });
-             alert("✅ Cambios guardados correctamente");
-         }
+             
+             try {
+                 await updateDoc(doc(db, "certificados", folioActual), { 
+                     enlaceDescarga: enlace,
+                     ultimaModificacion: Date.now()
+                 });
+                 alert("✅ Enlace guardado correctamente. Recuerda: el botón de descarga aparecerá solo cuando el registro esté DESBLOQUEADO.");
+             } catch (error) {
+                 console.error(error);
+                 alert("❌ Error al guardar: " + error.message);
+             }
+         };
          function actualizarEstadoBloqueo(activo) {
              const btn = document.getElementById("btnBloqueo");
              const alertaB = document.getElementById("alertaBloqueo");
