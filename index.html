@@ -12,16 +12,17 @@
             --gob-green: #0C231E;
             --gob-gold: #D4C19C;
             --gob-red: #982222;
+            --primaria: #1565C0;
+            --secundaria: #2E7D32;
+            --preparatoria: #F57C00;
         }
 
         body { background-color: #f2f2f2; font-family: 'Open Sans', sans-serif; }
         
-        /* Navbar Superior Oficial GobMx */
         .navbar-inverse { background-color: var(--gob-green); border: none; border-bottom: 4px solid var(--gob-gold); height: 70px; }
         
-        #seccion-resultados, #seccion-error, #loader { display: none; } 
+        #seccion-resultados, #seccion-error, #loader, #descarga-bloqueada, #descarga-liberada { display: none; } 
         
-        /* Botones de Acción */
         .btn-buscar { 
             background-color: var(--gob-green); color: white; transition: 0.3s; 
             font-weight: 700; border-radius: 0; border: none;
@@ -29,11 +30,9 @@
         }
         .btn-buscar:hover { background-color: #1d4d42; color: white; }
         
-        /* Tipografía e Identidad Institucional */
         .label-institucional { color: #545454; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
         .header-oficial { color: var(--gob-green); font-weight: 800; border-bottom: 2px solid var(--gob-gold); padding-bottom: 15px; margin-bottom: 30px; text-transform: uppercase; font-size: 20px; }
         
-        /* Contenedores de Información - Estilo Ficha Oficial SIGED */
         .res-box { background: white; padding: 40px; border: 1px solid #ccc; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .data-value { 
             font-size: 16px; font-weight: 800; color: #111; 
@@ -41,19 +40,24 @@
             line-height: 1.2; font-family: 'Open Sans', sans-serif;
         }
         
-        /* Estatus Gubernamental */
         .badge-estatus {
             background-color: #135838; color: white; padding: 8px 15px;
             font-weight: 800; text-transform: uppercase; display: inline-block;
             font-size: 12px; margin-bottom: 25px; letter-spacing: 0.5px;
         }
 
-        /* Tabla Estructurada Interna */
+        .nivel-primaria { border-top: 10px solid var(--primaria); }
+        .nivel-secundaria { border-top: 10px solid var(--secundaria); }
+        .nivel-preparatoria { border-top: 10px solid var(--preparatoria); }
+        .badge-nivel { padding: 5px 12px; color: white; font-weight: 700; font-size: 11px; text-transform: uppercase; border-radius: 2px; margin-left: 10px; }
+        .badge-primaria { background: var(--primaria); }
+        .badge-secundaria { background: var(--secundaria); }
+        .badge-preparatoria { background: var(--preparatoria); }
+
         .ficha-registro { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         .ficha-registro td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: top; }
         .ficha-registro tr:nth-child(even) { background-color: #fcfcfc; }
         
-        /* Animación de Carga */
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .spinner-custom { width: 60px; height: 60px; border: 6px solid #ddd; border-top: 6px solid var(--gob-gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 30px auto; }
         
@@ -65,6 +69,14 @@
             background: #f5f5f5; padding: 15px; border: 1px solid #ddd; 
             color: #555; word-break: break-all; text-transform: uppercase; line-height: 1.4;
         }
+
+        .caja-descarga {
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .desc-bloqueada { background: #FFF3CD; border: 1px solid #FFEEBA; color: #856404; }
+        .desc-liberada { background: #D4EDDA; border: 1px solid #C3E6CB; color: #155724; }
     </style>
 </head>
 
@@ -104,7 +116,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="label-institucional">Folio de Consulta Federal:</label>
-                            <input type="text" id="folio-input" class="form-control" placeholder="EJEMPLO: SEP-PREP-XXXXX-000" style="height: 55px; font-size: 20px; font-weight: 800; border-radius: 0; text-transform: uppercase; border: 2px solid #aaa; letter-spacing: 0.5px;">
+                            <input type="text" id="folio-input" class="form-control" placeholder="ej: 7aB3-kL9p-Qr2x-zW8v-cD5f" style="height: 55px; font-size: 18px; font-weight: 700; border-radius: 0; text-transform: uppercase; border: 2px solid #aaa; letter-spacing: 0.5px;">
                         </div>
                         <button type="button" onclick="consultarFirebase()" class="btn btn-buscar btn-block btn-lg">
                             Validar Sello ante el Registro Federal
@@ -114,11 +126,11 @@
                 <div class="col-md-4">
                     <div style="background: #FFF9E6; border: 1px solid #D4C19C; padding: 20px; font-size: 12px; color: #333;">
                         <h5 style="font-weight: 800; margin-top: 0;">INSTRUCCIONES DE CONSULTA</h5>
-                        <p>1. Localice el número de folio en el área de validación perimetral de su documento digital.</p>
-                        <p>2. Transcríbalo respetando los guiones y mayúsculas establecidos.</p>
-                        <p>3. El sistema arrojará el dictamen inmediato de inscripción oficial.</p>
+                        <p>1. Localice el folio único en su documento oficial.</p>
+                        <p>2. Transcríbalo respetando mayúsculas, minúsculas y guiones.</p>
+                        <p>3. El sistema emitirá el dictamen de validez inmediato.</p>
                         <hr style="border-top: 1px solid #D4C19C;">
-                        <small>Esta consulta pública constituye una herramienta de transparencia institucional de conformidad con la normativa de la SEP.</small>
+                        <small>Consulta oficial conforme a la normativa de la Secretaría de Educación Pública.</small>
                     </div>
                 </div>
             </div>
@@ -133,10 +145,11 @@
         <section id="seccion-resultados">
             <div class="row">
                 <div class="col-md-9">
-                    <div class="res-box" style="border-top: 10px solid var(--gob-green); padding: 35px;">
+                    <div id="caja-resultado" class="res-box">
                         <div class="row">
                             <div class="col-xs-8">
                                 <div class="badge-estatus">✓ Registro Localizado y Válido ante la Federación</div>
+                                <span id="etiqueta-nivel" class="badge-nivel"></span>
                             </div>
                             <div class="col-xs-4 text-right">
                                 <img src="https://images.seeklogo.com/logo-png/4/1/escudo-nacional-mexicano-logo-png_seeklogo-48977.png" width="85" style="opacity: 0.85; margin-top: -10px;">
@@ -156,16 +169,12 @@
                                 <td><p class="label-institucional">Nivel Educativo:</p></td>
                                 <td><div id="res-nivel" class="data-value">--</div></td>
                             </tr>
-                            <tr id="contenedor-especialidad" style="display:none;">
-                                <td><p class="label-institucional">Carrera / Especialidad:</p></td>
-                                <td><div id="res-carrera" class="data-value" style="background: #f4f4f4; padding: 5px 10px;">--</div></td>
-                            </tr>
                             <tr>
                                 <td><p class="label-institucional">Institución Educativa:</p></td>
                                 <td><div id="res-escuela" class="data-value" style="font-size: 14px; font-weight: 700;">--</div></td>
                             </tr>
                             <tr>
-                                <td><p class="label-institucional">Clave de Centro de Trabajo (CCT):</p></td>
+                                <td><p class="label-institucional">Clave CCT:</p></td>
                                 <td><div id="res-cct" class="data-value" style="font-family: monospace; font-size: 14px; color: #444;">--</div></td>
                             </tr>
                             <tr>
@@ -185,13 +194,25 @@
                             </div>
                         </div>
 
+                        <div id="descarga-bloqueada" class="caja-descarga desc-bloqueada">
+                            <p style="font-weight: 700; margin: 0;">⚠️ DOCUMENTO EN PROCESO DE VALIDACIÓN</p>
+                            <p style="margin: 5px 0 0 0; font-size: 13px;">El certificado aún no ha sido liberado por la institución emisora. Podrá descargarlo una vez que se complete el trámite administrativo correspondiente.</p>
+                        </div>
+
+                        <div id="descarga-liberada" class="caja-descarga desc-liberada">
+                            <p style="font-weight: 700; margin: 0;">✅ DOCUMENTO LIBERADO PARA DESCARGA</p>
+                            <a id="enlace-descarga" href="" target="_blank" class="btn btn-success btn-block" style="margin-top: 10px; border-radius: 0; font-weight: bold;">
+                                DESCARGAR CERTIFICADO ELECTRÓNICO
+                            </a>
+                        </div>
+
                         <hr style="border-top: 1px solid #ccc; margin: 25px 0 15px 0;">
                         
                         <div class="row">
                             <div class="col-md-12">
-                                <p class="label-institucional">Sello Digital de Validación Federal (Cadena Original):</p>
+                                <p class="label-institucional">Sello Digital de Validación Federal:</p>
                                 <div class="cadena-texto">
-                                    ||SEP|SIGED|CENTRAL|AER2026|<span id="res-curp-sello"></span>|<span id="res-folio-sello"></span>|PROMEDIO_<span id="res-promedio-sello"></span>|<span id="res-hash-falso"></span>||
+                                    ||SEP|SIGED|CENTRAL|<span id="res-curp-sello"></span>|<span id="res-folio-sello"></span>|PROMEDIO_<span id="res-promedio-sello"></span>|<span id="res-hash-falso"></span>||
                                 </div>
                             </div>
                         </div>
@@ -227,7 +248,7 @@
             <div class="res-box" style="border-top: 10px solid var(--gob-red); max-width: 700px; margin: 0 auto;">
                 <i class="glyphicon glyphicon-warning-sign" style="font-size: 45px; color: var(--gob-red); margin-bottom: 15px;"></i>
                 <h2 style="font-weight: 900; color: var(--gob-red); text-transform: uppercase; font-size: 22px;">Código o Datos No Localizados</h2>
-                <p class="text-muted" style="font-size: 14px; padding: 0 20px;">El identificador digital ingresado no se encuentra dado de alta en la Base Nacional del Sistema de Información y Gestión Educativa (SIGED) o bien cuenta con una restricción de actualización administrativa.</p>
+                <p class="text-muted" style="font-size: 14px; padding: 0 20px;">El identificador ingresado no se encuentra en la base nacional o cuenta con restricción administrativa.</p>
                 <hr>
                 <button class="btn btn-danger" onclick="location.reload()" style="border-radius: 0; font-weight: bold; text-transform: uppercase; padding: 10px 30px;">Intentar Nuevamente</button>
             </div>
@@ -238,9 +259,8 @@
         <div class="container text-center">
             <img src="https://framework-gb.cdn.gob.mx/gobmx/img/logo_blanco.svg" width="180" style="margin-bottom: 30px;">
             <div style="font-size: 11px; opacity: 0.7; max-width: 800px; margin: 0 auto; line-height: 1.6;">
-                <p style="font-weight: 700; font-size: 12px; letter-spacing: 0.5px;">SECRETARÍA DE EDUCACIÓN PÚBLICA | DIRECCIÓN GENERAL DE ACREDITACIÓN, INCORPORACIÓN Y REVALIDACIÓN</p>
+                <p style="font-weight: 700; font-size: 12px; letter-spacing: 0.5px;">SECRETARÍA DE EDUCACIÓN PÚBLICA | DIRECCIÓN GENERAL DE ACREDITACIÓN</p>
                 <p>Sistema de Información y Gestión Educativa (SIGED) - Portal de Validación Electrónica 2026</p>
-                <p style="margin-top: 15px; font-size: 10px;">La consulta e impresión de la información contenida en este sitio web no genera derechos de certificación o titulación adicionales a los emitidos físicamente por las autoridades competentes.</p>
             </div>
         </div>
     </footer>
@@ -263,13 +283,34 @@
 
         function generateFakeHash() {
             let res = "";
-            let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             for (let i = 0; i < 45; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
             return res;
         }
 
+        function aplicarEstiloNivel(nivel) {
+            const caja = document.getElementById('caja-resultado');
+            const etiqueta = document.getElementById('etiqueta-nivel');
+            caja.classList.remove('nivel-primaria','nivel-secundaria','nivel-preparatoria');
+            etiqueta.classList.remove('badge-primaria','badge-secundaria','badge-preparatoria');
+
+            if(nivel.includes("Primaria")) {
+                caja.classList.add('nivel-primaria');
+                etiqueta.classList.add('badge-primaria');
+                etiqueta.innerText = "EDUCACIÓN BÁSICA";
+            } else if(nivel.includes("Secundaria")) {
+                caja.classList.add('nivel-secundaria');
+                etiqueta.classList.add('badge-secundaria');
+                etiqueta.innerText = "EDUCACIÓN SECUNDARIA";
+            } else if(nivel.includes("Preparatoria") || nivel.includes("Media Superior")) {
+                caja.classList.add('nivel-preparatoria');
+                etiqueta.classList.add('badge-preparatoria');
+                etiqueta.innerText = "EDUCACIÓN MEDIA SUPERIOR";
+            }
+        }
+
         window.consultarFirebase = async function() {
-            const f = document.getElementById('folio-input').value.trim().toUpperCase();
+            const f = document.getElementById('folio-input').value.trim();
             if(!f) return;
 
             document.getElementById('seccion-busqueda').style.display = 'none';
@@ -279,66 +320,66 @@
                 const docRef = doc(db, "certificados", f);
                 const docSnap = await getDoc(docRef);
 
-                // Si no existe o "activo" es explícitamente false (Pausado), manda a la pantalla de error
                 if (docSnap.exists() && docSnap.data().activo !== false) {
                     const data = docSnap.data();
                     await updateDoc(docRef, { visitas: increment(1) });
 
                     setTimeout(() => {
                         document.getElementById('loader').style.display = 'none';
-                        document.getElementById('res-nombre').innerText = data.nombre;
-                        document.getElementById('res-nivel').innerText = data.nivel;
-                        document.getElementById('res-curp-tabla').innerText = data.curp;
-                        document.getElementById('res-curp-sello').innerText = data.curp;
-                        document.getElementById('res-folio-sello').innerText = f;
-                        document.getElementById('res-promedio').innerText = data.promedio;
-                        document.getElementById('res-promedio-sello').innerText = data.promedio;
-                        document.getElementById('res-folio').innerText = f;
-                        document.getElementById('res-ciclo').innerText = data.ciclo;
-                        document.getElementById('res-escuela').innerText = data.escuela || "INSTITUTO NACIONAL PARA LA EDUCACIÓN DE LOS ADULTOS";
-                        document.getElementById('res-cct').innerText = data.cct || "N/A";
-                        document.getElementById('res-visitas').innerText = "VERIFICACIONES INTEGRALES: " + ((data.visitas || 0) + 1);
-                        document.getElementById('res-hash-falso').innerText = generateFakeHash();
-                        document.getElementById('folio-display').innerText = f;
                         
-                        const hoy = new Date();
-                        document.getElementById('fecha-actual').innerText = hoy.toLocaleString('es-MX');
-
-                        if(data.fechaEmision) {
-                            const p = data.fechaEmision.split("-");
-                            document.getElementById('res-fecha').innerText = `${p[2]}/${p[1]}/${p[0]}`;
-                        }
-
-                        if(data.nivel === "TECNICO" || data.nivel === "TITULO" || data.nivel === "CEDULA" || data.nivel === "Título" || data.nivel === "Técnico") {
-                            document.getElementById('contenedor-especialidad').style.display = "table-row";
-                            document.getElementById('res-carrera').innerText = data.carrera || "GENERAL";
-                        } else {
-                            document.getElementById('contenedor-especialidad').style.display = "none";
-                        }
-
-                        document.getElementById('seccion-resultados').style.display = 'block';
-                        window.scrollTo(0,0);
-                    }, 1200);
-                } else {
-                    setTimeout(() => {
-                        document.getElementById('loader').style.display = 'none';
-                        document.getElementById('seccion-error').style.display = 'block';
-                    }, 1200);
-                }
-            } catch (e) {
-                console.error(e);
-                location.reload();
-            }
-        }
-
-        window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const f = urlParams.get('folio');
-            if (f) {
-                document.getElementById('folio-input').value = f.toUpperCase();
-                window.consultarFirebase();
-            }
-        });
-    </script>
-</body>
-</html>
+                        aplicarEstiloNivel(data.nivel);
+                         document.getElementById('res-nombre').innerText = data.nombre;
+                         document.getElementById('res-nivel').innerText = data.nivel;
+                         document.getElementById('res-curp-tabla').innerText = data.curp;
+                         document.getElementById('res-curp-sello').innerText = data.curp;
+                         document.getElementById('res-folio-sello').innerText = f;
+                         document.getElementById('res-promedio').innerText = data.promedio;
+                         document.getElementById('res-promedio-sello').innerText = data.promedio;
+                         document.getElementById('res-folio').innerText = f;
+                         document.getElementById('res-ciclo').innerText = data.ciclo;
+                         document.getElementById('res-escuela').innerText = data.escuela || "INSTITUTO NACIONAL PARA LA EDUCACIÓN DE LOS ADULTOS";
+                         document.getElementById('res-cct').innerText = data.cct || "N/A";
+                         document.getElementById('res-visitas').innerText = "VERIFICACIONES REALIZADAS: " + ((data.visitas || 0) + 1);
+                         document.getElementById('res-hash-falso').innerText = generateFakeHash();
+                         document.getElementById('folio-display').innerText = f;
+                         
+                         const hoy = new Date();
+                         document.getElementById('fecha-actual').innerText = hoy.toLocaleString('es-MX');
+                         if(data.fechaEmision) {
+                             const p = data.fechaEmision.split("-");
+                             document.getElementById('res-fecha').innerText = `${p[2]}/${p[1]}/${p[0]}`;
+                         }
+                         // Control de descarga según lo definido en el panel
+                         if(data.enlaceDescarga && data.enlaceDescarga.trim() !== "") {
+                             document.getElementById('descarga-bloqueada').style.display = 'none';
+                             document.getElementById('descarga-liberada').style.display = 'block';
+                             document.getElementById('enlace-descarga').href = data.enlaceDescarga;
+                         } else {
+                             document.getElementById('descarga-liberada').style.display = 'none';
+                             document.getElementById('descarga-bloqueada').style.display = 'block';
+                         }
+                         document.getElementById('seccion-resultados').style.display = 'block';
+                         window.scrollTo(0,0);
+                     }, 1200);
+                 } else {
+                     setTimeout(() => {
+                         document.getElementById('loader').style.display = 'none';
+                         document.getElementById('seccion-error').style.display = 'block';
+                     }, 1200);
+                 }
+             } catch (e) {
+                 console.error(e);
+                 location.reload();
+             }
+         }
+         window.addEventListener('load', () => {
+             const urlParams = new URLSearchParams(window.location.search);
+             const f = urlParams.get('folio');
+             if (f) {
+                 document.getElementById('folio-input').value = f;
+                 window.consultarFirebase();
+             }
+         });
+     </script>
+ </body>
+ </html>
